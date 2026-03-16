@@ -1,0 +1,61 @@
+{
+ "actions": [],
+ "creation": "2026-03-10 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "stage_name",
+  "test_type",
+  "is_mandatory",
+  "column_break_1",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "stage_name",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Stage Name",
+   "description": "Select from the stages defined in the Stages tab"
+  },
+  {
+   "fieldname": "test_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Test Type",
+   "options": "pH Test\nBrix Test\nABV Test\nResidual Sugar Test\nSensory Evaluation\nTemperature Test\nGeneral",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "is_mandatory",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Mandatory"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes / Instructions"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-12 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Recipe Lab Analysis",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

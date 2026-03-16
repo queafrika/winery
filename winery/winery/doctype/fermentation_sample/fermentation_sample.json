@@ -1,0 +1,84 @@
+{
+ "actions": [],
+ "creation": "2026-03-10 15:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "sample_date",
+  "week_number",
+  "specific_gravity",
+  "ph",
+  "sample_temp_c",
+  "gravity_stable",
+  "analyst",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "sample_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "week_number",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Week #",
+   "read_only": 1
+  },
+  {
+   "fieldname": "specific_gravity",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Specific Gravity",
+   "reqd": 1,
+   "precision": "3"
+  },
+  {
+   "fieldname": "ph",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "pH"
+  },
+  {
+   "fieldname": "sample_temp_c",
+   "fieldtype": "Float",
+   "label": "Temperature (\u00b0C)"
+  },
+  {
+   "fieldname": "gravity_stable",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "SG Stable",
+   "read_only": 1,
+   "default": "0",
+   "description": "Flagged when last 3 readings are within \u00b10.002"
+  },
+  {
+   "fieldname": "analyst",
+   "fieldtype": "Link",
+   "label": "Analyst",
+   "options": "User"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-10 15:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Fermentation Sample",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

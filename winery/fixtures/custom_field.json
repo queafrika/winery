@@ -1,0 +1,14 @@
+[
+ {
+  "doctype": "Custom Field",
+  "name": "Purchase Invoice-farmer",
+  "dt": "Purchase Invoice",
+  "fieldname": "farmer",
+  "fieldtype": "Link",
+  "label": "Farmer",
+  "options": "Farmer",
+  "insert_after": "supplier",
+  "in_list_view": 0,
+  "module": "Winery"
+ }
+]

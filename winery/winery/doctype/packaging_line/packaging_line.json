@@ -1,0 +1,87 @@
+{
+ "actions": [],
+ "creation": "2026-03-10 12:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "pack_size",
+  "bottles_per_carton",
+  "cartons",
+  "total_bottles",
+  "column_break_1",
+  "output_item",
+  "output_warehouse",
+  "output_batch_no"
+ ],
+ "fields": [
+  {
+   "fieldname": "pack_size",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Pack Size",
+   "reqd": 1,
+   "description": "e.g. 6-Pack, 12-Pack, Single"
+  },
+  {
+   "fieldname": "bottles_per_carton",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Bottles per Pack",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cartons",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Cartons / Units",
+   "reqd": 1
+  },
+  {
+   "fieldname": "total_bottles",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Total Bottles",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "output_item",
+   "fieldtype": "Link",
+   "label": "Output Item",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "output_warehouse",
+   "fieldtype": "Link",
+   "label": "Output Warehouse",
+   "options": "Warehouse",
+   "reqd": 1
+  },
+  {
+   "fieldname": "output_batch_no",
+   "fieldtype": "Link",
+   "label": "Batch No",
+   "options": "Batch",
+   "read_only": 1,
+   "description": "Auto-created on submit from Wine Batch"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-14 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Packaging Line",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

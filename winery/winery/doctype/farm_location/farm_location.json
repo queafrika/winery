@@ -1,0 +1,96 @@
+{
+ "actions": [],
+ "autoname": "field:location_name",
+ "creation": "2026-03-14 00:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "location_name",
+  "location_type",
+  "parent_farm_location",
+  "is_group",
+  "lft",
+  "rgt",
+  "old_parent"
+ ],
+ "fields": [
+  {
+   "fieldname": "location_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Location Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "location_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Location Type",
+   "options": "\nCountry\nCounty\nSub-County\nWard\nVillage"
+  },
+  {
+   "fieldname": "parent_farm_location",
+   "fieldtype": "Link",
+   "label": "Parent Location",
+   "options": "Farm Location"
+  },
+  {
+   "fieldname": "is_group",
+   "fieldtype": "Check",
+   "label": "Is Group"
+  },
+  {
+   "fieldname": "lft",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Left",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rgt",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Right",
+   "read_only": 1
+  },
+  {
+   "fieldname": "old_parent",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Old Parent",
+   "options": "Farm Location",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "is_tree": 1,
+ "links": [],
+ "modified": "2026-03-14 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Farm Location",
+ "nsm_parent_field": "parent_farm_location",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "search_fields": "location_name,location_type",
+ "sort_field": "lft",
+ "sort_order": "ASC",
+ "states": [],
+ "title_field": "location_name",
+ "track_changes": 0
+}

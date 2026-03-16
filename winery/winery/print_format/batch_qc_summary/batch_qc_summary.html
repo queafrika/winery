@@ -1,0 +1,254 @@
+{%- set pass_icon = "✔" -%}
+{%- set fail_icon = "✘" -%}
+{%- set blank = "_______________" -%}
+
+<style>
+  body { font-family: Arial, sans-serif; font-size: 11pt; color: #111; }
+  .qc-wrap { max-width: 780px; margin: 0 auto; padding: 10px 20px; }
+
+  /* Header */
+  .qc-title { text-align: center; font-size: 15pt; font-weight: bold;
+              border: 2px solid #222; padding: 8px; margin-bottom: 10px;
+              letter-spacing: 1px; text-transform: uppercase; }
+  .qc-subtitle { text-align: center; font-size: 10pt; color: #555;
+                 margin-bottom: 14px; }
+
+  /* Header grid */
+  .header-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 20px;
+                 border: 1px solid #ccc; padding: 8px 12px; margin-bottom: 12px; }
+  .header-grid .lbl { font-weight: bold; font-size: 10pt; }
+  .header-grid .val { border-bottom: 1px solid #888; min-width: 160px;
+                      display: inline-block; font-size: 10pt; }
+
+  /* Section headings */
+  .sec-head { background: #1a1a2e; color: #fff; font-weight: bold;
+              font-size: 10.5pt; padding: 4px 10px; margin: 12px 0 4px; }
+  .sec-sub   { background: #eef0f4; font-weight: bold; font-size: 10pt;
+               padding: 3px 10px; margin: 6px 0 2px; border-left: 3px solid #555; }
+
+  /* Test rows */
+  table.tests { width: 100%; border-collapse: collapse; margin-bottom: 4px; }
+  table.tests td { font-size: 10pt; padding: 3px 6px; vertical-align: top; }
+  table.tests td.chk { width: 18px; }
+  table.tests td.label { width: 45%; }
+  table.tests td.value { width: 25%; font-weight: bold; }
+  table.tests td.result { width: 12%; text-align: center; font-weight: bold; }
+  table.tests tr.pass td.result { color: #1a7a1a; }
+  table.tests tr.fail td.result { color: #c0392b; }
+  table.tests tr.na   td.result { color: #888; }
+
+  /* Approval boxes */
+  .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+                 margin: 10px 0; }
+  .status-box { border: 2px solid #ccc; padding: 8px 12px; font-size: 10.5pt;
+                display: flex; align-items: center; gap: 8px; }
+  .status-box.selected { border-color: #1a1a2e; background: #eef0f4;
+                          font-weight: bold; }
+  .status-box .chkbox { width: 16px; height: 16px; border: 2px solid #333;
+                         display: inline-block; text-align: center;
+                         line-height: 14px; font-size: 12pt; }
+
+  /* Signatures */
+  .sig-table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+  .sig-table td { padding: 6px 10px; font-size: 10pt; }
+  .sig-line { border-bottom: 1px solid #333; min-width: 180px; display: inline-block; }
+
+  /* Footer */
+  .qc-footer { text-align: center; font-size: 8.5pt; color: #888;
+               margin-top: 12px; border-top: 1px solid #ccc; padding-top: 6px; }
+
+  @media print {
+    .qc-wrap { padding: 0; }
+  }
+</style>
+
+{%- macro pf(val, decimals=2) -%}
+  {%- if val is not none and val != '' and val != 0 -%}{{ "%.{}f".format(decimals) | format(val) }}{%- else -%}—{%- endif -%}
+{%- endmacro -%}
+
+{%- macro result_row(label, value_str, result, show_chk=true) -%}
+{%- set r = (result or '') | upper -%}
+{%- set cls = 'pass' if r == 'PASS' else ('fail' if r == 'FAIL' else 'na') -%}
+<tr class="{{ cls }}">
+  <td class="chk">{% if show_chk %}☐{% endif %}</td>
+  <td class="label">{{ label }}</td>
+  <td class="value">{{ value_str }}</td>
+  <td class="result">
+    {% if r == 'PASS' %}{{ pass_icon }} Pass
+    {% elif r == 'FAIL' %}{{ fail_icon }} Fail
+    {% else %}—{% endif %}
+  </td>
+</tr>
+{%- endmacro -%}
+
+<div class="qc-wrap">
+
+  <!-- Title -->
+  <div class="qc-title">Master Batch Quality Control Summary</div>
+  <div class="qc-subtitle">Finesoft Afrika Winery — Confidential QC Record</div>
+
+  <!-- Batch Header -->
+  <div class="header-grid">
+    <div>
+      <span class="lbl">Lab Analysis No:</span>
+      <span class="val">{{ doc.name }}</span>
+    </div>
+    <div>
+      <span class="lbl">Analysis Date:</span>
+      <span class="val">{{ doc.analysis_date or blank }}</span>
+    </div>
+    <div>
+      <span class="lbl">Wine Batch:</span>
+      <span class="val">{{ doc.wine_batch or blank }}</span>
+    </div>
+    <div>
+      <span class="lbl">Test Type:</span>
+      <span class="val">{{ doc.test_type or blank }}</span>
+    </div>
+    <div>
+      <span class="lbl">Vessel:</span>
+      <span class="val">{{ doc.vessel or blank }}</span>
+    </div>
+    <div>
+      <span class="lbl">Analysed By:</span>
+      <span class="val">{{ doc.analyzed_by or blank }}</span>
+    </div>
+    {% if doc.supplier %}
+    <div>
+      <span class="lbl">Sugar Supplier:</span>
+      <span class="val">{{ doc.supplier }}</span>
+    </div>
+    <div>
+      <span class="lbl">Lot #:</span>
+      <span class="val">{{ doc.lot_batch_id or blank }}</span>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- PRE-PRODUCTION TESTING -->
+  {% if doc.test_type in ['Brix Test', 'pH Test'] %}
+  <div class="sec-head">PRE-PRODUCTION TESTING (SUGAR / MUST)</div>
+  <table class="tests">
+    {% if doc.test_type == 'Brix Test' %}
+    {{ result_row("Brix / Sugar Content",
+        pf(doc.brix_average, 1) ~ "°Brix  (Potential ABV: " ~ pf(doc.brix_potential_abv, 1) ~ "%)",
+        "PASS" if doc.brix_average else "") }}
+    {% endif %}
+    {% if doc.test_type == 'pH Test' and doc.ph_stage == 'Pre-Production' %}
+    {{ result_row("pH (Pre-Production)", pf(doc.ph_average, 2), doc.ph_result) }}
+    {% endif %}
+  </table>
+  {% endif %}
+
+  <!-- POST-PRODUCTION TESTING -->
+  {% if doc.test_type in ['ABV Test', 'Residual Sugar Test', 'pH Test', 'Sensory Evaluation',
+                           'Cold Stability Test', 'Microbial Stability Test'] %}
+  <div class="sec-head">POST-PRODUCTION TESTING (WINE)</div>
+  <table class="tests">
+
+    {% if doc.test_type == 'ABV Test' %}
+    {{ result_row("Alcohol Content (ABV)",
+        pf(doc.abv_corrected_abv, 2) ~ " %  (raw avg: " ~ pf(doc.abv_average_abv, 2) ~ "%)",
+        "PASS" if doc.abv_corrected_abv else "") }}
+    {% endif %}
+
+    {% if doc.test_type == 'Residual Sugar Test' %}
+    {{ result_row("Residual Sugar",
+        pf(doc.rs_residual_sugar_gl, 2) ~ " g/L  — " ~ (doc.rs_wine_classification or ''),
+        "PASS" if doc.rs_residual_sugar_gl is not none else "") }}
+    {% endif %}
+
+    {% if doc.test_type == 'pH Test' and doc.ph_stage == 'Post-Production' %}
+    {{ result_row("pH (Post-Production)", pf(doc.ph_average, 2), doc.ph_result) }}
+    {% endif %}
+
+    {% if doc.test_type == 'Sensory Evaluation' %}
+    {{ result_row("Sensory Score",
+        pf(doc.sens_average_score, 1) ~ " / 10  — " ~ (doc.sens_quality_classification or ''),
+        "PASS" if (doc.sens_average_score or 0) >= 5 else "FAIL") }}
+    {% endif %}
+
+    {% if doc.test_type == 'Cold Stability Test' %}
+    {{ result_row("Cold Stability", doc.cold_stability_result or '—', doc.cold_stability_result) }}
+    {% endif %}
+
+    {% if doc.test_type == 'Microbial Stability Test' %}
+    {{ result_row("Microbial Stability", doc.micro_stability_result or '—', doc.micro_stability_result) }}
+    {% endif %}
+
+  </table>
+  {% endif %}
+
+  <!-- GENERAL MEASUREMENTS -->
+  {% if doc.measurement %}
+  <div class="sec-sub">General Measurements</div>
+  <table class="tests">
+    {% for row in doc.measurement %}
+    <tr class="{{ 'pass' if row.within_range else 'fail' }}">
+      <td class="chk">☐</td>
+      <td class="label">{{ row.parameter }}</td>
+      <td class="value">{{ row.value }} {{ row.unit or '' }}</td>
+      <td class="result">
+        {% if row.within_range %}{{ pass_icon }} Pass{% else %}{{ fail_icon }} Fail{% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% endif %}
+
+  <!-- FINAL BATCH STATUS -->
+  <div class="sec-head">FINAL BATCH STATUS</div>
+  {%- set bs = doc.batch_status or '' -%}
+  <div class="status-grid">
+    <div class="status-box {{ 'selected' if bs == 'Approved for Bottling' }}">
+      <span class="chkbox">{{ "✔" if bs == 'Approved for Bottling' else "" }}</span>
+      ALL TESTS PASSED — Approved for Bottling
+    </div>
+    <div class="status-box {{ 'selected' if bs == 'Approved with Conditions' }}">
+      <span class="chkbox">{{ "✔" if bs == 'Approved with Conditions' else "" }}</span>
+      MINOR ISSUES — Approved with Conditions
+    </div>
+    <div class="status-box {{ 'selected' if bs == 'Hold for Treatment' }}">
+      <span class="chkbox">{{ "✔" if bs == 'Hold for Treatment' else "" }}</span>
+      MAJOR ISSUES — Hold for Treatment
+    </div>
+    <div class="status-box {{ 'selected' if bs == 'Rejected' }}">
+      <span class="chkbox">{{ "✔" if bs == 'Rejected' else "" }}</span>
+      REJECTED — Do Not Bottle
+    </div>
+  </div>
+
+  {% if doc.approval_notes %}
+  <p style="font-size:10pt; margin: 4px 0 10px;">
+    <strong>Conditions / Notes:</strong> {{ doc.approval_notes }}
+  </p>
+  {% endif %}
+
+  <!-- SIGNATURES -->
+  <table class="sig-table">
+    <tr>
+      <td style="width:50%">
+        <strong>Quality Control Manager:</strong><br>
+        <span class="sig-line">{{ doc.qc_manager or "" }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><br>
+        <small>Name &amp; Signature</small>
+      </td>
+      <td style="width:25%">
+        <strong>Date:</strong><br>
+        <span class="sig-line">{{ doc.approval_date or "" }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      </td>
+    </tr>
+    <tr><td colspan="2" style="padding-top:16px;">
+      <strong>Production Manager:</strong><br>
+      <span class="sig-line">{{ doc.production_manager or "" }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><br>
+      <small>Name &amp; Signature</small>
+    </td></tr>
+  </table>
+
+  <!-- Footer -->
+  <div class="qc-footer">
+    Printed: {{ frappe.utils.now_datetime().strftime("%d %b %Y %H:%M") }} &nbsp;|&nbsp;
+    Lab Analysis: {{ doc.name }} &nbsp;|&nbsp;
+    Status at print: {{ doc.docstatus_display() if doc.docstatus_display else ("Draft" if doc.docstatus == 0 else "Submitted") }}
+  </div>
+
+</div>

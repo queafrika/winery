@@ -1,0 +1,248 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "BG-.YYYY.-.#####",
+ "creation": "2026-03-07 00:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_details",
+  "procurement_date",
+  "banana_item",
+  "farmer",
+  "farm",
+  "column_break_1",
+  "warehouse",
+  "damaged_warehouse",
+  "purchase_invoice",
+  "total_fingers",
+  "total_amount",
+  "section_break_batches",
+  "batches",
+  "section_break_costing",
+  "total_good_fingers",
+  "total_damaged_fingers",
+  "column_break_costing",
+  "total_damaged_amount",
+  "net_usable_cost",
+  "valuation_percentage",
+  "valuation_amount",
+  "section_break_carried",
+  "cost_per_finger_carried_forward",
+  "section_break_tracking",
+  "purchase_receipt",
+  "section_break_notes",
+  "notes",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_details",
+   "fieldtype": "Section Break",
+   "label": "Grading Details"
+  },
+  {
+   "fieldname": "procurement_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Grading Date",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "purchase_invoice.farmer",
+   "fieldname": "farmer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Farmer",
+   "options": "Farmer",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "purchase_invoice.farm",
+   "fieldname": "farm",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Farm",
+   "options": "Farm",
+   "read_only": 1
+  },
+  {
+   "fieldname": "banana_item",
+   "fieldtype": "Link",
+   "label": "Grading Item",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "warehouse",
+   "fieldtype": "Link",
+   "label": "Accepted Warehouse",
+   "options": "Warehouse",
+   "reqd": 1
+  },
+  {
+   "fieldname": "damaged_warehouse",
+   "fieldtype": "Link",
+   "label": "Damaged Warehouse",
+   "options": "Warehouse",
+   "description": "Where damaged (rejected) bananas are stored"
+  },
+  {
+   "fieldname": "purchase_invoice",
+   "fieldtype": "Link",
+   "label": "Purchase Invoice",
+   "options": "Purchase Invoice"
+  },
+  {
+   "fieldname": "total_fingers",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Total Fingers",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_batches",
+   "fieldtype": "Section Break",
+   "label": "Banana Batches"
+  },
+  {
+   "fieldname": "batches",
+   "fieldtype": "Table",
+   "label": "Batches",
+   "options": "Banana Grading Batch",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_costing",
+   "fieldtype": "Section Break",
+   "label": "Costing Summary"
+  },
+  {
+   "fieldname": "total_good_fingers",
+   "fieldtype": "Int",
+   "label": "Total Good Fingers",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_damaged_fingers",
+   "fieldtype": "Int",
+   "label": "Total Damaged Fingers",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_costing",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Value of damaged bananas deducted from total cost",
+   "fieldname": "total_damaged_amount",
+   "fieldtype": "Currency",
+   "label": "Total Damaged Amount",
+   "read_only": 1
+  },
+  {
+   "description": "Total Amount minus Damaged Amount \u2014 cost attributable to good bananas",
+   "fieldname": "net_usable_cost",
+   "fieldtype": "Currency",
+   "label": "Net Usable Cost",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_carried",
+   "fieldtype": "Section Break"
+  },
+  {
+   "description": "Effective cost per good finger used in wine production costing",
+   "fieldname": "cost_per_finger_carried_forward",
+   "fieldtype": "Currency",
+   "label": "Cost Per Finger (Carried Forward)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_tracking",
+   "fieldtype": "Section Break",
+   "label": "Tracking"
+  },
+  {
+   "fieldname": "purchase_receipt",
+   "fieldtype": "Link",
+   "label": "Purchase Receipt",
+   "options": "Purchase Receipt",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_notes",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Banana Grading",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "valuation_percentage",
+   "fieldtype": "Percent",
+   "label": "Valuation Percentage",
+   "default": "100",
+   "description": "Percentage of total invoice value to carry forward as production cost"
+  },
+  {
+   "fieldname": "valuation_amount",
+   "fieldtype": "Currency",
+   "label": "Valuation Amount",
+   "read_only": 1,
+   "description": "Total Amount \u00d7 Valuation %"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-03-11 06:22:04.886196",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Banana Grading",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

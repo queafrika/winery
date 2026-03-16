@@ -1,0 +1,76 @@
+{
+ "actions": [],
+ "creation": "2026-03-11 00:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "task_name",
+  "task_type",
+  "scheduled_hours_from_start",
+  "description",
+  "section_break_lab",
+  "expected_sample_size",
+  "expected_sample_uom"
+ ],
+ "fields": [
+  {
+   "fieldname": "task_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Task",
+   "reqd": 1
+  },
+  {
+   "default": "General",
+   "fieldname": "task_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Type",
+   "options": "General\nLab Test"
+  },
+  {
+   "fieldname": "scheduled_hours_from_start",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Due (hrs from start)"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "section_break_lab",
+   "fieldtype": "Section Break",
+   "label": "Lab Test Details",
+   "depends_on": "eval:doc.task_type=='Lab Test'"
+  },
+  {
+   "fieldname": "expected_sample_size",
+   "fieldtype": "Float",
+   "label": "Expected Sample Size",
+   "depends_on": "eval:doc.task_type=='Lab Test'"
+  },
+  {
+   "fieldname": "expected_sample_uom",
+   "fieldtype": "Link",
+   "label": "Sample UOM",
+   "options": "UOM",
+   "depends_on": "eval:doc.task_type=='Lab Test'"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-11 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Cellar Operation Type Task",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

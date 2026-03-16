@@ -1,0 +1,75 @@
+{
+ "actions": [],
+ "creation": "2026-03-10 15:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "date",
+  "morning_temp",
+  "afternoon_temp",
+  "evening_temp",
+  "average_temp",
+  "out_of_range",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "morning_temp",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Morning (\u00b0C)"
+  },
+  {
+   "fieldname": "afternoon_temp",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Afternoon (\u00b0C)"
+  },
+  {
+   "fieldname": "evening_temp",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Evening (\u00b0C)"
+  },
+  {
+   "fieldname": "average_temp",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Average (\u00b0C)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "out_of_range",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Out of Range",
+   "read_only": 1,
+   "default": "0"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Data",
+   "label": "Notes"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-10 15:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Fermentation Temperature Reading",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

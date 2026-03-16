@@ -1,0 +1,224 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "WB-.YYYY.-.#####",
+ "creation": "2026-03-07 00:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_details",
+  "recipe",
+  "output_item",
+  "column_break_1",
+  "status",
+  "start_date",
+  "end_date",
+  "section_break_target",
+  "target_batch_size",
+  "target_uom",
+  "section_break_required_materials",
+  "required_materials",
+  "section_break_ziqp",
+  "lab_analyses",
+  "section_break_progress",
+  "current_stage_number",
+  "current_stage_name",
+  "column_break_2",
+  "current_vessel",
+  "section_break_output",
+  "erpnext_batch_no",
+  "actual_batch_size",
+  "process_loss",
+  "section_break_notes",
+  "notes",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_details",
+   "fieldtype": "Section Break",
+   "label": "Batch Details"
+  },
+  {
+   "fieldname": "recipe",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Recipe",
+   "options": "Recipe",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "recipe.output_item",
+   "fieldname": "output_item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Output Item",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Active\nCompleted\nCancelled"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "fieldname": "section_break_target",
+   "fieldtype": "Section Break",
+   "label": "Batch Size"
+  },
+  {
+   "description": "How much wine you intend to produce",
+   "fieldname": "target_batch_size",
+   "fieldtype": "Float",
+   "label": "Target Batch Size",
+   "reqd": 1
+  },
+  {
+   "fieldname": "target_uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_required_materials",
+   "fieldtype": "Section Break",
+   "label": "Required Materials"
+  },
+  {
+   "fieldname": "required_materials",
+   "fieldtype": "Table",
+   "label": "Required Materials",
+   "options": "Recipe Raw Material"
+  },
+  {
+   "fieldname": "section_break_progress",
+   "fieldtype": "Section Break",
+   "label": "Current Progress"
+  },
+  {
+   "fieldname": "current_stage_number",
+   "fieldtype": "Int",
+   "label": "Current Stage No.",
+   "read_only": 1
+  },
+  {
+   "fieldname": "current_stage_name",
+   "fieldtype": "Data",
+   "label": "Current Stage",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "current_vessel",
+   "fieldtype": "Link",
+   "label": "Current Vessel",
+   "options": "Vessel",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_output",
+   "fieldtype": "Section Break",
+   "label": "Final Output"
+  },
+  {
+   "fieldname": "erpnext_batch_no",
+   "fieldtype": "Link",
+   "label": "ERPNext Batch No",
+   "options": "Batch",
+   "read_only": 1,
+   "description": "Set when Bottling & Packaging is submitted"
+  },
+  {
+   "fieldname": "actual_batch_size",
+   "fieldtype": "Float",
+   "label": "Actual Batch Size (Litres)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "process_loss",
+   "fieldtype": "Float",
+   "label": "Process Loss (Litres)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_notes",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "section_break_ziqp",
+   "fieldtype": "Section Break",
+   "label": "Lab Analyses"
+  },
+  {
+   "fieldname": "lab_analyses",
+   "fieldtype": "Table",
+   "label": "Lab Analyses",
+   "options": "Recipe Lab Analysis"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Wine Batch",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-03-11 12:03:03.444224",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Wine Batch",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

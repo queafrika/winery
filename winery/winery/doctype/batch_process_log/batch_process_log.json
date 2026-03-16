@@ -1,0 +1,242 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "BPL-.YYYY.-#####",
+ "creation": "2026-03-05 22:21:00.756859",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_details",
+  "amended_from",
+  "wine_batch",
+  "stage_number",
+  "stage_name",
+  "column_break_1",
+  "vessel",
+  "operation_status",
+  "section_break_inputs",
+  "input_batches",
+  "wip_warehouse",
+  "section_break_output",
+  "output_item",
+  "output_quantity",
+  "output_warehouse",
+  "section_break_loss",
+  "material_loss",
+  "material_loss_pct",
+  "section_break_time",
+  "start_time",
+  "end_time",
+  "column_break_3",
+  "duration",
+  "tab_additives",
+  "additive_used",
+  "tab_tracking",
+  "transfer_entry",
+  "stock_entry",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_details",
+   "fieldtype": "Section Break",
+   "label": "Process Details"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Batch Process Log",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "wine_batch",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Wine Batch",
+   "options": "Wine Batch",
+   "reqd": 1
+  },
+  {
+   "fieldname": "stage_number",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Stage No.",
+   "read_only": 1
+  },
+  {
+   "fieldname": "stage_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Stage Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "vessel",
+   "fieldtype": "Link",
+   "label": "Vessel",
+   "options": "Vessel"
+  },
+  {
+   "fieldname": "operation_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "In Progress\nCompleted"
+  },
+  {
+   "fieldname": "section_break_loss",
+   "fieldtype": "Section Break",
+   "label": "Yield & Loss"
+  },
+  {
+   "fieldname": "material_loss",
+   "fieldtype": "Float",
+   "label": "Material Loss",
+   "read_only": 1
+  },
+  {
+   "fieldname": "material_loss_pct",
+   "fieldtype": "Percent",
+   "label": "Loss %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_time",
+   "fieldtype": "Section Break",
+   "label": "Time"
+  },
+  {
+   "fieldname": "start_time",
+   "fieldtype": "Datetime",
+   "label": "Start Time"
+  },
+  {
+   "fieldname": "end_time",
+   "fieldtype": "Datetime",
+   "label": "End Time"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "duration",
+   "fieldtype": "Float",
+   "label": "Duration (Hours)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "tab_additives",
+   "fieldtype": "Tab Break",
+   "label": "Additives Used"
+  },
+  {
+   "fieldname": "additive_used",
+   "fieldtype": "Table",
+   "label": "Additives Used",
+   "options": "Batch Process Additives"
+  },
+  {
+   "fieldname": "tab_tracking",
+   "fieldtype": "Tab Break",
+   "label": "Tracking"
+  },
+  {
+   "fieldname": "stock_entry",
+   "fieldtype": "Link",
+   "label": "Stock Entry",
+   "options": "Stock Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "section_break_inputs",
+   "fieldtype": "Section Break",
+   "label": "Input Batches"
+  },
+  {
+   "fieldname": "input_batches",
+   "fieldtype": "Table",
+   "label": "Input Batches",
+   "options": "Batch Process Input"
+  },
+  {
+   "fieldname": "wip_warehouse",
+   "fieldtype": "Link",
+   "label": "WIP Warehouse",
+   "options": "Warehouse",
+   "description": "Items will be transferred here before processing"
+  },
+  {
+   "fieldname": "section_break_output",
+   "fieldtype": "Section Break",
+   "label": "Output"
+  },
+  {
+   "fieldname": "output_item",
+   "fieldtype": "Link",
+   "label": "Output Item",
+   "options": "Item"
+  },
+  {
+   "fieldname": "output_quantity",
+   "fieldtype": "Float",
+   "label": "Output Quantity"
+  },
+  {
+   "fieldname": "output_warehouse",
+   "fieldtype": "Link",
+   "label": "Target Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "transfer_entry",
+   "fieldtype": "Link",
+   "label": "WIP Transfer Entry",
+   "options": "Stock Entry",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-03-07 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Batch Process Log",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

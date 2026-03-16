@@ -1,0 +1,354 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"w_h1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Winery</b></span>\",\"col\":12}},{\"id\":\"w_s1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Banana Grading\",\"col\":3}},{\"id\":\"w_s2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Ripening Batch\",\"col\":3}},{\"id\":\"w_s3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Wine Batch\",\"col\":3}},{\"id\":\"w_s4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Lab Analysis\",\"col\":3}},{\"id\":\"w_sp1\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"w_h2\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size:18px\\\"><b>Operations</b></span>\",\"col\":12}},{\"id\":\"w_c1\",\"type\":\"card\",\"data\":{\"card_name\":\"Procurement\",\"col\":4}},{\"id\":\"w_c2\",\"type\":\"card\",\"data\":{\"card_name\":\"Ripening\",\"col\":4}},{\"id\":\"w_c3\",\"type\":\"card\",\"data\":{\"card_name\":\"Wine Production\",\"col\":4}},{\"id\":\"w_sp2\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"w_c4\",\"type\":\"card\",\"data\":{\"card_name\":\"Quality & Lab\",\"col\":4}},{\"id\":\"w_c5\",\"type\":\"card\",\"data\":{\"card_name\":\"Cellar & Vessel\",\"col\":4}},{\"id\":\"w_c6\",\"type\":\"card\",\"data\":{\"card_name\":\"Bottling & Packaging\",\"col\":4}},{\"id\":\"w_sp3\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"w_h3\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size:18px\\\"><b>Masters &amp; Setup</b></span>\",\"col\":12}},{\"id\":\"w_c7\",\"type\":\"card\",\"data\":{\"card_name\":\"Production Setup\",\"col\":4}},{\"id\":\"w_c8\",\"type\":\"card\",\"data\":{\"card_name\":\"Farmer & Farm Setup\",\"col\":4}},{\"id\":\"w_c9\",\"type\":\"card\",\"data\":{\"card_name\":\"Lab & Packaging Setup\",\"col\":4}}]",
+ "creation": "2026-03-07 00:00:00",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "filter",
+ "idx": 0,
+ "indicator_color": "",
+ "is_hidden": 0,
+ "label": "Winery",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Procurement",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Banana Grading",
+   "link_count": 0,
+   "link_to": "Banana Grading",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Ripening",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Ripening Batch",
+   "link_count": 0,
+   "link_to": "Ripening Batch",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Ripening Rack",
+   "link_count": 0,
+   "link_to": "Ripening Rack",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Wine Production",
+   "link_count": 3,
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Wine Batch",
+   "link_count": 0,
+   "link_to": "Wine Batch",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Batch Process Log",
+   "link_count": 0,
+   "link_to": "Batch Process Log",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Fermentation Log",
+   "link_count": 0,
+   "link_to": "Fermentation Log",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Quality & Lab",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Lab Analysis",
+   "link_count": 0,
+   "link_to": "Lab Analysis",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Lab Test Parameter",
+   "link_count": 0,
+   "link_to": "Lab Test Parameter",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Cellar & Vessel",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Cellar Operation",
+   "link_count": 0,
+   "link_to": "Cellar Operation",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Vessel",
+   "link_count": 0,
+   "link_to": "Vessel",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Bottling & Packaging",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Bottling",
+   "link_count": 0,
+   "link_to": "Bottling",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Packaging",
+   "link_count": 0,
+   "link_to": "Packaging",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Production Setup",
+   "link_count": 4,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Recipe",
+   "link_count": 0,
+   "link_to": "Recipe",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Cellar Operation Type",
+   "link_count": 0,
+   "link_to": "Cellar Operation Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Banana Grade",
+   "link_count": 0,
+   "link_to": "Banana Grade",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Test Identification",
+   "link_count": 0,
+   "link_to": "Test Identification",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "ABV Tax Band",
+   "link_count": 0,
+   "link_to": "ABV Tax Band",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Farmer & Farm Setup",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Farmer",
+   "link_count": 0,
+   "link_to": "Farmer",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Farm",
+   "link_count": 0,
+   "link_to": "Farm",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Lab & Packaging Setup",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Lab Test Parameter",
+   "link_count": 0,
+   "link_to": "Lab Test Parameter",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Packaging Line",
+   "link_count": 0,
+   "link_to": "Packaging Line",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-03-11 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Winery",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 99.0,
+ "shortcuts": [
+  {
+   "color": "Green",
+   "doc_view": "List",
+   "label": "Banana Grading",
+   "link_to": "Banana Grading",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Orange",
+   "doc_view": "List",
+   "label": "Ripening Batch",
+   "link_to": "Ripening Batch",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Blue",
+   "doc_view": "List",
+   "label": "Wine Batch",
+   "link_to": "Wine Batch",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Cyan",
+   "doc_view": "List",
+   "label": "Lab Analysis",
+   "link_to": "Lab Analysis",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Winery"
+}

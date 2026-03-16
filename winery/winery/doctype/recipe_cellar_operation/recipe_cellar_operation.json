@@ -1,0 +1,57 @@
+{
+ "actions": [],
+ "creation": "2026-03-10 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "stage_name",
+  "operation_name",
+  "operation_description",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "stage_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Stage",
+   "reqd": 1
+  },
+  {
+   "fieldname": "operation_name",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Operation Type",
+   "options": "Cellar Operation Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "operation_description",
+   "fieldtype": "Small Text",
+   "label": "Operation Description",
+   "fetch_from": "operation_name.description",
+   "fetch_if_empty": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-11 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Recipe Cellar Operation",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

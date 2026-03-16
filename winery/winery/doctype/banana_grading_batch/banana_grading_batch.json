@@ -1,0 +1,71 @@
+{
+ "actions": [],
+ "creation": "2026-03-07 00:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "batch_id",
+  "quality_grade",
+  "column_break_damaged",
+  "fingers",
+  "amount",
+  "damaged"
+ ],
+ "fields": [
+  {
+   "fieldname": "batch_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Batch ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "fingers",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Fingers",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Valuation Amount",
+   "read_only": 1,
+   "description": "Auto-calculated: (fingers / total_fingers) × invoice total"
+  },
+  {
+   "fieldname": "column_break_damaged",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "quality_grade",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Quality Grade",
+   "options": "Banana Grade"
+  },
+  {
+   "default": "0",
+   "fieldname": "damaged",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Damaged"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-11 06:22:51.049205",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Banana Grading Batch",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

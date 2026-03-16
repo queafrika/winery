@@ -1,0 +1,67 @@
+{
+ "actions": [],
+ "creation": "2026-03-11 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "banana_grading",
+  "batch_no",
+  "quality_grade",
+  "available_fingers",
+  "fingers_for_ripening"
+ ],
+ "fields": [
+  {
+   "fieldname": "banana_grading",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Banana Grading",
+   "options": "Banana Grading",
+   "reqd": 1
+  },
+  {
+   "fieldname": "batch_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Batch No",
+   "options": "Batch",
+   "reqd": 1
+  },
+  {
+   "fieldname": "quality_grade",
+   "fieldtype": "Link",
+   "label": "Quality Grade",
+   "options": "Banana Grade",
+   "read_only": 1
+  },
+  {
+   "fieldname": "available_fingers",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Available Fingers",
+   "read_only": 1
+  },
+  {
+   "fieldname": "fingers_for_ripening",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Fingers for Ripening",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-11 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Ripening Batch Source",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

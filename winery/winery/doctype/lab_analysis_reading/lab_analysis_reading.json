@@ -1,0 +1,88 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-03-05 22:49:39.669281",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "parameter",
+  "value",
+  "unit",
+  "within_range",
+  "notes",
+  "column_break_hnfp",
+  "reading_no",
+  "temperature",
+  "observation"
+ ],
+ "fields": [
+  {
+   "fieldname": "parameter",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Parameter",
+   "options": "Lab Test Parameter",
+   "reqd": 1
+  },
+  {
+   "fieldname": "value",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Value"
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Unit",
+   "options": "UOM"
+  },
+  {
+   "default": "0",
+   "fieldname": "within_range",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Within Range",
+   "read_only": 1
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "column_break_hnfp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "reading_no",
+   "fieldtype": "Int",
+   "label": "Reading No"
+  },
+  {
+   "fieldname": "temperature",
+   "fieldtype": "Float",
+   "label": "Temperature \u00b0C"
+  },
+  {
+   "fieldname": "observation",
+   "fieldtype": "Select",
+   "label": "Observation"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-09 22:42:42.124880",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Lab Analysis Reading",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

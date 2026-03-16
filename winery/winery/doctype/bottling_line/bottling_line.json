@@ -1,0 +1,110 @@
+{
+ "actions": [],
+ "creation": "2026-03-14 00:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "bottle_item",
+  "bottle_size_ml",
+  "bottle_source_warehouse",
+  "sealing_item",
+  "sealing_source_warehouse",
+  "column_break_1",
+  "planned_bottles",
+  "actual_bottles",
+  "qc_bottles",
+  "net_bottles",
+  "volume_litres"
+ ],
+ "fields": [
+  {
+   "fieldname": "bottle_item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Bottle / Container",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "bottle_size_ml",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Bottle Size (ml)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "bottle_source_warehouse",
+   "fieldtype": "Link",
+   "label": "Bottle Warehouse",
+   "options": "Warehouse",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sealing_item",
+   "fieldtype": "Link",
+   "label": "Sealing Item",
+   "options": "Item",
+   "description": "e.g. cork, cap, foil seal"
+  },
+  {
+   "fieldname": "sealing_source_warehouse",
+   "fieldtype": "Link",
+   "label": "Sealing Warehouse",
+   "options": "Warehouse",
+   "depends_on": "sealing_item"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "planned_bottles",
+   "fieldtype": "Int",
+   "label": "Planned Bottles"
+  },
+  {
+   "fieldname": "actual_bottles",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Actual Bottles",
+   "reqd": 1
+  },
+  {
+   "fieldname": "qc_bottles",
+   "fieldtype": "Int",
+   "default": "0",
+   "label": "QC Bottles Reserved"
+  },
+  {
+   "fieldname": "net_bottles",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Net Bottles",
+   "read_only": 1,
+   "description": "Actual − QC"
+  },
+  {
+   "fieldname": "volume_litres",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Volume (Litres)",
+   "read_only": 1,
+   "description": "Actual Bottles × Bottle Size ÷ 1000"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 0,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-14 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Bottling Line",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

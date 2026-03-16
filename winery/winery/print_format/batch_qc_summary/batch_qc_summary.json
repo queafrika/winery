@@ -1,0 +1,17 @@
+{
+ "align_labels_right": 0,
+ "creation": "2026-03-11 00:00:00.000000",
+ "custom_format": 1,
+ "doc_type": "Lab Analysis",
+ "doctype": "Print Format",
+ "font": "Default",
+ "html": "",
+ "line_breaks": 0,
+ "modified": "2026-03-11 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Batch QC Summary",
+ "owner": "Administrator",
+ "print_format_type": "Jinja",
+ "standard": "Yes"
+}

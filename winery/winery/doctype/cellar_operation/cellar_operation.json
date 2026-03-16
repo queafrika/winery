@@ -1,0 +1,267 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "CO-.YYYY.-.#####",
+ "creation": "2026-03-05 14:33:49.369778",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_details",
+  "operation_name",
+  "operation_type",
+  "wine_batch",
+  "recipe_stage_idx",
+  "column_break_1",
+  "vessel",
+  "status",
+  "started_by",
+  "supervisor",
+  "section_break_time",
+  "start_time",
+  "expected_end_time",
+  "column_break_2",
+  "end_time",
+  "duration",
+  "section_break_tasks",
+  "tasks",
+  "tab_materials",
+  "section_break_additives",
+  "details",
+  "section_break_output",
+  "wip_warehouse",
+  "output_item",
+  "column_break_output",
+  "output_quantity",
+  "output_warehouse",
+  "section_break_notes",
+  "notes",
+  "transfer_entry",
+  "stock_entry",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_details",
+   "fieldtype": "Section Break",
+   "label": "Operation Details"
+  },
+  {
+   "fieldname": "operation_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Operation Name"
+  },
+  {
+   "fieldname": "operation_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Operation Type",
+   "options": "Cellar Operation Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "wine_batch",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Wine Batch",
+   "options": "Wine Batch"
+  },
+  {
+   "fieldname": "recipe_stage_idx",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Recipe Stage Index",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "vessel",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Vessel",
+   "options": "Vessel"
+  },
+  {
+   "default": "Planned",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Planned\nIn Progress\nCompleted\nCancelled"
+  },
+  {
+   "fieldname": "started_by",
+   "fieldtype": "Link",
+   "label": "Started By",
+   "options": "Employee",
+   "read_only": 1
+  },
+  {
+   "default": "__user",
+   "fieldname": "supervisor",
+   "fieldtype": "Link",
+   "label": "Supervisor",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_time",
+   "fieldtype": "Section Break",
+   "label": "Timing"
+  },
+  {
+   "fieldname": "start_time",
+   "fieldtype": "Datetime",
+   "label": "Start Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "expected_end_time",
+   "fieldtype": "Datetime",
+   "label": "Expected End Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "end_time",
+   "fieldtype": "Datetime",
+   "label": "End Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "duration",
+   "fieldtype": "Float",
+   "label": "Duration (Hours)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_tasks",
+   "fieldtype": "Section Break",
+   "label": "Task Checklist"
+  },
+  {
+   "fieldname": "tasks",
+   "fieldtype": "Table",
+   "label": "Tasks",
+   "options": "Cellar Operation Task"
+  },
+  {
+   "fieldname": "tab_materials",
+   "fieldtype": "Tab Break",
+   "label": "Materials"
+  },
+  {
+   "fieldname": "section_break_additives",
+   "fieldtype": "Section Break",
+   "label": "Materials Required"
+  },
+  {
+   "fieldname": "details",
+   "fieldtype": "Table",
+   "label": "Materials Used",
+   "options": "Cellar Operation Details"
+  },
+  {
+   "fieldname": "section_break_output",
+   "fieldtype": "Section Break",
+   "label": "Output (Final Stage)"
+  },
+  {
+   "fieldname": "wip_warehouse",
+   "fieldtype": "Link",
+   "label": "WIP Warehouse",
+   "options": "Warehouse",
+   "read_only": 1
+  },
+  {
+   "fieldname": "output_item",
+   "fieldtype": "Link",
+   "label": "Output Item",
+   "options": "Item"
+  },
+  {
+   "fieldname": "column_break_output",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "output_quantity",
+   "fieldtype": "Float",
+   "label": "Output Quantity"
+  },
+  {
+   "fieldname": "output_warehouse",
+   "fieldtype": "Link",
+   "label": "Output Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "section_break_notes",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "transfer_entry",
+   "fieldtype": "Link",
+   "label": "WIP Transfer Entry",
+   "options": "Stock Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "stock_entry",
+   "fieldtype": "Link",
+   "label": "Manufacture Entry",
+   "options": "Stock Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Cellar Operation",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-03-11 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Cellar Operation",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

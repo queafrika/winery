@@ -1,18 +1,18 @@
 {
  "app": "winery",
  "charts": [],
- "content": "[{\"id\":\"wh1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"ws1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Banana Grading\",\"col\":3}},{\"id\":\"ws2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Ripening Batch\",\"col\":3}},{\"id\":\"ws3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Wine Batch\",\"col\":3}},{\"id\":\"ws4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Lab Analysis\",\"col\":3}},{\"id\":\"wsp1\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"wh2\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Transactions</b></span>\",\"col\":12}},{\"id\":\"wc1\",\"type\":\"card\",\"data\":{\"card_name\":\"Procurement\",\"col\":4}},{\"id\":\"wc2\",\"type\":\"card\",\"data\":{\"card_name\":\"Ripening\",\"col\":4}},{\"id\":\"wc3\",\"type\":\"card\",\"data\":{\"card_name\":\"Wine Production\",\"col\":4}},{\"id\":\"wsp2\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"wc4\",\"type\":\"card\",\"data\":{\"card_name\":\"Quality &amp; Lab\",\"col\":4}},{\"id\":\"wc5\",\"type\":\"card\",\"data\":{\"card_name\":\"Cellar &amp; Vessel\",\"col\":4}},{\"id\":\"wc6\",\"type\":\"card\",\"data\":{\"card_name\":\"Bottling &amp; Packaging\",\"col\":4}}]",
- "creation": "2026-03-07 00:00:00",
+ "content": "[{\"id\":\"da_h1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Production Overview</b></span>\",\"col\":12}},{\"id\":\"da_s1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Wine Batch\",\"col\":3}},{\"id\":\"da_s2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Ripening Batch\",\"col\":3}},{\"id\":\"da_s3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Cellar Operation\",\"col\":3}},{\"id\":\"da_s4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Lab Analysis\",\"col\":3}},{\"id\":\"da_sp1\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"da_h2\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>By Stage</b></span>\",\"col\":12}},{\"id\":\"da_c1\",\"type\":\"card\",\"data\":{\"card_name\":\"Procurement\",\"col\":4}},{\"id\":\"da_c2\",\"type\":\"card\",\"data\":{\"card_name\":\"Ripening\",\"col\":4}},{\"id\":\"da_c3\",\"type\":\"card\",\"data\":{\"card_name\":\"Wine Production\",\"col\":4}},{\"id\":\"da_sp2\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"da_c4\",\"type\":\"card\",\"data\":{\"card_name\":\"Quality &amp; Lab\",\"col\":4}},{\"id\":\"da_c5\",\"type\":\"card\",\"data\":{\"card_name\":\"Cellar &amp; Vessel\",\"col\":4}},{\"id\":\"da_c6\",\"type\":\"card\",\"data\":{\"card_name\":\"Bottling &amp; Packaging\",\"col\":4}}]",
+ "creation": "2026-03-16 00:00:00",
  "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
  "for_user": "",
  "hide_custom": 0,
- "icon": "wine",
+ "icon": "layout-dashboard",
  "idx": 0,
  "indicator_color": "",
  "is_hidden": 0,
- "label": "Winery",
+ "label": "Dashboard",
  "links": [
   {
    "hidden": 0,
@@ -192,20 +192,20 @@
  "modified": "2026-03-16 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Winery",
- "name": "Winery",
+ "name": "Winery Dashboard",
  "number_cards": [],
  "owner": "Administrator",
- "parent_page": "",
+ "parent_page": "Winery",
  "public": 1,
  "quick_lists": [],
  "roles": [],
- "sequence_id": 99.0,
+ "sequence_id": 1.0,
  "shortcuts": [
   {
-   "color": "Green",
+   "color": "Blue",
    "doc_view": "List",
-   "label": "Banana Grading",
-   "link_to": "Banana Grading",
+   "label": "Wine Batch",
+   "link_to": "Wine Batch",
    "stats_filter": "[]",
    "type": "DocType"
   },
@@ -218,10 +218,10 @@
    "type": "DocType"
   },
   {
-   "color": "Blue",
+   "color": "Purple",
    "doc_view": "List",
-   "label": "Wine Batch",
-   "link_to": "Wine Batch",
+   "label": "Cellar Operation",
+   "link_to": "Cellar Operation",
    "stats_filter": "[]",
    "type": "DocType"
   },
@@ -234,6 +234,6 @@
    "type": "DocType"
   }
  ],
- "title": "Winery",
+ "title": "Dashboard",
  "type": "Workspace"
 }

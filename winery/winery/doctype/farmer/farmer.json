@@ -50,7 +50,7 @@
   },
   {
    "fieldname": "phone",
-   "fieldtype": "Phone",
+   "fieldtype": "Data",
    "label": "Phone",
    "in_list_view": 1
   },

@@ -17,8 +17,6 @@
   "description",
   "raw_materials_tab",
   "raw_materials",
-  "cellar_operations_tab",
-  "stages",
   "lab_tab",
   "lab_analyses"
  ],
@@ -83,13 +81,6 @@
    "label": "Description"
   },
   {
-   "fieldname": "stages",
-   "fieldtype": "Table",
-   "label": "Stages",
-   "options": "Recipe Stage",
-   "reqd": 1
-  },
-  {
    "fieldname": "raw_materials",
    "fieldtype": "Table",
    "label": "Raw Materials",
@@ -107,14 +98,9 @@
    "label": "Raw Materials"
   },
   {
-   "fieldname": "cellar_operations_tab",
-   "fieldtype": "Tab Break",
-   "label": "Cellar Operations"
-  },
-  {
    "fieldname": "lab_tab",
    "fieldtype": "Tab Break",
-   "label": "Lab"
+   "label": "Lab Analyses"
   }
  ],
  "grid_page_length": 50,

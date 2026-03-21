@@ -126,8 +126,6 @@ class RipeningBatch(Document):
 				})
 
 		se.insert(ignore_permissions=True)
-		for item in se.items:
-			frappe.db.set_value("Stock Entry Detail", item.name, "batch_no", None, update_modified=False)
 		# se.submit()
 		self.db_set("stock_entry", se.name)
 		frappe.msgprint(f"Stock Entry <b>{se.name}</b> — bananas transferred to rack.", alert=True)
@@ -324,8 +322,6 @@ def end_ripening(ripening_batch, ripe_item, destination_warehouse, end_date, tra
 		frappe.throw("No fingers to transfer — please enter at least one transfer quantity.")
 
 	se.insert(ignore_permissions=True)
-	for item in se.items:
-		frappe.db.set_value("Stock Entry Detail", item.name, "batch_no", None, update_modified=False)
 	se.submit()
 
 	# Update child table batch_no for split batches

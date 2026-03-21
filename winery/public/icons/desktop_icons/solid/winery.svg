@@ -1,0 +1,13 @@
+<svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Rounded square background in deep burgundy -->
+  <path d="M38.5714 0H15.4286C6.90761 0 0 6.90761 0 15.4286V38.5714C0 47.0924 6.90761 54 15.4286 54H38.5714C47.0924 54 54 47.0924 54 38.5714V15.4286C54 6.90761 47.0924 0 38.5714 0Z" fill="#7B1D4A"/>
+  <!-- Wine glass icon (lucide wine, scaled 1.25× and centered at offset 12,10) -->
+  <g transform="translate(12,10) scale(1.25)" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- Bowl -->
+    <path d="M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H7c-1.5 4-2 6-2 8a5 5 0 0 0 5 5z"/>
+    <!-- Stem -->
+    <path d="M12 15v7"/>
+    <!-- Base -->
+    <path d="M8 22h8"/>
+  </g>
+</svg>

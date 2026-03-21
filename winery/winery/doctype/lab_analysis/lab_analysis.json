@@ -11,40 +11,12 @@
   "wine_batch",
   "cellar_operation",
   "cellar_operation_task",
-  "batch_process_log",
   "column_break_1",
   "analysis_date",
   "analyzed_by",
-  "expected_sample_size",
   "expected_sample_uom",
-  "section_break_2",
-  "vessel",
-  "status",
-  "column_break_2",
-  "next_analysis_date",
-  "assigned_analyst",
-  "alert_before_days",
-  "alert_sent",
   "section_break_vtvb",
   "test_type",
-  "supplier",
-  "lot_batch_id",
-  "quantity_received",
-  "section_break_ph",
-  "ph_stage",
-  "ph_sample_weight_g",
-  "ph_solution_volume_ml",
-  "ph_solution_concentration_pct",
-  "ph_settling_time_min",
-  "section_break_ph_cal",
-  "ph_cal_buffer_4_result",
-  "ph_cal_buffer_4_pass",
-  "ph_cal_buffer_7_result",
-  "ph_cal_buffer_7_pass",
-  "ph_cal_buffer_10_result",
-  "ph_cal_buffer_10_pass",
-  "column_break_ph_cal",
-  "ph_calibration_pass",
   "section_break_ph_readings",
   "ph_reading_1",
   "ph_reading_2",
@@ -75,23 +47,12 @@
   "rs_wine_classification",
   "rs_fermentation_status",
   "section_break_brix",
-  "brix_sample_weight_g",
-  "brix_solution_volume_ml",
-  "brix_target_temp_c",
-  "column_break_brix1",
   "brix_reading_1",
-  "brix_temp_1",
   "brix_reading_2",
-  "brix_temp_2",
   "brix_reading_3",
-  "brix_temp_3",
   "brix_average",
-  "brix_potential_abv",
-  "section_break_abv_ferment",
-  "abv_stable_gravity_day1",
-  "abv_stable_gravity_day2",
-  "abv_stable_gravity_day3",
-  "abv_fermentation_stable",
+  "column_break_vaxu",
+  "target_brix",
   "section_break_abv_prep",
   "abv_sample_volume_ml",
   "abv_degassing_method",
@@ -106,8 +67,11 @@
   "abv_correction_factor",
   "abv_corrected_abv",
   "section_break_abv_label",
-  "abv_proposed_label_abv",
-  "abv_label_matches",
+  "gravity_reading_1",
+  "gravity_reading_2",
+  "gravity_reading_3",
+  "column_break_fzqq",
+  "average_gravity",
   "section_break_diss",
   "diss_sample_weight_g",
   "diss_water_volume_ml",
@@ -119,12 +83,12 @@
   "diss_sediment",
   "diss_floating_particles",
   "section_break_sensory_visual",
+  "visual_assessment_column",
   "sens_clarity",
   "sens_brightness",
   "sens_color_observed",
   "sens_color_appropriate",
   "column_break_sensory1",
-  "section_break_sensory_aroma",
   "sens_primary_aroma",
   "sens_primary_aroma_other",
   "sens_secondary_aromas",
@@ -134,7 +98,6 @@
   "sens_aroma_quality",
   "section_break_sensory_taste",
   "sens_sweetness",
-  "sens_sweetness_matches_test",
   "sens_acidity",
   "sens_body",
   "sens_dominant_flavors",
@@ -143,28 +106,17 @@
   "sens_balance",
   "sens_balance_notes",
   "column_break_sensory2",
-  "section_break_sensory_scores",
-  "sens_taster_scores",
-  "sens_average_score",
-  "sens_quality_classification",
   "section_break_temp_test",
-  "temp_location",
-  "temp_purpose",
+  "temp_reading_1",
+  "temp_reading_2",
+  "temp_reading_3",
+  "column_break_temp1",
   "temp_target_min",
   "temp_target_max",
-  "column_break_temp1",
-  "temp_reading_1",
-  "temp_time_1",
-  "temp_reading_2",
-  "temp_time_2",
-  "temp_reading_3",
-  "temp_time_3",
   "temp_average",
   "temp_out_of_range",
-  "temp_action_required",
   "section_break_cold_stab",
   "cold_test_start_date",
-  "cold_sample_volume_ml",
   "cold_container_type",
   "cold_storage_temp_c",
   "cold_duration_days",
@@ -173,11 +125,8 @@
   "cold_post_clarity",
   "cold_crystal_formation",
   "cold_crystal_type",
-  "cold_stability_result",
-  "cold_corrective_action",
   "section_break_microbial_stab",
   "micro_test_start_date",
-  "micro_sample_volume_ml",
   "micro_storage_temp_c",
   "micro_duration_days",
   "column_break_micro1",
@@ -187,19 +136,10 @@
   "micro_gas_production",
   "micro_odor_post",
   "micro_color_change",
-  "micro_stability_result",
   "section_break_stability_decision",
   "stability_decision",
   "stability_treatment_notes",
   "stability_predicted_shelf_life",
-  "section_break_measurements",
-  "measurement",
-  "section_break_approval",
-  "batch_status",
-  "approval_date",
-  "column_break_approval",
-  "qc_manager",
-  "production_manager",
   "section_break_approval_notes",
   "approval_notes",
   "section_break_notes",
@@ -242,12 +182,6 @@
    "label": "Task"
   },
   {
-   "fieldname": "batch_process_log",
-   "fieldtype": "Link",
-   "label": "Batch Process Log",
-   "options": "Batch Process Log"
-  },
-  {
    "fieldname": "column_break_1",
    "fieldtype": "Column Break"
   },
@@ -266,63 +200,10 @@
    "options": "User"
   },
   {
-   "fieldname": "expected_sample_size",
-   "fieldtype": "Float",
-   "label": "Expected Sample Size",
-   "read_only": 1
-  },
-  {
    "fieldname": "expected_sample_uom",
    "fieldtype": "Link",
    "label": "Sample UOM",
    "options": "UOM",
-   "read_only": 1
-  },
-  {
-   "fieldname": "section_break_2",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "vessel",
-   "fieldtype": "Link",
-   "label": "Vessel",
-   "options": "Vessel"
-  },
-  {
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Result",
-   "options": "Pending\nPassed\nFailed"
-  },
-  {
-   "fieldname": "column_break_2",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "next_analysis_date",
-   "fieldtype": "Date",
-   "label": "Next Analysis Date"
-  },
-  {
-   "description": "User who will be alerted to perform the next analysis",
-   "fieldname": "assigned_analyst",
-   "fieldtype": "Link",
-   "label": "Assigned Analyst",
-   "options": "User"
-  },
-  {
-   "default": "1",
-   "description": "Send reminder this many days before the next analysis date",
-   "fieldname": "alert_before_days",
-   "fieldtype": "Int",
-   "label": "Alert (Days Before)"
-  },
-  {
-   "default": "0",
-   "fieldname": "alert_sent",
-   "fieldtype": "Check",
-   "label": "Alert Sent",
    "read_only": 1
   },
   {
@@ -334,132 +215,8 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Test Type",
-   "options": "\nABV Test\nBrix Test\nDissolution Test\nResidual Sugar Test\nSensory Evaluation\nStability Test\nTemperature Test\npH Test",
+   "options": "\nTemperature Test\nBrix Test\nGravity Test\npH Test\nDissolution Test\nResidual Sugar Test\nSensory Evaluation\nCold Stability Test\nMicrobial Stability Test",
    "reqd": 1
-  },
-  {
-   "depends_on": "eval:['Brix Test','Dissolution Test','pH Test'].includes(doc.test_type)",
-   "description": "For pre-production ingredient tests",
-   "fieldname": "supplier",
-   "fieldtype": "Link",
-   "label": "Supplier",
-   "options": "Supplier"
-  },
-  {
-   "depends_on": "eval:['Brix Test','Dissolution Test','pH Test'].includes(doc.test_type)",
-   "fieldname": "lot_batch_id",
-   "fieldtype": "Data",
-   "label": "Lot / Batch ID"
-  },
-  {
-   "depends_on": "eval:['Brix Test','Dissolution Test','pH Test'].includes(doc.test_type)",
-   "fieldname": "quantity_received",
-   "fieldtype": "Data",
-   "label": "Quantity Received"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='pH Test'",
-   "fieldname": "section_break_ph",
-   "fieldtype": "Section Break",
-   "label": "pH Test \u2014 Sample & Parameters"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='pH Test'",
-   "description": "Pre-Production target: 6.5\u20137.5 pH | Post-Production target: 3.2\u20134.0 pH",
-   "fieldname": "ph_stage",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Test Stage",
-   "options": "\nPre-Production\nPost-Production"
-  },
-  {
-   "default": "50",
-   "depends_on": "eval:doc.test_type=='pH Test'",
-   "fieldname": "ph_sample_weight_g",
-   "fieldtype": "Float",
-   "label": "Sample Weight (g)"
-  },
-  {
-   "default": "450",
-   "depends_on": "eval:doc.test_type=='pH Test'",
-   "fieldname": "ph_solution_volume_ml",
-   "fieldtype": "Int",
-   "label": "Solution Volume (ml)"
-  },
-  {
-   "default": "10",
-   "depends_on": "eval:doc.test_type=='pH Test'",
-   "fieldname": "ph_solution_concentration_pct",
-   "fieldtype": "Float",
-   "label": "Solution Concentration (%)"
-  },
-  {
-   "default": "5",
-   "depends_on": "eval:doc.test_type=='pH Test'",
-   "fieldname": "ph_settling_time_min",
-   "fieldtype": "Int",
-   "label": "Settling Time (minutes)"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='pH Test'",
-   "fieldname": "section_break_ph_cal",
-   "fieldtype": "Section Break",
-   "label": "Calibration Check"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='pH Test'",
-   "fieldname": "ph_cal_buffer_4_result",
-   "fieldtype": "Float",
-   "label": "pH 4.0 Buffer \u2014 Reading",
-   "precision": "2"
-  },
-  {
-   "default": "0",
-   "depends_on": "eval:doc.test_type=='pH Test'",
-   "fieldname": "ph_cal_buffer_4_pass",
-   "fieldtype": "Check",
-   "label": "pH 4.0 Buffer \u2014 Pass"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='pH Test'",
-   "fieldname": "ph_cal_buffer_7_result",
-   "fieldtype": "Float",
-   "label": "pH 7.0 Buffer \u2014 Reading",
-   "precision": "2"
-  },
-  {
-   "default": "0",
-   "depends_on": "eval:doc.test_type=='pH Test'",
-   "fieldname": "ph_cal_buffer_7_pass",
-   "fieldtype": "Check",
-   "label": "pH 7.0 Buffer \u2014 Pass"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='pH Test'",
-   "fieldname": "ph_cal_buffer_10_result",
-   "fieldtype": "Float",
-   "label": "pH 10.0 Buffer \u2014 Reading",
-   "precision": "2"
-  },
-  {
-   "default": "0",
-   "depends_on": "eval:doc.test_type=='pH Test'",
-   "fieldname": "ph_cal_buffer_10_pass",
-   "fieldtype": "Check",
-   "label": "pH 10.0 Buffer \u2014 Pass"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='pH Test'",
-   "fieldname": "column_break_ph_cal",
-   "fieldtype": "Column Break"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='pH Test'",
-   "fieldname": "ph_calibration_pass",
-   "fieldtype": "Select",
-   "label": "Overall Calibration Result",
-   "options": "\nPASS\nFAIL",
-   "read_only": 1
   },
   {
    "depends_on": "eval:doc.test_type=='pH Test'",
@@ -668,42 +425,10 @@
    "label": "Brix Test"
   },
   {
-   "default": "100",
-   "depends_on": "eval:doc.test_type=='Brix Test'",
-   "fieldname": "brix_sample_weight_g",
-   "fieldtype": "Float",
-   "label": "Sample Weight (g)"
-  },
-  {
-   "default": "400",
-   "depends_on": "eval:doc.test_type=='Brix Test'",
-   "fieldname": "brix_solution_volume_ml",
-   "fieldtype": "Int",
-   "label": "Solution Volume (ml)"
-  },
-  {
-   "default": "20",
-   "depends_on": "eval:doc.test_type=='Brix Test'",
-   "fieldname": "brix_target_temp_c",
-   "fieldtype": "Int",
-   "label": "Target Temperature (\u00b0C)"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='Brix Test'",
-   "fieldname": "column_break_brix1",
-   "fieldtype": "Column Break"
-  },
-  {
    "depends_on": "eval:doc.test_type=='Brix Test'",
    "fieldname": "brix_reading_1",
    "fieldtype": "Float",
    "label": "Reading 1 (\u00b0Brix)"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='Brix Test'",
-   "fieldname": "brix_temp_1",
-   "fieldtype": "Float",
-   "label": "Temperature 1 (\u00b0C)"
   },
   {
    "depends_on": "eval:doc.test_type=='Brix Test'",
@@ -713,21 +438,9 @@
   },
   {
    "depends_on": "eval:doc.test_type=='Brix Test'",
-   "fieldname": "brix_temp_2",
-   "fieldtype": "Float",
-   "label": "Temperature 2 (\u00b0C)"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='Brix Test'",
    "fieldname": "brix_reading_3",
    "fieldtype": "Float",
    "label": "Reading 3 (\u00b0Brix)"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='Brix Test'",
-   "fieldname": "brix_temp_3",
-   "fieldtype": "Float",
-   "label": "Temperature 3 (\u00b0C)"
   },
   {
    "depends_on": "eval:doc.test_type=='Brix Test'",
@@ -735,48 +448,6 @@
    "fieldtype": "Float",
    "label": "Average (\u00b0Brix)",
    "read_only": 1
-  },
-  {
-   "depends_on": "eval:doc.test_type=='Brix Test'",
-   "description": "= Average \u00b0Brix \u00d7 0.59",
-   "fieldname": "brix_potential_abv",
-   "fieldtype": "Float",
-   "label": "Potential ABV (%)",
-   "read_only": 1
-  },
-  {
-   "depends_on": "eval:doc.test_type=='ABV Test'",
-   "fieldname": "section_break_abv_ferment",
-   "fieldtype": "Section Break",
-   "label": "ABV Test \u2014 Fermentation Verification"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='ABV Test'",
-   "fieldname": "abv_stable_gravity_day1",
-   "fieldtype": "Float",
-   "label": "Stable Gravity Day 1",
-   "precision": "3"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='ABV Test'",
-   "fieldname": "abv_stable_gravity_day2",
-   "fieldtype": "Float",
-   "label": "Stable Gravity Day 2",
-   "precision": "3"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='ABV Test'",
-   "fieldname": "abv_stable_gravity_day3",
-   "fieldtype": "Float",
-   "label": "Stable Gravity Day 3",
-   "precision": "3"
-  },
-  {
-   "default": "0",
-   "depends_on": "eval:doc.test_type=='ABV Test'",
-   "fieldname": "abv_fermentation_stable",
-   "fieldtype": "Check",
-   "label": "Fermentation Stable (3 consecutive days)"
   },
   {
    "depends_on": "eval:doc.test_type=='ABV Test'",
@@ -858,23 +529,10 @@
    "read_only": 1
   },
   {
-   "depends_on": "eval:doc.test_type=='ABV Test'",
+   "depends_on": "eval:doc.test_type=='Gravity Test'",
    "fieldname": "section_break_abv_label",
    "fieldtype": "Section Break",
-   "label": "Label Compliance"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='ABV Test'",
-   "fieldname": "abv_proposed_label_abv",
-   "fieldtype": "Float",
-   "label": "Proposed Label ABV (%)"
-  },
-  {
-   "default": "0",
-   "depends_on": "eval:doc.test_type=='ABV Test'",
-   "fieldname": "abv_label_matches",
-   "fieldtype": "Check",
-   "label": "Label matches actual measurement"
+   "label": "Gravity Test"
   },
   {
    "depends_on": "eval:doc.test_type=='Dissolution Test'",
@@ -946,8 +604,7 @@
   {
    "depends_on": "eval:doc.test_type=='Sensory Evaluation'",
    "fieldname": "section_break_sensory_visual",
-   "fieldtype": "Section Break",
-   "label": "Sensory Evaluation \u2014 Visual Assessment"
+   "fieldtype": "Section Break"
   },
   {
    "depends_on": "eval:doc.test_type=='Sensory Evaluation'",
@@ -979,12 +636,7 @@
   {
    "depends_on": "eval:doc.test_type=='Sensory Evaluation'",
    "fieldname": "column_break_sensory1",
-   "fieldtype": "Column Break"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='Sensory Evaluation'",
-   "fieldname": "section_break_sensory_aroma",
-   "fieldtype": "Section Break",
+   "fieldtype": "Column Break",
    "label": "Aroma Assessment"
   },
   {
@@ -1048,13 +700,6 @@
    "options": "\nBone dry\nDry\nOff-dry\nSweet\nVery sweet"
   },
   {
-   "default": "0",
-   "depends_on": "eval:doc.test_type=='Sensory Evaluation'",
-   "fieldname": "sens_sweetness_matches_test",
-   "fieldtype": "Check",
-   "label": "Matches residual sugar test results"
-  },
-  {
    "depends_on": "eval:doc.test_type=='Sensory Evaluation'",
    "fieldname": "sens_acidity",
    "fieldtype": "Select",
@@ -1107,33 +752,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "depends_on": "eval:doc.test_type=='Sensory Evaluation'",
-   "fieldname": "section_break_sensory_scores",
-   "fieldtype": "Section Break",
-   "label": "Overall Quality Rating"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='Sensory Evaluation'",
-   "fieldname": "sens_taster_scores",
-   "fieldtype": "Table",
-   "label": "Taster Scores",
-   "options": "Lab Analysis Taster Score"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='Sensory Evaluation'",
-   "fieldname": "sens_average_score",
-   "fieldtype": "Float",
-   "label": "Average Score (/10)",
-   "read_only": 1
-  },
-  {
-   "depends_on": "eval:doc.test_type=='Sensory Evaluation'",
-   "fieldname": "sens_quality_classification",
-   "fieldtype": "Select",
-   "label": "Quality Classification",
-   "options": "\nExcellent (9-10)\nVery Good (7-8)\nAcceptable (5-6)\nBelow Standard (3-4)\nUnacceptable (0-2)"
-  },
-  {
    "depends_on": "eval:doc.test_type=='Temperature Test'",
    "fieldname": "section_break_temp_test",
    "fieldtype": "Section Break",
@@ -1141,29 +759,17 @@
   },
   {
    "depends_on": "eval:doc.test_type=='Temperature Test'",
-   "description": "e.g. Vessel 3, Cellar A, Fermentation Tank 2",
-   "fieldname": "temp_location",
-   "fieldtype": "Data",
-   "label": "Location / Point of Measurement"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='Temperature Test'",
-   "fieldname": "temp_purpose",
-   "fieldtype": "Select",
-   "label": "Purpose",
-   "options": "\nStorage Monitoring\nFermentation Control\nCold Stability\nPre-Bottling Check\nCooling Verification\nProcess Control"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='Temperature Test'",
    "fieldname": "temp_target_min",
    "fieldtype": "Float",
-   "label": "Target Min (\u00b0C)"
+   "label": "Target Min (\u00b0C)",
+   "read_only": 1
   },
   {
    "depends_on": "eval:doc.test_type=='Temperature Test'",
    "fieldname": "temp_target_max",
    "fieldtype": "Float",
-   "label": "Target Max (\u00b0C)"
+   "label": "Target Max (\u00b0C)",
+   "read_only": 1
   },
   {
    "depends_on": "eval:doc.test_type=='Temperature Test'",
@@ -1178,33 +784,15 @@
   },
   {
    "depends_on": "eval:doc.test_type=='Temperature Test'",
-   "fieldname": "temp_time_1",
-   "fieldtype": "Time",
-   "label": "Time 1"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='Temperature Test'",
    "fieldname": "temp_reading_2",
    "fieldtype": "Float",
    "label": "Reading 2 (\u00b0C)"
   },
   {
    "depends_on": "eval:doc.test_type=='Temperature Test'",
-   "fieldname": "temp_time_2",
-   "fieldtype": "Time",
-   "label": "Time 2"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='Temperature Test'",
    "fieldname": "temp_reading_3",
    "fieldtype": "Float",
    "label": "Reading 3 (\u00b0C)"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='Temperature Test'",
-   "fieldname": "temp_time_3",
-   "fieldtype": "Time",
-   "label": "Time 3"
   },
   {
    "depends_on": "eval:doc.test_type=='Temperature Test'",
@@ -1222,183 +810,144 @@
    "read_only": 1
   },
   {
-   "depends_on": "eval:doc.test_type=='Temperature Test'",
-   "fieldname": "temp_action_required",
-   "fieldtype": "Select",
-   "label": "Action Required",
-   "options": "\nNone\nAdjust cooling\nAdjust heating\nInvestigate cause\nEscalate to supervisor"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
+   "depends_on": "eval:doc.test_type=='Cold Stability Test'",
    "fieldname": "section_break_cold_stab",
    "fieldtype": "Section Break",
    "label": "Stability Test \u2014 Cold Stability"
   },
   {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
+   "depends_on": "eval:doc.test_type=='Cold Stability Test'",
    "fieldname": "cold_test_start_date",
    "fieldtype": "Date",
    "label": "Test Start Date"
   },
   {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
-   "fieldname": "cold_sample_volume_ml",
-   "fieldtype": "Float",
-   "label": "Sample Volume (ml)"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
+   "depends_on": "eval:doc.test_type=='Cold Stability Test'",
    "fieldname": "cold_container_type",
    "fieldtype": "Data",
    "label": "Container Type"
   },
   {
    "default": "2",
-   "depends_on": "eval:doc.test_type=='Stability Test'",
+   "depends_on": "eval:doc.test_type=='Cold Stability Test'",
    "description": "Target: 0\u20134\u00b0C",
    "fieldname": "cold_storage_temp_c",
    "fieldtype": "Float",
    "label": "Storage Temperature (\u00b0C)"
   },
   {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
+   "depends_on": "eval:doc.test_type=='Cold Stability Test'",
    "description": "Target: 3\u20137 days",
    "fieldname": "cold_duration_days",
    "fieldtype": "Int",
    "label": "Duration (days)"
   },
   {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
+   "depends_on": "eval:doc.test_type=='Cold Stability Test'",
    "fieldname": "column_break_cold1",
    "fieldtype": "Column Break"
   },
   {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
+   "depends_on": "eval:doc.test_type=='Cold Stability Test'",
    "fieldname": "cold_pre_clarity",
    "fieldtype": "Select",
    "label": "Pre-Test Clarity",
    "options": "\nClear\nSlight haze\nHazy\nCloudy"
   },
   {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
+   "depends_on": "eval:doc.test_type=='Cold Stability Test'",
    "fieldname": "cold_post_clarity",
    "fieldtype": "Select",
    "label": "Post-Test Clarity",
    "options": "\nClear\nSlight haze\nHazy\nCloudy"
   },
   {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
+   "depends_on": "eval:doc.test_type=='Cold Stability Test'",
    "fieldname": "cold_crystal_formation",
    "fieldtype": "Select",
    "label": "Crystal / Precipitate Formation",
    "options": "\nNone visible\nFew crystals at bottom\nModerate crystal formation\nHeavy precipitation\nSuspended particles in wine"
   },
   {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
+   "depends_on": "eval:doc.test_type=='Cold Stability Test'",
    "fieldname": "cold_crystal_type",
    "fieldtype": "Select",
    "label": "Crystal Type",
    "options": "\nNone\nClear/white crystals (tartrate)\nColored crystals\nProtein haze\nOther"
   },
   {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
-   "fieldname": "cold_stability_result",
-   "fieldtype": "Select",
-   "label": "Cold Stability Result",
-   "options": "\nPASS\nFAIL"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
-   "fieldname": "cold_corrective_action",
-   "fieldtype": "Small Text",
-   "label": "Corrective Action Required"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
+   "depends_on": "eval:doc.test_type=='Microbial Stability Test'",
    "fieldname": "section_break_microbial_stab",
    "fieldtype": "Section Break",
    "label": "Microbial Stability Test"
   },
   {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
+   "depends_on": "eval:doc.test_type=='Microbial Stability Test'",
    "fieldname": "micro_test_start_date",
    "fieldtype": "Date",
    "label": "Test Start Date"
   },
   {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
-   "fieldname": "micro_sample_volume_ml",
-   "fieldtype": "Float",
-   "label": "Sample Volume (ml)"
-  },
-  {
    "default": "27",
-   "depends_on": "eval:doc.test_type=='Stability Test'",
+   "depends_on": "eval:doc.test_type=='Microbial Stability Test'",
    "description": "Target: 25\u201330\u00b0C",
    "fieldname": "micro_storage_temp_c",
    "fieldtype": "Float",
    "label": "Storage Temperature (\u00b0C)"
   },
   {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
+   "depends_on": "eval:doc.test_type=='Microbial Stability Test'",
    "description": "Target: 7\u201314 days",
    "fieldname": "micro_duration_days",
    "fieldtype": "Int",
    "label": "Duration (days)"
   },
   {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
+   "depends_on": "eval:doc.test_type=='Microbial Stability Test'",
    "fieldname": "column_break_micro1",
    "fieldtype": "Column Break"
   },
   {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
+   "depends_on": "eval:doc.test_type=='Microbial Stability Test'",
    "fieldname": "micro_post_clarity",
    "fieldtype": "Select",
    "label": "Post-Test Clarity",
    "options": "\nRemains clear\nSlight cloudiness\nModerate cloudiness\nHeavy cloudiness"
   },
   {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
+   "depends_on": "eval:doc.test_type=='Microbial Stability Test'",
    "fieldname": "micro_sediment",
    "fieldtype": "Select",
    "label": "Sediment",
    "options": "\nNone\nSlight sediment at bottom\nModerate sediment\nHeavy sediment"
   },
   {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
+   "depends_on": "eval:doc.test_type=='Microbial Stability Test'",
    "fieldname": "micro_surface_film",
    "fieldtype": "Select",
    "label": "Surface Film / Pellicle",
    "options": "\nNone\nThin film on surface\nThick pellicle formation"
   },
   {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
+   "depends_on": "eval:doc.test_type=='Microbial Stability Test'",
    "fieldname": "micro_gas_production",
    "fieldtype": "Select",
    "label": "Gas Production",
    "options": "\nNone\nSlight pressure/fizz when opened\nSignificant gas production"
   },
   {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
+   "depends_on": "eval:doc.test_type=='Microbial Stability Test'",
    "fieldname": "micro_odor_post",
    "fieldtype": "Select",
    "label": "Post-Test Odor",
    "options": "\nNormal wine aroma\nYeasty smell\nVinegar smell\nSulfur smell\nMoldy/musty smell\nOther off-odor"
   },
   {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
+   "depends_on": "eval:doc.test_type=='Microbial Stability Test'",
    "fieldname": "micro_color_change",
    "fieldtype": "Select",
    "label": "Color Change",
    "options": "\nNo change\nDarkened\nLightened\nBrowning (oxidation)"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='Stability Test'",
-   "fieldname": "micro_stability_result",
-   "fieldtype": "Select",
-   "label": "Microbial Stability Result",
-   "options": "\nPASS\nFAIL"
   },
   {
    "depends_on": "eval:doc.test_type=='Stability Test'",
@@ -1427,51 +976,6 @@
    "options": "\n>12 months (excellent stability)\n6-12 months (good stability)\n3-6 months (moderate stability)\n<3 months (poor stability)"
   },
   {
-   "fieldname": "section_break_measurements",
-   "fieldtype": "Section Break",
-   "label": "Measurements"
-  },
-  {
-   "description": "For pH readings and any additional custom parameters",
-   "fieldname": "measurement",
-   "fieldtype": "Table",
-   "label": "Measurements",
-   "options": "Lab Analysis Reading"
-  },
-  {
-   "fieldname": "section_break_approval",
-   "fieldtype": "Section Break",
-   "label": "Final Batch Status & Approval"
-  },
-  {
-   "fieldname": "batch_status",
-   "fieldtype": "Select",
-   "label": "Batch Status",
-   "options": "\nApproved for Bottling\nApproved with Conditions\nHold for Treatment\nRejected",
-   "in_list_view": 1
-  },
-  {
-   "fieldname": "approval_date",
-   "fieldtype": "Date",
-   "label": "Approval Date"
-  },
-  {
-   "fieldname": "column_break_approval",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "qc_manager",
-   "fieldtype": "Link",
-   "label": "Quality Control Manager",
-   "options": "User"
-  },
-  {
-   "fieldname": "production_manager",
-   "fieldtype": "Link",
-   "label": "Production Manager",
-   "options": "User"
-  },
-  {
    "fieldname": "section_break_approval_notes",
    "fieldtype": "Section Break"
   },
@@ -1488,17 +992,66 @@
    "fieldname": "notes",
    "fieldtype": "Small Text",
    "label": "Notes"
+  },
+  {
+   "fieldname": "column_break_vaxu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.test_type=='Brix Test'",
+   "fieldname": "target_brix",
+   "fieldtype": "Float",
+   "label": "Target (\u00b0Brix)",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.test_type=='Gravity Test'",
+   "fieldname": "gravity_reading_1",
+   "fieldtype": "Float",
+   "label": "Gravity Reading 1",
+   "precision": "3"
+  },
+  {
+   "depends_on": "eval:doc.test_type=='Gravity Test'",
+   "fieldname": "gravity_reading_2",
+   "fieldtype": "Float",
+   "label": "Gravity Reading 2",
+   "precision": "3"
+  },
+  {
+   "depends_on": "eval:doc.test_type=='Gravity Test'",
+   "fieldname": "gravity_reading_3",
+   "fieldtype": "Float",
+   "label": "Gravity Reading 3",
+   "precision": "3"
+  },
+  {
+   "fieldname": "column_break_fzqq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.test_type=='Gravity Test'",
+   "fieldname": "average_gravity",
+   "fieldtype": "Float",
+   "label": "Average Gravity",
+   "precision": "3",
+   "read_only": 1
+  },
+  {
+   "fieldname": "visual_assessment_column",
+   "fieldtype": "Column Break",
+   "label": "Visual Assessment"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-11 12:26:05.980079",
+ "modified": "2026-03-21 06:20:10.545182",
  "modified_by": "Administrator",
  "module": "Winery",
  "name": "Lab Analysis",
- "naming_rule": "Expression (old style)",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {

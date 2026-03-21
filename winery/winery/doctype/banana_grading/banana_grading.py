@@ -85,16 +85,17 @@ class BananaGrading(Document):
 				"is_damaged": 1 if row.damaged else 0,
 				"banana_grade": row.quality_grade or "",
 			})
-			row.db_set("batch_no", row.batch_id)
 
 	def _create_purchase_receipt(self):
 		supplier = None
-		if self.farmer:
+		if self.purchase_invoice:
+			supplier = frappe.db.get_value("Purchase Invoice", self.purchase_invoice, "supplier")
+		if not supplier and self.farmer:
 			supplier = frappe.db.get_value("Farmer", self.farmer, "supplier")
 		if not supplier:
 			frappe.throw(
 				"Cannot create Purchase Receipt: no Supplier found. "
-				"Link a Purchase Invoice with a Farmer that has a linked Supplier."
+				"Link a Purchase Invoice or ensure the Farmer has a linked Supplier."
 			)
 
 		rejected_warehouse = self.damaged_warehouse or self.warehouse
@@ -121,7 +122,7 @@ class BananaGrading(Document):
 					"rejected_uom": "Nos",
 					"warehouse": self.warehouse,
 					"rejected_warehouse": rejected_warehouse,
-					"batch_no": row.batch_no,
+					"batch_no": row.batch_id,
 					"description": f"Damaged — {row.batch_id}",
 				})
 			else:
@@ -131,7 +132,7 @@ class BananaGrading(Document):
 					"rate": rate,
 					"uom": "Nos",
 					"warehouse": self.warehouse,
-					"batch_no": row.batch_no,
+					"batch_no": row.batch_id,
 					"description": f"Good — {row.batch_id}",
 				})
 

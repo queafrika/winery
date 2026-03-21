@@ -5,7 +5,7 @@ import json
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import add_to_date, flt, now_datetime, time_diff_in_hours
+from frappe.utils import flt, now_datetime, time_diff_in_hours
 
 
 class CellarOperation(Document):
@@ -54,52 +54,41 @@ class CellarOperation(Document):
 		if employee:
 			self.db_set("started_by", employee)
 
-		# Compute scheduled_time for each task based on start_time
-		for row in self.tasks:
-			if row.scheduled_hours_from_start:
-				due = add_to_date(now, hours=row.scheduled_hours_from_start)
-				row.db_set("scheduled_time", due)
-
-		# Compute expected_end_time from the recipe stage expected duration
-		if self.wine_batch and self.recipe_stage_idx:
-			recipe = frappe.db.get_value("Wine Batch", self.wine_batch, "recipe")
-			if recipe:
-				stages = frappe.get_all(
-					"Recipe Stage",
-					filters={"parent": recipe},
-					fields=["expected_duration", "idx"],
-					order_by="idx asc",
-				)
-				for s in stages:
-					if s.idx == self.recipe_stage_idx:
-						if s.expected_duration:
-							self.db_set(
-								"expected_end_time",
-								add_to_date(now, hours=s.expected_duration),
-							)
-						break
-
 		frappe.msgprint(f"Operation started at {frappe.utils.format_datetime(now)}.", alert=True)
 		return {"start_time": str(now)}
 
 	@frappe.whitelist()
 	def complete_operation(self):
-		"""Complete the operation — blocks if any Lab Test tasks are incomplete."""
+		"""Complete the operation — blocks if any mandatory lab analyses are incomplete."""
 		if self.status != "In Progress":
 			frappe.throw("Operation must be In Progress before it can be completed.")
 
-		# Reload to get latest task state
 		self.reload()
-		incomplete_lab_tasks = [
-			row.task_name
-			for row in self.tasks
-			if row.task_type == "Lab Test" and not row.completed
-		]
-		if incomplete_lab_tasks:
-			frappe.throw(
-				"Cannot complete operation — the following Lab Test tasks are still pending:<br>"
-				+ "<br>".join(f"• {t}" for t in incomplete_lab_tasks)
-			)
+
+		# Check mandatory lab analyses from the recipe for this operation type
+		if self.wine_batch and self.operation_type:
+			recipe = frappe.db.get_value("Wine Batch", self.wine_batch, "recipe")
+			if recipe:
+				mandatory = frappe.get_all(
+					"Recipe Lab Analysis",
+					filters={"parent": recipe, "operation_type": self.operation_type, "is_mandatory": 1},
+					fields=["test_type"],
+				)
+				if mandatory:
+					done = {
+						r.test_type
+						for r in frappe.get_all(
+							"Lab Analysis",
+							filters={"cellar_operation": self.name, "docstatus": 1},
+							fields=["test_type"],
+						)
+					}
+					missing = [r.test_type for r in mandatory if r.test_type not in done]
+					if missing:
+						frappe.throw(
+							"Cannot complete operation — the following mandatory lab analyses are not yet submitted:<br>"
+							+ "<br>".join(f"• {t}" for t in missing)
+						)
 
 		now = now_datetime()
 		self.db_set("end_time", now)

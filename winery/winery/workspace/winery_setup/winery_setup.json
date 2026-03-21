@@ -1,0 +1,139 @@
+{
+ "app": "winery",
+ "charts": [],
+ "content": "[{\"id\":\"su_h1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Masters &amp; Setup</b></span>\",\"col\":12}},{\"id\":\"su_c1\",\"type\":\"card\",\"data\":{\"card_name\":\"Production Masters\",\"col\":4}},{\"id\":\"su_c2\",\"type\":\"card\",\"data\":{\"card_name\":\"Farm &amp; Supply\",\"col\":4}},{\"id\":\"su_c3\",\"type\":\"card\",\"data\":{\"card_name\":\"Infrastructure\",\"col\":4}}]",
+ "creation": "2026-03-16 00:00:00",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "settings",
+ "idx": 0,
+ "indicator_color": "",
+ "is_hidden": 0,
+ "label": "Setup",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Production Masters",
+   "link_count": 3,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Recipe",
+   "link_count": 0,
+   "link_to": "Recipe",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Cellar Operation Type",
+   "link_count": 0,
+   "link_to": "Cellar Operation Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Banana Grade",
+   "link_count": 0,
+   "link_to": "Banana Grade",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Farm & Supply",
+   "link_count": 3,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Farmer",
+   "link_count": 0,
+   "link_to": "Farmer",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Farm",
+   "link_count": 0,
+   "link_to": "Farm",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Farm Location",
+   "link_count": 0,
+   "link_to": "Farm Location",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Infrastructure",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Ripening Rack",
+   "link_count": 0,
+   "link_to": "Ripening Rack",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Vessel",
+   "link_count": 0,
+   "link_to": "Vessel",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-03-16 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Winery Setup",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "Winery",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 3.0,
+ "shortcuts": [],
+ "title": "Setup",
+ "type": "Workspace"
+}

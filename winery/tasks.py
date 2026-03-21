@@ -43,8 +43,8 @@ def _notify_analyst(rec):
 		message = f"Reminder: Lab analysis for Wine Batch {rec.wine_batch or ''} is due in {days_left} day(s) on {rec.next_analysis_date}. Test type: {rec.test_type or 'N/A'}."
 
 	frappe.publish_realtime(
-		"eval_js",
-		f"frappe.show_alert({{message: {frappe.as_json(message)}, indicator: 'orange'}}, 10);",
+		"msgprint",
+		{"message": message, "alert": True, "indicator": "orange"},
 		user=rec.assigned_analyst,
 	)
 
@@ -75,7 +75,7 @@ def _create_next_analysis(rec):
 	new_doc.batch_process_log = rec.batch_process_log
 	new_doc.vessel = rec.vessel
 	new_doc.test_type = rec.test_type
-	new_doc.analysis_date = frappe.utils.now()
+	new_doc.analysis_date = frappe.utils.today()
 	new_doc.analyzed_by = rec.assigned_analyst
 	new_doc.assigned_analyst = rec.assigned_analyst
 	new_doc.alert_before_days = rec.alert_before_days
@@ -159,8 +159,8 @@ schedule staff for the End Ripening transfer tomorrow.</p>
 		)
 
 		frappe.publish_realtime(
-			"eval_js",
-			f"frappe.show_alert({{message: 'Ripening Batch {rb.name} is ready for transfer tomorrow!', indicator: 'green'}}, 15);",
+			"msgprint",
+			{"message": f"Ripening Batch {rb.name} is ready for transfer tomorrow!", "alert": True, "indicator": "green"},
 			user=user_email,
 		)
 
@@ -244,8 +244,8 @@ Bananas left too long may over-ripen and affect wine quality.</p>
 
 		# Real-time desk alert
 		frappe.publish_realtime(
-			"eval_js",
-			f"frappe.show_alert({{message: 'Ripening Batch {rb.name} is overdue by {days_over} days!', indicator: 'red'}}, 15);",
+			"msgprint",
+			{"message": f"Ripening Batch {rb.name} is overdue by {days_over} days!", "alert": True, "indicator": "red"},
 			user=user_email,
 		)
 
@@ -267,7 +267,7 @@ def _get_winery_alert_recipients():
 
 	# Fallback: system default email or Administrator
 	if not emails:
-		system_email = frappe.db.get_single_value("Email Account", "email_id") or "Administrator"
+		system_email = frappe.db.get_value("Email Account", {"default_outgoing": 1}, "email_id") or "Administrator"
 		emails.add(system_email)
 
 	return list(emails)

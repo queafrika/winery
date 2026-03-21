@@ -11,6 +11,7 @@
   "farmer",
   "column_break_1",
   "farm_size_acres",
+  "collection_date",
   "section_break_location",
   "county",
   "sub_county",
@@ -103,12 +104,17 @@
    "fieldname": "notes",
    "fieldtype": "Small Text",
    "label": "Notes"
+  },
+  {
+   "fieldname": "collection_date",
+   "fieldtype": "Date",
+   "label": "Collection Date"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-14 05:35:14.696482",
+ "modified": "2026-03-20 16:53:04.774885",
  "modified_by": "Administrator",
  "module": "Winery",
  "name": "Farm",

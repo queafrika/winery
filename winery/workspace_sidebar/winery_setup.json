@@ -1,0 +1,28 @@
+{
+ "app": "winery",
+ "creation": "2026-03-17 04:41:38.641799",
+ "docstatus": 0,
+ "doctype": "Workspace Sidebar",
+ "header_icon": "settings",
+ "idx": 0,
+ "items": [
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Home",
+   "link_to": "Winery Setup",
+   "link_type": "Workspace",
+   "show_arrow": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-03-17 08:46:35.824969",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Winery Setup",
+ "owner": "Administrator",
+ "standard": 1,
+ "title": "Winery Setup"
+}

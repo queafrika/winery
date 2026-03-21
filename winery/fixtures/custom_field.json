@@ -10,5 +10,98 @@
   "insert_after": "supplier",
   "in_list_view": 0,
   "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Batch-winery_section",
+  "dt": "Batch",
+  "fieldname": "winery_section",
+  "fieldtype": "Section Break",
+  "label": "Winery",
+  "insert_after": "description",
+  "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Batch-banana_grade",
+  "dt": "Batch",
+  "fieldname": "banana_grade",
+  "fieldtype": "Link",
+  "label": "Banana Grade",
+  "options": "Banana Grade",
+  "insert_after": "winery_section",
+  "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Batch-is_damaged",
+  "dt": "Batch",
+  "fieldname": "is_damaged",
+  "fieldtype": "Check",
+  "label": "Is Damaged",
+  "insert_after": "banana_grade",
+  "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Batch-ripening_section",
+  "dt": "Batch",
+  "fieldname": "ripening_section",
+  "fieldtype": "Section Break",
+  "label": "Ripening",
+  "insert_after": "is_damaged",
+  "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Batch-ripening_status",
+  "dt": "Batch",
+  "fieldname": "ripening_status",
+  "fieldtype": "Select",
+  "label": "Ripening Status",
+  "options": "\nIn Ripening\nRipening Complete",
+  "insert_after": "ripening_section",
+  "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Batch-ripening_batch_ref",
+  "dt": "Batch",
+  "fieldname": "ripening_batch_ref",
+  "fieldtype": "Link",
+  "label": "Ripening Batch",
+  "options": "Ripening Batch",
+  "insert_after": "ripening_status",
+  "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Batch-ripening_start_date",
+  "dt": "Batch",
+  "fieldname": "ripening_start_date",
+  "fieldtype": "Date",
+  "label": "Ripening Start Date",
+  "insert_after": "ripening_batch_ref",
+  "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Batch-ripening_end_date",
+  "dt": "Batch",
+  "fieldname": "ripening_end_date",
+  "fieldtype": "Date",
+  "label": "Ripening End Date",
+  "insert_after": "ripening_start_date",
+  "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Batch-ripening_days_actual",
+  "dt": "Batch",
+  "fieldname": "ripening_days_actual",
+  "fieldtype": "Int",
+  "label": "Ripening Days (Actual)",
+  "insert_after": "ripening_end_date",
+  "module": "Winery"
  }
 ]

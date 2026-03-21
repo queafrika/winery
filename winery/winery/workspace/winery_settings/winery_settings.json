@@ -1,0 +1,109 @@
+{
+ "app": "winery",
+ "charts": [],
+ "content": "[{\"id\":\"se_h1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Configuration &amp; Settings</b></span>\",\"col\":12}},{\"id\":\"se_c1\",\"type\":\"card\",\"data\":{\"card_name\":\"Lab Configuration\",\"col\":4}},{\"id\":\"se_c2\",\"type\":\"card\",\"data\":{\"card_name\":\"Compliance &amp; Tax\",\"col\":4}},{\"id\":\"se_c3\",\"type\":\"card\",\"data\":{\"card_name\":\"Packaging\",\"col\":4}}]",
+ "creation": "2026-03-16 00:00:00",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "sliders-horizontal",
+ "idx": 0,
+ "indicator_color": "",
+ "is_hidden": 0,
+ "label": "Settings",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Lab Configuration",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Lab Test Parameter",
+   "link_count": 0,
+   "link_to": "Lab Test Parameter",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Test Identification",
+   "link_count": 0,
+   "link_to": "Test Identification",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Compliance & Tax",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "ABV Tax Band",
+   "link_count": 0,
+   "link_to": "ABV Tax Band",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Packaging",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Packaging Line",
+   "link_count": 0,
+   "link_to": "Packaging Line",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Bottling Line",
+   "link_count": 0,
+   "link_to": "Bottling Line",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-03-16 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Winery Settings",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "Winery",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 4.0,
+ "shortcuts": [],
+ "title": "Settings",
+ "type": "Workspace"
+}

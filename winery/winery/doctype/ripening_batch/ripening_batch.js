@@ -43,10 +43,10 @@ frappe.ui.form.on("Ripening Batch Source", {
 
 		const row = locals[cdt][cdn];
 		if (row.banana_grading) {
-			frappe.db.get_value("Banana Grading", row.banana_grading, ["banana_item", "warehouse"], (r) => {
-				if (r) {
-					if (r.banana_item && !frm.doc.banana_item) frm.set_value("banana_item", r.banana_item);
-					if (r.warehouse && !frm.doc.source_warehouse) frm.set_value("source_warehouse", r.warehouse);
+			frappe.db.get_value("Banana Grading", row.banana_grading, ["banana_item", "warehouse"]).then((r) => {
+				if (r && r.message) {
+					if (r.message.banana_item && !frm.doc.banana_item) frm.set_value("banana_item", r.message.banana_item);
+					if (r.message.warehouse && !frm.doc.source_warehouse) frm.set_value("source_warehouse", r.message.warehouse);
 				}
 			});
 		}

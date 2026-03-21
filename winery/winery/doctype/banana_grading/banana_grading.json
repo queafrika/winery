@@ -9,8 +9,8 @@
   "section_break_details",
   "procurement_date",
   "banana_item",
-  "farmer",
   "farm",
+  "farmer",
   "column_break_1",
   "warehouse",
   "damaged_warehouse",
@@ -58,7 +58,7 @@
    "read_only": 1
   },
   {
-   "fetch_from": "purchase_invoice.farm",
+   "fetch_from": "purchase_invoice.custom_farm",
    "fieldname": "farm",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -85,11 +85,11 @@
    "reqd": 1
   },
   {
+   "description": "Where damaged (rejected) bananas are stored",
    "fieldname": "damaged_warehouse",
    "fieldtype": "Link",
    "label": "Damaged Warehouse",
-   "options": "Warehouse",
-   "description": "Where damaged (rejected) bananas are stored"
+   "options": "Warehouse"
   },
   {
    "fieldname": "purchase_invoice",
@@ -201,29 +201,29 @@
    "search_index": 1
   },
   {
+   "default": "100",
+   "description": "Percentage of total invoice value to carry forward as production cost",
    "fieldname": "valuation_percentage",
    "fieldtype": "Percent",
-   "label": "Valuation Percentage",
-   "default": "100",
-   "description": "Percentage of total invoice value to carry forward as production cost"
+   "label": "Valuation Percentage"
   },
   {
+   "description": "Total Amount \u00d7 Valuation %",
    "fieldname": "valuation_amount",
    "fieldtype": "Currency",
    "label": "Valuation Amount",
-   "read_only": 1,
-   "description": "Total Amount \u00d7 Valuation %"
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-11 06:22:04.886196",
- "modified_by": "Administrator",
+ "modified": "2026-03-17 07:23:48.170136",
+ "modified_by": "macharianyota@gmail.com",
  "module": "Winery",
  "name": "Banana Grading",
- "naming_rule": "Expression (old style)",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {

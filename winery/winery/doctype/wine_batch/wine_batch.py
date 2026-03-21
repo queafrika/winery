@@ -107,7 +107,11 @@ class WineBatch(Document):
 				})
 
 		co.insert(ignore_permissions=True)
-		co.submit()
+		try:
+			co.submit()
+		except Exception:
+			frappe.delete_doc("Cellar Operation", co.name, ignore_permissions=True, force=True)
+			raise
 
 		# Notify about lab test sample requirements
 		lab_tasks = [t for t in co.tasks if t.task_type == "Lab Test"]

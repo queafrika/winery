@@ -5,19 +5,34 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "stage_name",
+  "operation_type",
+  "hours_after_start",
   "test_type",
   "is_mandatory",
   "column_break_1",
+  "target_value",
+  "sample_size_ml",
+  "section_break_recurrence",
+  "is_recurring",
+  "recurrence_interval_hrs",
+  "section_break_notes",
   "notes"
  ],
  "fields": [
   {
-   "fieldname": "stage_name",
-   "fieldtype": "Select",
+   "fieldname": "operation_type",
+   "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Stage Name",
-   "description": "Select from the stages defined in the Stages tab"
+   "label": "Operation",
+   "options": "Cellar Operation Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "hours_after_start",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Hours After Start",
+   "description": "Number of hours after the operation starts that this analysis should be performed"
   },
   {
    "fieldname": "test_type",
@@ -39,6 +54,41 @@
    "fieldtype": "Column Break"
   },
   {
+   "fieldname": "target_value",
+   "fieldtype": "Data",
+   "label": "Target Value",
+   "description": "Expected result or acceptable range (e.g. 3.2–3.6, <5 g/L)"
+  },
+  {
+   "fieldname": "sample_size_ml",
+   "fieldtype": "Float",
+   "label": "Sample Size (ml)",
+   "description": "Volume of sample required for this test in millilitres"
+  },
+  {
+   "fieldname": "section_break_recurrence",
+   "fieldtype": "Section Break",
+   "label": "Recurrence"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_recurring",
+   "fieldtype": "Check",
+   "label": "Recurring",
+   "description": "Repeat this analysis at a fixed interval throughout the operation"
+  },
+  {
+   "fieldname": "recurrence_interval_hrs",
+   "fieldtype": "Int",
+   "label": "Every (hrs)",
+   "description": "Repeat every N hours (e.g. 72 for every 3 days)",
+   "depends_on": "eval:doc.is_recurring"
+  },
+  {
+   "fieldname": "section_break_notes",
+   "fieldtype": "Section Break"
+  },
+  {
    "fieldname": "notes",
    "fieldtype": "Small Text",
    "label": "Notes / Instructions"
@@ -48,7 +98,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-03-12 00:00:00.000000",
+ "modified": "2026-03-21 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Winery",
  "name": "Recipe Lab Analysis",

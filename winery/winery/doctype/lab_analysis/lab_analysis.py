@@ -7,6 +7,10 @@ from frappe.model.document import Document
 
 class LabAnalysis(Document):
 	def validate(self):
+		if self.analysis_source == "Purchased Item" and not self.item_batch:
+			frappe.throw("Item Batch is required for a Purchased Item analysis.")
+		if self.analysis_source != "Purchased Item" and not self.wine_batch:
+			frappe.throw("Wine Batch is required for a Wine Batch analysis.")
 		self._auto_fill_vessel()
 		self._calc_residual_sugar()
 		self._calc_brix()
@@ -137,7 +141,8 @@ class LabAnalysis(Document):
 
 	def on_submit(self):
 		self._evaluate_readings()
-		self._mark_cellar_task_complete()
+		if self.analysis_source != "Purchased Item":
+			self._mark_cellar_task_complete()
 
 	def _mark_cellar_task_complete(self):
 		"""Auto-check the linked Cellar Operation task when this lab analysis is submitted."""

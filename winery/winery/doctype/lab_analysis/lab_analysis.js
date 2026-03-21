@@ -10,6 +10,31 @@ frappe.ui.form.on("Lab Analysis", {
 				frappe.set_route("Form", "Wine Batch", frm.doc.wine_batch);
 			});
 		}
+		if (frm.doc.item_batch) {
+			frm.add_custom_button(__("View Item Batch"), () => {
+				frappe.set_route("Form", "Batch", frm.doc.item_batch);
+			});
+		}
+	},
+
+	analysis_source(frm) {
+		// Clear the irrelevant link fields when switching source
+		if (frm.doc.analysis_source === "Purchased Item") {
+			frm.set_value("wine_batch", null);
+			frm.set_value("cellar_operation", null);
+			frm.set_value("cellar_operation_task", null);
+		} else {
+			frm.set_value("item_batch", null);
+			frm.set_value("item", null);
+			frm.set_value("supplier", null);
+		}
+	},
+
+	item_batch(frm) {
+		if (frm.doc.item_batch) {
+			frm.set_value("wine_batch", null);
+			frm.set_value("cellar_operation", null);
+		}
 	},
 
 	wine_batch(frm) {

@@ -31,6 +31,10 @@
   "process_loss",
   "section_break_notes",
   "notes",
+  "cellar_ops_tab",
+  "cellar_ops_html",
+  "lab_tab",
+  "lab_analyses_html",
   "amended_from"
  ],
  "fields": [
@@ -179,6 +183,26 @@
    "fieldtype": "Table",
    "label": "Lab Analyses",
    "options": "Recipe Lab Analysis"
+  },
+  {
+   "fieldname": "cellar_ops_tab",
+   "fieldtype": "Tab Break",
+   "label": "Cellar Operations"
+  },
+  {
+   "fieldname": "cellar_ops_html",
+   "fieldtype": "HTML",
+   "label": "Cellar Operations"
+  },
+  {
+   "fieldname": "lab_tab",
+   "fieldtype": "Tab Break",
+   "label": "Lab Analyses"
+  },
+  {
+   "fieldname": "lab_analyses_html",
+   "fieldtype": "HTML",
+   "label": "Lab Analyses"
   },
   {
    "fieldname": "amended_from",

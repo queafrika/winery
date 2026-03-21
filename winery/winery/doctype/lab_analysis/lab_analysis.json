@@ -8,6 +8,10 @@
  "field_order": [
   "section_break_details",
   "amended_from",
+  "analysis_source",
+  "item_batch",
+  "item",
+  "supplier",
   "wine_batch",
   "cellar_operation",
   "cellar_operation_task",
@@ -162,6 +166,41 @@
    "search_index": 1
   },
   {
+   "default": "Wine Batch",
+   "fieldname": "analysis_source",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Analysis For",
+   "options": "Wine Batch\nPurchased Item"
+  },
+  {
+   "depends_on": "eval:doc.analysis_source=='Purchased Item'",
+   "fieldname": "item_batch",
+   "fieldtype": "Link",
+   "label": "Item Batch",
+   "mandatory_depends_on": "eval:doc.analysis_source=='Purchased Item'",
+   "options": "Batch"
+  },
+  {
+   "depends_on": "eval:doc.analysis_source=='Purchased Item'",
+   "fetch_from": "item_batch.item",
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "label": "Item",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.analysis_source=='Purchased Item'",
+   "fetch_from": "item_batch.supplier",
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Supplier",
+   "options": "Supplier",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.analysis_source!='Purchased Item'",
    "fieldname": "wine_batch",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -169,6 +208,7 @@
    "options": "Wine Batch"
   },
   {
+   "depends_on": "eval:doc.analysis_source!='Purchased Item'",
    "fieldname": "cellar_operation",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -176,6 +216,7 @@
    "options": "Cellar Operation"
   },
   {
+   "depends_on": "eval:doc.analysis_source!='Purchased Item'",
    "description": "Name of the task in the Cellar Operation this analysis fulfils",
    "fieldname": "cellar_operation_task",
    "fieldtype": "Data",

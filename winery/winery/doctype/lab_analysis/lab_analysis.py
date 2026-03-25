@@ -11,19 +11,11 @@ class LabAnalysis(Document):
 			frappe.throw("Item Batch is required for a Purchased Item analysis.")
 		if self.analysis_source != "Purchased Item" and not self.wine_batch:
 			frappe.throw("Wine Batch is required for a Wine Batch analysis.")
-		self._auto_fill_vessel()
 		self._calc_residual_sugar()
 		self._calc_brix()
 		self._calc_abv()
-		self._calc_sensory_average()
 		self._calc_temperature()
 		self._calc_ph()
-
-	def _auto_fill_vessel(self):
-		if self.batch_process_log and not self.vessel:
-			vessel = frappe.db.get_value("Batch Process Log", self.batch_process_log, "vessel")
-			if vessel:
-				self.vessel = vessel
 
 	def _calc_residual_sugar(self):
 		if self.test_type != "Residual Sugar Test":
@@ -63,7 +55,6 @@ class LabAnalysis(Document):
 			return
 		avg = round(sum(readings) / len(readings), 2)
 		self.brix_average = avg
-		self.brix_potential_abv = round(avg * 0.59, 2)
 
 	def _calc_abv(self):
 		if self.test_type != "ABV Test":
@@ -75,26 +66,6 @@ class LabAnalysis(Document):
 		self.abv_average_abv = avg
 		correction = self.abv_correction_factor or 0
 		self.abv_corrected_abv = round(avg + correction, 2)
-
-	def _calc_sensory_average(self):
-		if self.test_type != "Sensory Evaluation":
-			return
-		scores = [row.score for row in (self.sens_taster_scores or []) if row.score is not None]
-		if not scores:
-			return
-		avg = round(sum(scores) / len(scores), 1)
-		self.sens_average_score = avg
-
-		if avg >= 9:
-			self.sens_quality_classification = "Excellent (9-10)"
-		elif avg >= 7:
-			self.sens_quality_classification = "Very Good (7-8)"
-		elif avg >= 5:
-			self.sens_quality_classification = "Acceptable (5-6)"
-		elif avg >= 3:
-			self.sens_quality_classification = "Below Standard (3-4)"
-		else:
-			self.sens_quality_classification = "Unacceptable (0-2)"
 
 	def _calc_temperature(self):
 		if self.test_type != "Temperature Test":
@@ -114,18 +85,6 @@ class LabAnalysis(Document):
 		if self.test_type != "pH Test":
 			return
 
-		# Set target range from stage
-		if self.ph_stage == "Pre-Production":
-			self.ph_target_min = 6.5
-			self.ph_target_max = 7.5
-		elif self.ph_stage == "Post-Production":
-			self.ph_target_min = 3.2
-			self.ph_target_max = 4.0
-
-		# Calibration pass (all 3 buffers must pass)
-		all_pass = bool(self.ph_cal_buffer_4_pass and self.ph_cal_buffer_7_pass and self.ph_cal_buffer_10_pass)
-		self.ph_calibration_pass = "PASS" if all_pass else "FAIL"
-
 		# Average of readings
 		readings = [v for v in [self.ph_reading_1, self.ph_reading_2, self.ph_reading_3] if v is not None and v != 0]
 		if not readings:
@@ -140,9 +99,40 @@ class LabAnalysis(Document):
 			self.ph_result = "PASS" if target_min <= avg <= target_max else "FAIL"
 
 	def on_submit(self):
-		self._evaluate_readings()
-		if self.analysis_source != "Purchased Item":
+		if self.analysis_source == "Purchased Item":
+			self._release_batch_if_complete()
+		else:
 			self._mark_cellar_task_complete()
+
+	def _release_batch_if_complete(self):
+		"""Release the batch QA hold once all mandatory tests have been submitted."""
+		if not self.item_batch or not self.item:
+			return
+		mandatory = [
+			r.test_type
+			for r in frappe.get_all(
+				"Item Lab Test Requirement",
+				filters={"parent": self.item, "is_mandatory": 1},
+				fields=["test_type"],
+			)
+		]
+		if not mandatory:
+			return
+		done = {
+			r.test_type
+			for r in frappe.get_all(
+				"Lab Analysis",
+				filters={"item_batch": self.item_batch, "docstatus": 1},
+				fields=["test_type"],
+			)
+		}
+		if all(t in done for t in mandatory):
+			frappe.db.set_value("Batch", self.item_batch, "qa_status", "Released")
+			frappe.msgprint(
+				f"Batch <b>{self.item_batch}</b> has passed all mandatory QA tests and is now released for use.",
+				alert=True,
+				indicator="green",
+			)
 
 	def _mark_cellar_task_complete(self):
 		"""Auto-check the linked Cellar Operation task when this lab analysis is submitted."""
@@ -154,31 +144,4 @@ class LabAnalysis(Document):
 			lab_analysis=self.name,
 		)
 
-	def _evaluate_readings(self):
-		has_failure = False
-		for row in self.measurement:
-			if not row.parameter:
-				continue
-			param = frappe.get_doc("Lab Test Parameter", row.parameter)
-			within = True
-			if param.min_value is not None and row.value is not None and row.value < param.min_value:
-				within = False
-			if param.max_value is not None and row.value is not None and row.value > param.max_value:
-				within = False
-			frappe.db.set_value(
-				"Lab Analysis Reading",
-				row.name,
-				"within_range",
-				1 if within else 0,
-			)
-			if not within:
-				has_failure = True
 
-		if self.measurement:
-			new_status = "Failed" if has_failure else "Passed"
-			self.db_set("status", new_status)
-			if has_failure:
-				frappe.msgprint(
-					"One or more readings are outside the acceptable range. Status set to Failed.",
-					indicator="orange",
-				)

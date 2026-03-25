@@ -12,7 +12,8 @@
   "column_break_base",
   "base_batch_size",
   "base_uom",
-  "output_item",
+  "section_break_zioc",
+  "stages",
   "section_break_desc",
   "description",
   "raw_materials_tab",
@@ -46,7 +47,7 @@
   },
   {
    "default": "1",
-   "description": "Base recipe yield — all material quantities are per this volume (default 1 Litre). Wine Batch will scale up automatically.",
+   "description": "Base recipe yield \u2014 all material quantities are per this volume (default 1 Litre). Wine Batch will scale up automatically.",
    "fieldname": "base_batch_size",
    "fieldtype": "Float",
    "in_list_view": 1,
@@ -61,15 +62,6 @@
    "label": "Base UOM",
    "options": "UOM",
    "reqd": 1
-  },
-  {
-   "fieldname": "output_item",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Output Item",
-   "options": "Item",
-   "reqd": 1,
-   "description": "The final bottled wine item produced by this recipe"
   },
   {
    "fieldname": "section_break_desc",
@@ -101,12 +93,22 @@
    "fieldname": "lab_tab",
    "fieldtype": "Tab Break",
    "label": "Lab Analyses"
+  },
+  {
+   "fieldname": "section_break_zioc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "stages",
+   "fieldtype": "Table",
+   "label": "Recipe Operations",
+   "options": "Recipe Stage"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-11 05:24:01.475580",
+ "modified": "2026-03-24 05:57:32.432967",
  "modified_by": "Administrator",
  "module": "Winery",
  "name": "Recipe",

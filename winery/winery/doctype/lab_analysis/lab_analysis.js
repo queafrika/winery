@@ -3,8 +3,6 @@
 
 frappe.ui.form.on("Lab Analysis", {
 	refresh(frm) {
-		_show_due_alert(frm);
-
 		if (frm.doc.wine_batch) {
 			frm.add_custom_button(__("View Wine Batch"), () => {
 				frappe.set_route("Form", "Wine Batch", frm.doc.wine_batch);
@@ -15,6 +13,7 @@ frappe.ui.form.on("Lab Analysis", {
 				frappe.set_route("Form", "Batch", frm.doc.item_batch);
 			});
 		}
+		_render_batch_qa_status(frm);
 	},
 
 	analysis_source(frm) {
@@ -35,28 +34,12 @@ frappe.ui.form.on("Lab Analysis", {
 			frm.set_value("wine_batch", null);
 			frm.set_value("cellar_operation", null);
 		}
+		_render_batch_qa_status(frm);
 	},
 
 	wine_batch(frm) {
 		if (!frm.doc.wine_batch || frm.doc.test_type) return;
 		_suggest_test_type_from_recipe(frm);
-	},
-
-	batch_process_log(frm) {
-		if (frm.doc.batch_process_log) {
-			frappe.db.get_value(
-				"Batch Process Log",
-				frm.doc.batch_process_log,
-				["vessel", "wine_batch"],
-				(r) => {
-					if (r) {
-						if (r.vessel && !frm.doc.vessel) frm.set_value("vessel", r.vessel);
-						if (r.wine_batch && !frm.doc.wine_batch)
-							frm.set_value("wine_batch", r.wine_batch);
-					}
-				}
-			);
-		}
 	},
 
 	// ── Residual Sugar ──────────────────────────────────────────────
@@ -84,40 +67,9 @@ frappe.ui.form.on("Lab Analysis", {
 	temp_target_max(frm) { _calc_temp(frm); },
 
 	// ── pH Test ───────────────────────────────────────────────────────
-	ph_stage(frm) { _set_ph_targets(frm); _calc_ph(frm); },
 	ph_reading_1(frm) { _calc_ph(frm); },
 	ph_reading_2(frm) { _calc_ph(frm); },
 	ph_reading_3(frm) { _calc_ph(frm); },
-	ph_cal_buffer_4_pass(frm) { _calc_ph_calibration(frm); },
-	ph_cal_buffer_7_pass(frm) { _calc_ph_calibration(frm); },
-	ph_cal_buffer_10_pass(frm) { _calc_ph_calibration(frm); },
-});
-
-frappe.ui.form.on("Lab Analysis Taster Score", {
-	score(frm) { _calc_sensory_average(frm); },
-	sens_taster_scores_remove(frm) { _calc_sensory_average(frm); },
-});
-
-frappe.ui.form.on("Lab Analysis Reading", {
-	parameter(frm, cdt, cdn) {
-		const row = locals[cdt][cdn];
-		if (row.parameter) {
-			frappe.db.get_value(
-				"Lab Test Parameter",
-				row.parameter,
-				["default_uom", "min_value", "max_value"],
-				(r) => {
-					if (r && r.default_uom) {
-						frappe.model.set_value(cdt, cdn, "unit", r.default_uom);
-					}
-				}
-			);
-		}
-	},
-
-	value(frm, cdt, cdn) {
-		_check_range(cdt, cdn);
-	},
 });
 
 // ── Residual Sugar calculation ───────────────────────────────────────────────
@@ -167,7 +119,6 @@ function _calc_brix(frm) {
 
 	const avg = flt(readings.reduce((a, b) => a + b, 0) / readings.length, 2);
 	frm.set_value("brix_average", avg);
-	frm.set_value("brix_potential_abv", flt(avg * 0.59, 2));
 }
 
 // ── ABV calculation ──────────────────────────────────────────────────────────
@@ -209,40 +160,7 @@ function _calc_temp(frm) {
 	}
 }
 
-// ── Sensory average score ────────────────────────────────────────────────────
-function _calc_sensory_average(frm) {
-	const rows = frm.doc.sens_taster_scores || [];
-	const scores = rows.map((r) => r.score).filter((s) => s !== undefined && s !== null);
-	if (!scores.length) return;
-
-	const avg = flt(scores.reduce((a, b) => a + b, 0) / scores.length, 1);
-	frm.set_value("sens_average_score", avg);
-
-	let classification = "";
-	if (avg >= 9) classification = "Excellent (9-10)";
-	else if (avg >= 7) classification = "Very Good (7-8)";
-	else if (avg >= 5) classification = "Acceptable (5-6)";
-	else if (avg >= 3) classification = "Below Standard (3-4)";
-	else classification = "Unacceptable (0-2)";
-	frm.set_value("sens_quality_classification", classification);
-}
-
 // ── pH Test ──────────────────────────────────────────────────────────────────
-function _set_ph_targets(frm) {
-	if (frm.doc.ph_stage === "Pre-Production") {
-		frm.set_value("ph_target_min", 6.5);
-		frm.set_value("ph_target_max", 7.5);
-	} else if (frm.doc.ph_stage === "Post-Production") {
-		frm.set_value("ph_target_min", 3.2);
-		frm.set_value("ph_target_max", 4.0);
-	}
-}
-
-function _calc_ph_calibration(frm) {
-	const all_pass = frm.doc.ph_cal_buffer_4_pass && frm.doc.ph_cal_buffer_7_pass && frm.doc.ph_cal_buffer_10_pass;
-	frm.set_value("ph_calibration_pass", all_pass ? "PASS" : "FAIL");
-}
-
 function _calc_ph(frm) {
 	const readings = [frm.doc.ph_reading_1, frm.doc.ph_reading_2, frm.doc.ph_reading_3].filter(
 		(v) => v !== undefined && v !== null && v !== 0
@@ -314,44 +232,42 @@ function _suggest_test_type_from_recipe(frm) {
 	});
 }
 
-// ── Due alert banner ─────────────────────────────────────────────────────────
-function _show_due_alert(frm) {
-	if (!frm.doc.next_analysis_date || frm.doc.docstatus === 2) return;
+// ── Batch QA status panel (Purchased Item analyses) ─────────────────────────
+function _render_batch_qa_status(frm) {
+	frm.set_intro("");
+	if (frm.doc.analysis_source !== "Purchased Item" || !frm.doc.item_batch || !frm.doc.item) return;
 
-	const today = frappe.datetime.get_today();
-	const due = frm.doc.next_analysis_date;
-	const days_diff = frappe.datetime.get_diff(due, today);
+	Promise.all([
+		frappe.db.get_list("Item Lab Test Requirement", {
+			filters: { parent: frm.doc.item },
+			fields: ["test_type", "is_mandatory"],
+		}),
+		frappe.db.get_list("Lab Analysis", {
+			filters: { item_batch: frm.doc.item_batch, docstatus: 1 },
+			fields: ["test_type"],
+		}),
+		frappe.db.get_value("Batch", frm.doc.item_batch, "qa_status"),
+	]).then(([requirements, done_analyses, batch_r]) => {
+		if (!requirements.length) return;
 
-	if (days_diff < 0) {
-		frm.dashboard.set_headline_alert(
-			`<span class="indicator red">Next analysis was due ${Math.abs(days_diff)} day(s) ago (${due}). Please take measurements immediately.</span>`
+		const done_types = new Set(done_analyses.map((r) => r.test_type));
+		const qa_status = batch_r && batch_r.message ? batch_r.message.qa_status : null;
+
+		const status_badge = qa_status === "Released"
+			? `<span class="badge badge-success">${__("Released")}</span>`
+			: `<span class="badge badge-warning">${__("Pending QA")}</span>`;
+
+		let rows = requirements.map((r) => {
+			const done = done_types.has(r.test_type);
+			const icon = done ? "✓" : "✗";
+			const color = done ? "green" : (r.is_mandatory ? "red" : "#888");
+			const mandatory = r.is_mandatory ? ` <small>(${__("mandatory")})</small>` : ` <small>(${__("optional")})</small>`;
+			return `<span style="margin-right:14px;color:${color}">${icon} ${r.test_type}${mandatory}</span>`;
+		}).join("");
+
+		frm.set_intro(
+			`<b>${__("Batch QA Status")}:</b> ${status_badge} &nbsp;&nbsp; ${rows}`,
+			qa_status === "Released" ? "green" : "orange"
 		);
-	} else if (days_diff === 0) {
-		frm.dashboard.set_headline_alert(
-			`<span class="indicator orange">Next analysis is due TODAY (${due}). Please take measurements.</span>`
-		);
-	} else if (days_diff <= (frm.doc.alert_before_days || 1)) {
-		frm.dashboard.set_headline_alert(
-			`<span class="indicator yellow">Next analysis due in ${days_diff} day(s) on ${due}.</span>`
-		);
-	}
-}
-
-// ── Range check for measurement table ────────────────────────────────────────
-function _check_range(cdt, cdn) {
-	const row = locals[cdt][cdn];
-	if (!row.parameter || row.value === undefined) return;
-
-	frappe.db.get_value(
-		"Lab Test Parameter",
-		row.parameter,
-		["min_value", "max_value"],
-		(r) => {
-			if (!r) return;
-			const within =
-				(r.min_value === null || row.value >= r.min_value) &&
-				(r.max_value === null || row.value <= r.max_value);
-			frappe.model.set_value(cdt, cdn, "within_range", within ? 1 : 0);
-		}
-	);
+	});
 }

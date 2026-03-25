@@ -1,0 +1,26 @@
+[
+ {
+  "description": "Premium — large, uniform, no blemishes",
+  "docstatus": 0,
+  "doctype": "Banana Grade",
+  "grade_name": "Grade A",
+  "modified": "2026-03-16 18:15:59.831610",
+  "name": "Grade A"
+ },
+ {
+  "description": "Standard — slight blemishes, good for wine",
+  "docstatus": 0,
+  "doctype": "Banana Grade",
+  "grade_name": "Grade B",
+  "modified": "2026-03-16 18:15:59.834685",
+  "name": "Grade B"
+ },
+ {
+  "description": "Basic — minor bruising, acceptable for processing",
+  "docstatus": 0,
+  "doctype": "Banana Grade",
+  "grade_name": "Grade C",
+  "modified": "2026-03-16 18:15:59.836174",
+  "name": "Grade C"
+ }
+]

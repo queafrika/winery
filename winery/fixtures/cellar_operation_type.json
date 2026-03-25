@@ -1,0 +1,47 @@
+[
+ {
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Cellar Operation Type",
+  "modified": "2026-03-11 11:56:34.915015",
+  "name": "Chilling",
+  "operation_type_name": "Chilling",
+  "tasks": []
+ },
+ {
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Cellar Operation Type",
+  "modified": "2026-03-11 05:52:09.010292",
+  "name": "Fermentation",
+  "operation_type_name": "Fermentation",
+  "tasks": []
+ },
+ {
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Cellar Operation Type",
+  "modified": "2026-03-11 05:47:51.095585",
+  "name": "Holding",
+  "operation_type_name": "Holding",
+  "tasks": []
+ },
+ {
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Cellar Operation Type",
+  "modified": "2026-03-11 05:48:10.323766",
+  "name": "Cutting and Mushing",
+  "operation_type_name": "Cutting and Mushing",
+  "tasks": []
+ },
+ {
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Cellar Operation Type",
+  "modified": "2026-03-11 05:43:33.731410",
+  "name": "Mixing",
+  "operation_type_name": "Mixing",
+  "tasks": []
+ }
+]

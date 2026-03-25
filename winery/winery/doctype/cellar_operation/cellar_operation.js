@@ -149,7 +149,8 @@ function _build_transfer_dialog(frm, stock_items, item_map, conv_map) {
 			reqd: 1,
 		});
 
-		if (info.has_batch_no) {
+		if (info.has_batch_no && !uom_mismatch) {
+			// UOM-mismatch batch items use the HTML table below instead
 			fields.push({
 				fieldname: `batch_no_${idx}`,
 				fieldtype: "Link",
@@ -172,23 +173,43 @@ function _build_transfer_dialog(frm, stock_items, item_map, conv_map) {
 			});
 		}
 
-		if (uom_mismatch) {
+		if (uom_mismatch && info.has_batch_no) {
+			// Multi-batch: dynamic HTML table — one row per batch
 			fields.push({
-				fieldname: `cf_${idx}`,
-				fieldtype: "Float",
-				label: __(`Conversion Factor (1 ${req_uom} = ? ${stock_uom})`),
-				default: default_cf,
-				reqd: 1,
-				description: default_cf && default_cf !== 1
-					? __(`Pre-filled from UOM table. Adjust if this batch has a different weight.`)
-					: __(`Enter how many ${stock_uom} equals 1 ${req_uom} for this specific batch.`),
+				fieldname: `batch_table_${idx}`,
+				fieldtype: "HTML",
+				options: `
+					<table class="table table-bordered table-sm" style="margin-bottom:6px">
+						<thead><tr>
+							<th>${__("Batch No")}</th>
+							<th style="width:140px">${stock_uom} ${__("Count")}</th>
+							<th style="width:36px"></th>
+						</tr></thead>
+						<tbody class="bt-tbody"></tbody>
+					</table>
+					<button class="btn btn-xs btn-default bt-add" type="button">
+						+ ${__("Add Row")}
+					</button>
+					<div class="bt-total" style="color:#555;font-size:12px;margin-top:6px">
+						${__("Total")}: 0 ${stock_uom} (${__("represents")} ${item.quantity} ${req_uom})
+					</div>`,
 			});
-			// Placeholder for effective qty hint — updated live
+		} else if (uom_mismatch) {
+			// No batch tracking: single total stock-uom qty field
+			const default_stock_qty = parseFloat(((item.quantity || 0) * default_cf).toFixed(3));
+			fields.push({
+				fieldname: `actual_qty_${idx}`,
+				fieldtype: "Float",
+				label: __(`Total ${stock_uom} to Transfer`),
+				default: default_stock_qty || null,
+				reqd: 1,
+				description: __(`Enter the actual ${stock_uom} count being transferred. The system treats this as ${item.quantity} ${req_uom}.`),
+			});
 			fields.push({
 				fieldname: `eff_qty_${idx}`,
 				fieldtype: "HTML",
-				options: `<div id="eff_qty_${idx}" style="color:#555;font-size:12px;padding-bottom:4px">
-					Effective qty: ${_fmt_eff_qty(item.quantity, default_cf, stock_uom)}
+				options: `<div style="color:#555;font-size:12px;padding-bottom:4px">
+					${__("Represents")}: ${item.quantity} ${req_uom}
 				</div>`,
 			});
 		}
@@ -203,21 +224,67 @@ function _build_transfer_dialog(frm, stock_items, item_map, conv_map) {
 		fields,
 		primary_action_label: __("Transfer"),
 		primary_action(values) {
-			const transfer_items = stock_items.map((item, idx) => {
+			const transfer_items = [];
+			let validation_failed = false;
+
+			stock_items.forEach((item, idx) => {
+				if (validation_failed) return;
 				const info = item_map[item.item];
 				const conv = conv_map[item.item] || {};
 				const stock_uom = conv.stock_uom || info.stock_uom;
 				const uom_mismatch = item.uom && stock_uom && item.uom !== stock_uom;
-				return {
-					item_code: item.item,
-					qty: item.quantity,
-					uom: item.uom || null,
-					s_warehouse: values[`s_warehouse_${idx}`],
-					batch_no: values[`batch_no_${idx}`] || null,
-					serial_no: values[`serial_no_${idx}`] || null,
-					conversion_factor: uom_mismatch ? (values[`cf_${idx}`] || 1) : 1,
-				};
+				const s_warehouse = values[`s_warehouse_${idx}`];
+
+				if (uom_mismatch && info.has_batch_no) {
+					// Multi-batch: read rows from the HTML table
+					const tbody = dialog.fields_dict[`batch_table_${idx}`].$wrapper.find(".bt-tbody")[0];
+					let has_entry = false;
+					tbody.querySelectorAll("tr").forEach(row => {
+						const batch_no = row.querySelector(".b-no").value.trim();
+						const batch_qty = parseFloat(row.querySelector(".b-qty").value) || 0;
+						if (!batch_no || !batch_qty) return;
+						has_entry = true;
+						transfer_items.push({
+							item_code: item.item,
+							qty: batch_qty,
+							uom: stock_uom,
+							s_warehouse,
+							batch_no,
+							conversion_factor: 1,
+						});
+					});
+					if (!has_entry) {
+						frappe.msgprint(__(
+							`Please enter at least one batch and ${stock_uom} count for ${item.item}.`
+						));
+						validation_failed = true;
+					}
+				} else if (uom_mismatch) {
+					// Single line, transact in stock_uom
+					transfer_items.push({
+						item_code: item.item,
+						qty: parseFloat(values[`actual_qty_${idx}`]) || 0,
+						uom: stock_uom,
+						s_warehouse,
+						batch_no: values[`batch_no_${idx}`] || null,
+						serial_no: values[`serial_no_${idx}`] || null,
+						conversion_factor: 1,
+					});
+				} else {
+					// No UOM mismatch — original behaviour
+					transfer_items.push({
+						item_code: item.item,
+						qty: item.quantity,
+						uom: item.uom || null,
+						s_warehouse,
+						batch_no: values[`batch_no_${idx}`] || null,
+						serial_no: values[`serial_no_${idx}`] || null,
+						conversion_factor: 1,
+					});
+				}
 			});
+
+			if (validation_failed) return;
 
 			frm.call("transfer_materials", {
 				wip_warehouse: values.wip_warehouse,
@@ -231,27 +298,106 @@ function _build_transfer_dialog(frm, stock_items, item_map, conv_map) {
 		},
 	});
 
-	dialog.show();
-
-	// Live-update effective qty hints when conversion factor changes
+	// Init batch tables before show — fields_dict.$wrapper is populated during Dialog construction
 	stock_items.forEach((item, idx) => {
+		const info = item_map[item.item];
 		const conv = conv_map[item.item] || {};
-		const stock_uom = conv.stock_uom || item_map[item.item].stock_uom;
+		const stock_uom = conv.stock_uom || info.stock_uom;
 		const req_uom = item.uom;
 		if (!req_uom || !stock_uom || req_uom === stock_uom) return;
-
-		dialog.fields_dict[`cf_${idx}`].$input.on("input change", function () {
-			const cf = parseFloat(this.value) || 0;
-			const eff = cf ? `${(item.quantity * cf).toFixed(3)} ${stock_uom}` : "—";
-			const el = document.getElementById(`eff_qty_${idx}`);
-			if (el) el.textContent = `Effective qty: ${eff}`;
-		});
+		if (!info.has_batch_no) return;
+		_init_batch_table(dialog, idx, item, stock_uom, req_uom);
 	});
+
+	dialog.show();
 }
 
-function _fmt_eff_qty(qty, cf, stock_uom) {
-	if (!cf || cf === 1) return "";
-	return `${((qty || 0) * cf).toFixed(3)} ${stock_uom}`;
+function _init_batch_table(dialog, idx, item, stock_uom, req_uom) {
+	const $field = dialog.fields_dict[`batch_table_${idx}`].$wrapper;
+	let availableBatches = [];
+
+	function buildBatchOptions() {
+		let html = `<option value="">— ${__("Select Batch")} —</option>`;
+		availableBatches.forEach(b => {
+			html += `<option value="${b.batch_no}">${b.batch_no} (${parseFloat(b.qty).toFixed(0)} ${stock_uom})</option>`;
+		});
+		return html;
+	}
+
+	function populateBatchSelects() {
+		const optHtml = buildBatchOptions();
+		$field.find(".b-no").each(function () {
+			const cur = this.value;
+			this.innerHTML = optHtml;
+			if (cur) this.value = cur;  // restore selection if still valid
+		});
+	}
+
+	function loadBatches(warehouse) {
+		if (!warehouse) return;
+		frappe.call({
+			method: "winery.winery.doctype.cellar_operation.cellar_operation.get_batches_for_item_warehouse",
+			args: { item_code: item.item, warehouse },
+		}).then(r => {
+			availableBatches = r.message || [];
+			populateBatchSelects();
+		});
+	}
+
+	// Watch the source warehouse field — df.onchange is called with this = field control
+	const wfDict = dialog.fields_dict[`s_warehouse_${idx}`];
+	if (wfDict) {
+		const orig = wfDict.df.onchange;
+		wfDict.df.onchange = function () {
+			orig?.call(this);
+			loadBatches(this.value);
+		};
+	}
+
+	const tbody   = $field.find(".bt-tbody")[0];
+	const totalEl = $field.find(".bt-total")[0];
+	const addBtn  = $field.find(".bt-add")[0];
+
+	function recalcTotal() {
+		let total = 0;
+		tbody.querySelectorAll(".b-qty").forEach(inp => {
+			total += parseFloat(inp.value) || 0;
+		});
+		totalEl.textContent =
+			`${__("Total")}: ${total.toFixed(0)} ${stock_uom} (${__("represents")} ${item.quantity} ${req_uom})`;
+	}
+
+	function addRow(removable) {
+		const tr = document.createElement("tr");
+		tr.innerHTML = `
+			<td>
+				<select class="form-control form-control-sm b-no">
+					<option value="">— ${__("Select Batch")} —</option>
+				</select>
+			</td>
+			<td>
+				<input type="number" class="form-control form-control-sm b-qty"
+				       placeholder="0" min="0" step="1">
+			</td>
+			<td style="text-align:center;vertical-align:middle">
+				${removable
+					? `<button class="btn btn-xs btn-danger rm-row" type="button"
+					           style="line-height:1;padding:2px 7px">&times;</button>`
+					: ""}
+			</td>`;
+		tbody.appendChild(tr);
+		tr.querySelector(".b-no").innerHTML = buildBatchOptions();
+		tr.querySelector(".b-qty").addEventListener("input", recalcTotal);
+		if (removable) {
+			tr.querySelector(".rm-row").addEventListener("click", () => {
+				tr.remove();
+				recalcTotal();
+			});
+		}
+	}
+
+	addRow(false);  // first row is non-removable
+	addBtn.addEventListener("click", () => addRow(true));
 }
 
 function _show_start_dialog(frm) {
@@ -307,6 +453,9 @@ function _create_lab_analysis(frm) {
 				cellar_operation: frm.doc.name,
 				cellar_operation_task: values.task_name,
 				wine_batch: frm.doc.wine_batch,
+				test_type: task ? task.test_type : null,
+				analysis_date: frappe.datetime.get_today(),
+				analyzed_by: frappe.session.user,
 				expected_sample_size: task ? task.expected_sample_size : null,
 				expected_sample_uom: task ? task.expected_sample_uom : null,
 			});

@@ -145,8 +145,45 @@ class CellarOperation(Document):
 		if not se.items:
 			frappe.throw("No valid items to transfer. Please provide source warehouses.")
 
+		# Block batches that have not yet passed their mandatory QA lab analyses
+		blocked = []
+		for row in items:
+			batch_no = row.get("batch_no")
+			item_code = row.get("item_code")
+			if not batch_no or not item_code:
+				continue
+			if not frappe.db.exists("Item Lab Test Requirement", {"parent": item_code}):
+				continue
+			qa_status = frappe.db.get_value("Batch", batch_no, "qa_status")
+			if qa_status != "Released":
+				mandatory = [
+					r.test_type
+					for r in frappe.get_all(
+						"Item Lab Test Requirement",
+						filters={"parent": item_code, "is_mandatory": 1},
+						fields=["test_type"],
+					)
+				]
+				done = {
+					r.test_type
+					for r in frappe.get_all(
+						"Lab Analysis",
+						filters={"item_batch": batch_no, "docstatus": 1},
+						fields=["test_type"],
+					)
+				}
+				missing = [t for t in mandatory if t not in done]
+				blocked.append(f"<b>{batch_no}</b> ({item_code}): missing {', '.join(missing)}")
+
+		if blocked:
+			frappe.throw(
+				"The following batches have not completed mandatory QA lab analyses:<br>"
+				+ "<br>".join(f"• {b}" for b in blocked)
+			)
+
+		se.use_serial_batch_fields = 1
 		se.insert(ignore_permissions=True)
-		# se.submit()
+		se.submit()
 		self.db_set("transfer_entry", se.name)
 		self.db_set("wip_warehouse", wip_warehouse)
 		frappe.msgprint(f"WIP Transfer Entry <b>{se.name}</b> created.", alert=True)
@@ -177,6 +214,7 @@ class CellarOperation(Document):
 			"is_finished_item": 1,
 		})
 
+		se.use_serial_batch_fields = 1
 		se.insert(ignore_permissions=True)
 		se.submit()
 		self.db_set("stock_entry", se.name)
@@ -198,6 +236,28 @@ class CellarOperation(Document):
 # --------------------------------------------------------------------------- #
 #  UOM conversion helper (called from Transfer Stock dialog)                   #
 # --------------------------------------------------------------------------- #
+
+@frappe.whitelist()
+def start_cellar_operation(name, employee=None):
+	"""Standalone helper so the Wine Batch view can start an operation."""
+	doc = frappe.get_doc("Cellar Operation", name)
+	doc.start_operation(employee=employee)
+
+
+@frappe.whitelist()
+def transfer_materials_for_op(name, wip_warehouse, items):
+	"""Module-level wrapper callable from Wine Batch view."""
+	doc = frappe.get_doc("Cellar Operation", name)
+	return doc.transfer_materials(wip_warehouse, items)
+
+
+@frappe.whitelist()
+def complete_cellar_operation(name):
+	"""Standalone helper so the Wine Batch view can complete an operation without
+	needing to pass the full serialised document (avoids the docs='' JSON error)."""
+	doc = frappe.get_doc("Cellar Operation", name)
+	doc.complete_operation()
+
 
 @frappe.whitelist()
 def get_uom_conversion(item_code, from_uom):
@@ -237,3 +297,19 @@ def get_uom_conversion(item_code, from_uom):
 			cf = 1.0 / flt(reverse)
 
 	return {"stock_uom": stock_uom, "conversion_factor": flt(cf) or 1.0}
+
+
+# --------------------------------------------------------------------------- #
+#  Batch availability helper (called from Transfer Stock dialog)               #
+# --------------------------------------------------------------------------- #
+
+@frappe.whitelist()
+def get_batches_for_item_warehouse(item_code, warehouse):
+	"""Return batches with positive available stock for item_code in warehouse."""
+	from erpnext.stock.doctype.batch.batch import get_batch_qty
+	batches = get_batch_qty(item_code=item_code, warehouse=warehouse) or []
+	return [
+		{"batch_no": b.get("batch_no"), "qty": b.get("qty")}
+		for b in batches
+		if b.get("qty", 0) > 0
+	]

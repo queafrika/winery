@@ -179,22 +179,6 @@
   </table>
   {% endif %}
 
-  <!-- GENERAL MEASUREMENTS -->
-  {% if doc.measurement %}
-  <div class="sec-sub">General Measurements</div>
-  <table class="tests">
-    {% for row in doc.measurement %}
-    <tr class="{{ 'pass' if row.within_range else 'fail' }}">
-      <td class="chk">☐</td>
-      <td class="label">{{ row.parameter }}</td>
-      <td class="value">{{ row.value }} {{ row.unit or '' }}</td>
-      <td class="result">
-        {% if row.within_range %}{{ pass_icon }} Pass{% else %}{{ fail_icon }} Fail{% endif %}
-      </td>
-    </tr>
-    {% endfor %}
-  </table>
-  {% endif %}
 
   <!-- FINAL BATCH STATUS -->
   <div class="sec-head">FINAL BATCH STATUS</div>

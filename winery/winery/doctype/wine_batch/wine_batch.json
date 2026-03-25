@@ -8,7 +8,6 @@
  "field_order": [
   "section_break_details",
   "recipe",
-  "output_item",
   "column_break_1",
   "status",
   "start_date",
@@ -20,21 +19,36 @@
   "required_materials",
   "section_break_ziqp",
   "lab_analyses",
-  "section_break_progress",
-  "current_stage_number",
-  "current_stage_name",
-  "column_break_2",
-  "current_vessel",
-  "section_break_output",
-  "erpnext_batch_no",
-  "actual_batch_size",
-  "process_loss",
   "section_break_notes",
   "notes",
+  "current_stage_number",
+  "current_stage_name",
   "cellar_ops_tab",
   "cellar_ops_html",
   "lab_tab",
   "lab_analyses_html",
+  "bottling_packaging_tab",
+  "section_bp_template",
+  "bottling_template",
+  "bottling_date",
+  "column_break_bp1",
+  "abv_percentage",
+  "abv_tax_band",
+  "excise_duty_per_litre",
+  "section_bp_status",
+  "bottling_status",
+  "bottling_stock_entry",
+  "column_break_bp2",
+  "total_volume_bottled",
+  "process_loss",
+  "yield_efficiency_pct",
+  "excise_duty_amount",
+  "section_bottling_lines",
+  "bottling_lines",
+  "section_packaging_lines",
+  "packaging_lines",
+  "section_material_lines",
+  "material_lines",
   "amended_from"
  ],
  "fields": [
@@ -49,15 +63,6 @@
    "in_list_view": 1,
    "label": "Recipe",
    "options": "Recipe",
-   "reqd": 1
-  },
-  {
-   "fetch_from": "recipe.output_item",
-   "fieldname": "output_item",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Output Item",
-   "options": "Item",
    "reqd": 1
   },
   {
@@ -112,56 +117,15 @@
    "options": "Recipe Raw Material"
   },
   {
-   "fieldname": "section_break_progress",
-   "fieldtype": "Section Break",
-   "label": "Current Progress"
-  },
-  {
    "fieldname": "current_stage_number",
    "fieldtype": "Int",
-   "label": "Current Stage No.",
-   "read_only": 1
+   "label": "Current Stage Number"
   },
   {
    "fieldname": "current_stage_name",
    "fieldtype": "Data",
-   "label": "Current Stage",
-   "read_only": 1
-  },
-  {
-   "fieldname": "column_break_2",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "current_vessel",
-   "fieldtype": "Link",
-   "label": "Current Vessel",
-   "options": "Vessel",
-   "read_only": 1
-  },
-  {
-   "fieldname": "section_break_output",
-   "fieldtype": "Section Break",
-   "label": "Final Output"
-  },
-  {
-   "fieldname": "erpnext_batch_no",
-   "fieldtype": "Link",
-   "label": "ERPNext Batch No",
-   "options": "Batch",
-   "read_only": 1,
-   "description": "Set when Bottling & Packaging is submitted"
-  },
-  {
-   "fieldname": "actual_batch_size",
-   "fieldtype": "Float",
-   "label": "Actual Batch Size (Litres)",
-   "read_only": 1
-  },
-  {
-   "fieldname": "process_loss",
-   "fieldtype": "Float",
-   "label": "Process Loss (Litres)",
+   "label": "Current Stage Name",
+   "no_copy": 1,
    "read_only": 1
   },
   {
@@ -205,6 +169,147 @@
    "label": "Lab Analyses"
   },
   {
+   "fieldname": "bottling_packaging_tab",
+   "fieldtype": "Tab Break",
+   "label": "Bottling & Packaging"
+  },
+  {
+   "fieldname": "section_bp_template",
+   "fieldtype": "Section Break",
+   "label": "Template & Dates"
+  },
+  {
+   "fieldname": "bottling_template",
+   "fieldtype": "Link",
+   "label": "Bottling & Packaging Template",
+   "options": "Bottling Packaging Template",
+   "description": "Select a template to pre-fill bottling and packaging lines",
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "bottling_date",
+   "fieldtype": "Date",
+   "label": "Bottling Date",
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "column_break_bp1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "abv_percentage",
+   "fieldtype": "Float",
+   "label": "ABV (%)",
+   "description": "Alcohol By Volume percentage",
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "abv_tax_band",
+   "fieldtype": "Link",
+   "label": "ABV Tax Band",
+   "options": "ABV Tax Band",
+   "read_only": 1,
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "excise_duty_per_litre",
+   "fieldtype": "Currency",
+   "label": "Excise Duty per Litre",
+   "read_only": 1,
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "section_bp_status",
+   "fieldtype": "Section Break",
+   "label": "Bottling Status & Results"
+  },
+  {
+   "fieldname": "bottling_status",
+   "fieldtype": "Select",
+   "label": "Bottling Status",
+   "options": "Pending\nCompleted",
+   "default": "Pending",
+   "read_only": 1,
+   "in_list_view": 0
+  },
+  {
+   "fieldname": "bottling_stock_entry",
+   "fieldtype": "Link",
+   "label": "Bottling Stock Entry",
+   "options": "Stock Entry",
+   "read_only": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "column_break_bp2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_volume_bottled",
+   "fieldtype": "Float",
+   "label": "Total Volume Bottled (L)",
+   "read_only": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "process_loss",
+   "fieldtype": "Float",
+   "label": "Process Loss (L)",
+   "read_only": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "yield_efficiency_pct",
+   "fieldtype": "Float",
+   "label": "Yield Efficiency (%)",
+   "read_only": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "excise_duty_amount",
+   "fieldtype": "Currency",
+   "label": "Total Excise Duty",
+   "read_only": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "section_bottling_lines",
+   "fieldtype": "Section Break",
+   "label": "Bottling Lines"
+  },
+  {
+   "fieldname": "bottling_lines",
+   "fieldtype": "Table",
+   "label": "Bottling Lines",
+   "options": "Wine Batch Bottling Line",
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "section_packaging_lines",
+   "fieldtype": "Section Break",
+   "label": "Packaging Lines"
+  },
+  {
+   "fieldname": "packaging_lines",
+   "fieldtype": "Table",
+   "label": "Packaging Lines",
+   "options": "Wine Batch Packaging Line",
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "section_material_lines",
+   "fieldtype": "Section Break",
+   "label": "Additional Materials"
+  },
+  {
+   "fieldname": "material_lines",
+   "fieldtype": "Table",
+   "label": "Additional Materials",
+   "options": "Wine Batch Material Line",
+   "description": "Other consumables used during bottling — corks, labels, stamp duty stickers, cartons, etc.",
+   "allow_on_submit": 1
+  },
+  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
@@ -219,11 +324,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-11 12:03:03.444224",
+ "modified": "2026-03-25 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Winery",
  "name": "Wine Batch",
- "naming_rule": "Expression (old style)",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {

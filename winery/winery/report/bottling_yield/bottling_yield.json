@@ -1,0 +1,13 @@
+{
+ "add_total_row": 1,
+ "columns": [],
+ "disabled": 0,
+ "doctype": "Report",
+ "filters": [],
+ "is_standard": "Yes",
+ "module": "Winery",
+ "name": "Bottling Yield",
+ "ref_doctype": "Bottling",
+ "report_name": "Bottling Yield",
+ "report_type": "Script Report"
+}

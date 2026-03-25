@@ -1,0 +1,66 @@
+{
+ "actions": [],
+ "creation": "2026-03-25 00:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "batch_series_section",
+  "batch_number_series",
+  "section_break_warehouses",
+  "sample_warehouse",
+  "unpackaged_bottle_warehouse"
+ ],
+ "fields": [
+  {
+   "fieldname": "batch_series_section",
+   "fieldtype": "Section Break",
+   "label": "Batch Numbering"
+  },
+  {
+   "fieldname": "batch_number_series",
+   "fieldtype": "Data",
+   "label": "Batch Number Series",
+   "description": "Naming series for ERPNext Batch records created on bottling completion. E.g. BATCH-.YYYY.-.#####",
+   "default": "BATCH-.YYYY.-.#####"
+  },
+  {
+   "fieldname": "section_break_warehouses",
+   "fieldtype": "Section Break",
+   "label": "Warehouses"
+  },
+  {
+   "fieldname": "sample_warehouse",
+   "fieldtype": "Link",
+   "label": "Sample Warehouse",
+   "options": "Warehouse",
+   "description": "Destination warehouse for sample bottles kept from each bottling line"
+  },
+  {
+   "fieldname": "unpackaged_bottle_warehouse",
+   "fieldtype": "Link",
+   "label": "Unpackaged Bottle Warehouse",
+   "options": "Warehouse",
+   "description": "Destination warehouse for remainder filled bottles not allocated to any packaging line"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-03-25 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Winery Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "read": 1,
+   "role": "System Manager",
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import flt, cint
+from frappe.utils import flt, cint, today
 
 
 class Bottling(Document):
@@ -200,6 +200,7 @@ class Bottling(Document):
 			"process_loss": self.process_loss,
 			"erpnext_batch_no": self.erpnext_batch_no,
 			"status": "Completed",
+			"end_date": today(),
 		})
 
 	def _revert_wine_batch(self):
@@ -208,6 +209,7 @@ class Bottling(Document):
 			"process_loss": 0,
 			"erpnext_batch_no": None,
 			"status": "Active",
+			"end_date": None,
 		})
 
 

@@ -1,0 +1,350 @@
+[
+ {
+  "base_batch_size": 1.0,
+  "base_uom": "Litre",
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Recipe",
+  "is_active": 1,
+  "lab_analyses": [],
+  "modified": "2026-03-17 02:24:08",
+  "name": "Dry Wine",
+  "output_item": "Bulk Dry Wine",
+  "process_name": "Dry Wine",
+  "raw_materials": [
+   {
+    "item": "Ripe Banana",
+    "notes": null,
+    "quantity": 0.25,
+    "stage_name": "Cutting and Mushing",
+    "status": "Pending",
+    "uom": "Kg"
+   },
+   {
+    "item": "Water",
+    "notes": null,
+    "quantity": 1.0,
+    "stage_name": "Mixing",
+    "status": "Pending",
+    "uom": "Litre"
+   },
+   {
+    "item": "Yeast",
+    "notes": null,
+    "quantity": 3.5,
+    "stage_name": "Fermentation",
+    "status": "Pending",
+    "uom": "Gram"
+   },
+   {
+    "item": "Sugar",
+    "notes": null,
+    "quantity": 500.0,
+    "stage_name": "Fermentation",
+    "status": "Pending",
+    "uom": "Gram"
+   },
+   {
+    "item": "Pectinase",
+    "notes": null,
+    "quantity": 0.05,
+    "stage_name": "Fermentation",
+    "status": "Pending",
+    "uom": "Gram"
+   },
+   {
+    "item": "Amilase",
+    "notes": null,
+    "quantity": 0.5,
+    "stage_name": "Fermentation",
+    "status": "Pending",
+    "uom": "Gram"
+   },
+   {
+    "item": "Pottasium Metabisulfite",
+    "notes": null,
+    "quantity": 0.25,
+    "stage_name": "Mixing",
+    "status": "Pending",
+    "uom": "Tablet"
+   },
+   {
+    "item": "Pottasium Sobate",
+    "notes": null,
+    "quantity": 0.75,
+    "stage_name": "Holding",
+    "status": "Pending",
+    "uom": "Milligram"
+   },
+   {
+    "item": "Pottasium Metabisulfite",
+    "notes": null,
+    "quantity": 0.25,
+    "stage_name": "Chilling",
+    "status": "Pending",
+    "uom": "Tablet"
+   }
+  ]
+ },
+ {
+  "base_batch_size": 1.0,
+  "base_uom": "Litre",
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Recipe",
+  "is_active": 1,
+  "lab_analyses": [],
+  "modified": "2026-03-17 02:24:08",
+  "name": "Medium Dry Wine",
+  "output_item": "Bulk Medium Dry Wine",
+  "process_name": "Medium Dry Wine",
+  "raw_materials": [
+   {
+    "item": "Ripe Banana",
+    "notes": null,
+    "quantity": 0.25,
+    "stage_name": "Cutting and Mushing",
+    "status": "Pending",
+    "uom": "Kg"
+   },
+   {
+    "item": "Water",
+    "notes": null,
+    "quantity": 1.0,
+    "stage_name": "Mixing",
+    "status": "Pending",
+    "uom": "Litre"
+   },
+   {
+    "item": "Yeast",
+    "notes": null,
+    "quantity": 3.5,
+    "stage_name": "Fermentation",
+    "status": "Pending",
+    "uom": "Gram"
+   },
+   {
+    "item": "Sugar",
+    "notes": null,
+    "quantity": 500.0,
+    "stage_name": "Fermentation",
+    "status": "Pending",
+    "uom": "Gram"
+   },
+   {
+    "item": "Pectinase",
+    "notes": null,
+    "quantity": 0.05,
+    "stage_name": "Fermentation",
+    "status": "Pending",
+    "uom": "Gram"
+   },
+   {
+    "item": "Amilase",
+    "notes": null,
+    "quantity": 0.5,
+    "stage_name": "Fermentation",
+    "status": "Pending",
+    "uom": "Gram"
+   },
+   {
+    "item": "Pottasium Metabisulfite",
+    "notes": null,
+    "quantity": 0.25,
+    "stage_name": "Mixing",
+    "status": "Pending",
+    "uom": "Tablet"
+   },
+   {
+    "item": "Pottasium Sobate",
+    "notes": null,
+    "quantity": 0.75,
+    "stage_name": "Holding",
+    "status": "Pending",
+    "uom": "Milligram"
+   },
+   {
+    "item": "Pottasium Metabisulfite",
+    "notes": null,
+    "quantity": 0.25,
+    "stage_name": "Chilling",
+    "status": "Pending",
+    "uom": "Tablet"
+   }
+  ]
+ },
+ {
+  "base_batch_size": 1.0,
+  "base_uom": "Litre",
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Recipe",
+  "is_active": 1,
+  "lab_analyses": [],
+  "modified": "2026-03-17 02:24:08",
+  "name": "Semi Sweet Wine",
+  "output_item": "Semi Sweet Wine",
+  "process_name": "Semi Sweet Wine",
+  "raw_materials": [
+   {
+    "item": "Ripe Banana",
+    "notes": null,
+    "quantity": 0.25,
+    "stage_name": "Cutting and Mushing",
+    "status": "Pending",
+    "uom": "Kg"
+   },
+   {
+    "item": "Water",
+    "notes": null,
+    "quantity": 1.0,
+    "stage_name": "Mixing",
+    "status": "Pending",
+    "uom": "Litre"
+   },
+   {
+    "item": "Yeast",
+    "notes": null,
+    "quantity": 3.5,
+    "stage_name": "Fermentation",
+    "status": "Pending",
+    "uom": "Gram"
+   },
+   {
+    "item": "Sugar",
+    "notes": null,
+    "quantity": 750.0,
+    "stage_name": "Fermentation",
+    "status": "Pending",
+    "uom": "Gram"
+   },
+   {
+    "item": "Pectinase",
+    "notes": null,
+    "quantity": 0.05,
+    "stage_name": "Fermentation",
+    "status": "Pending",
+    "uom": "Gram"
+   },
+   {
+    "item": "Amilase",
+    "notes": null,
+    "quantity": 0.5,
+    "stage_name": "Fermentation",
+    "status": "Pending",
+    "uom": "Gram"
+   },
+   {
+    "item": "Pottasium Metabisulfite",
+    "notes": null,
+    "quantity": 0.25,
+    "stage_name": "Mixing",
+    "status": "Pending",
+    "uom": "Tablet"
+   },
+   {
+    "item": "Pottasium Sobate",
+    "notes": null,
+    "quantity": 0.75,
+    "stage_name": "Holding",
+    "status": "Pending",
+    "uom": "Milligram"
+   },
+   {
+    "item": "Pottasium Metabisulfite",
+    "notes": null,
+    "quantity": 0.25,
+    "stage_name": "Chilling",
+    "status": "Pending",
+    "uom": "Tablet"
+   }
+  ]
+ },
+ {
+  "base_batch_size": 1.0,
+  "base_uom": "Litre",
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Recipe",
+  "is_active": 1,
+  "lab_analyses": [],
+  "modified": "2026-03-17 02:24:08",
+  "name": "Sweet Wine",
+  "output_item": "Sweet Wine",
+  "process_name": "Sweet Wine",
+  "raw_materials": [
+   {
+    "item": "Ripe Banana",
+    "notes": null,
+    "quantity": 0.25,
+    "stage_name": "Cutting and Mushing",
+    "status": "Pending",
+    "uom": "Kg"
+   },
+   {
+    "item": "Water",
+    "notes": null,
+    "quantity": 1.0,
+    "stage_name": "Mixing",
+    "status": "Pending",
+    "uom": "Litre"
+   },
+   {
+    "item": "Yeast",
+    "notes": null,
+    "quantity": 3.5,
+    "stage_name": "Fermentation",
+    "status": "Pending",
+    "uom": "Gram"
+   },
+   {
+    "item": "Sugar",
+    "notes": null,
+    "quantity": 750.0,
+    "stage_name": "Fermentation",
+    "status": "Pending",
+    "uom": "Gram"
+   },
+   {
+    "item": "Pectinase",
+    "notes": null,
+    "quantity": 0.05,
+    "stage_name": "Fermentation",
+    "status": "Pending",
+    "uom": "Gram"
+   },
+   {
+    "item": "Amilase",
+    "notes": null,
+    "quantity": 0.5,
+    "stage_name": "Fermentation",
+    "status": "Pending",
+    "uom": "Gram"
+   },
+   {
+    "item": "Pottasium Metabisulfite",
+    "notes": null,
+    "quantity": 0.25,
+    "stage_name": "Mixing",
+    "status": "Pending",
+    "uom": "Tablet"
+   },
+   {
+    "item": "Pottasium Sobate",
+    "notes": null,
+    "quantity": 0.75,
+    "stage_name": "Holding",
+    "status": "Pending",
+    "uom": "Milligram"
+   },
+   {
+    "item": "Pottasium Metabisulfite",
+    "notes": null,
+    "quantity": 0.25,
+    "stage_name": "Chilling",
+    "status": "Pending",
+    "uom": "Tablet"
+   }
+  ]
+ }
+]

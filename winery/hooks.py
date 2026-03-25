@@ -158,13 +158,16 @@ required_apps = ["erpnext"]
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+after_migrate = ["winery.winery.utils.seed_recipes.seed_recipe_data"]
+
+doc_events = {
+	"Purchase Receipt": {
+		"on_submit": "winery.winery.utils.qa_hooks.set_batch_qa_pending",
+	},
+	"Purchase Invoice": {
+		"on_submit": "winery.winery.utils.qa_hooks.set_batch_qa_pending",
+	},
+}
 
 # Scheduled Tasks
 # ---------------

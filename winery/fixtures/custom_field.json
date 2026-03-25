@@ -103,5 +103,40 @@
   "label": "Ripening Days (Actual)",
   "insert_after": "ripening_end_date",
   "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Batch-qa_status",
+  "dt": "Batch",
+  "fieldname": "qa_status",
+  "fieldtype": "Select",
+  "label": "QA Status",
+  "options": "\nPending\nReleased",
+  "insert_after": "winery_section",
+  "read_only": 1,
+  "bold": 1,
+  "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Item-lab_test_requirements_section",
+  "dt": "Item",
+  "fieldname": "lab_test_requirements_section",
+  "fieldtype": "Section Break",
+  "label": "Lab Test Requirements",
+  "insert_after": "description",
+  "collapsible": 1,
+  "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Item-lab_test_requirements",
+  "dt": "Item",
+  "fieldname": "lab_test_requirements",
+  "fieldtype": "Table",
+  "label": "Lab Test Requirements",
+  "options": "Item Lab Test Requirement",
+  "insert_after": "lab_test_requirements_section",
+  "module": "Winery"
  }
 ]

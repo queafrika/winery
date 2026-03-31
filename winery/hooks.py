@@ -1,9 +1,6 @@
 app_name = "winery"
 app_title = "Winery"
 
-doctype_js = {
-	"Purchase Invoice": "public/js/purchase_invoice_custom.js"
-}
 
 fixtures = [
 	{

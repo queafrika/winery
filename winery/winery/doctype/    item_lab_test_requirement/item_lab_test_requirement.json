@@ -1,0 +1,39 @@
+{
+ "actions": [],
+ "creation": "2026-03-25 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "test_type",
+  "is_mandatory"
+ ],
+ "fields": [
+  {
+   "fieldname": "test_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Test Type",
+   "options": "\nTemperature Test\nBrix Test\nGravity Test\npH Test\nDissolution Test\nResidual Sugar Test\nSensory Evaluation\nCold Stability Test\nMicrobial Stability Test",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "is_mandatory",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Mandatory"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-25 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Item Lab Test Requirement",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "creation",
+ "sort_order": "DESC"
+}

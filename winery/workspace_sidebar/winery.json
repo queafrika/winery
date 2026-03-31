@@ -105,6 +105,30 @@
   {
    "child": 0,
    "collapsible": 1,
+   "icon": "bottle-wine",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Rebottling and Repackaging",
+   "link_to": "Wine Batch Rebottling",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "component",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Compliance",
+   "link_to": "Compliance License",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
    "icon": "database",
    "indent": 1,
    "keep_closed": 1,
@@ -434,7 +458,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-03-26 19:28:28.489704",
+ "modified": "2026-03-31 19:46:33.233020",
  "modified_by": "Administrator",
  "module": "Winery",
  "name": "Winery",

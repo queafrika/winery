@@ -51,7 +51,7 @@ required_apps = ["erpnext"]
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/winery/css/winery.css"
+app_include_css = ["/assets/winery/css/winery.css"]
 # app_include_js = "/assets/winery/js/winery.js"
 
 # include js, css files in header of web template

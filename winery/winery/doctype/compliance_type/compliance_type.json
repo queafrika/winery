@@ -1,0 +1,185 @@
+{
+ "actions": [],
+ "autoname": "field:type_name",
+ "creation": "2026-03-31 00:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "type_name",
+  "category",
+  "issuing_authority",
+  "description",
+  "column_break_1",
+  "payment_frequency",
+  "auto_renew",
+  "amount_source",
+  "default_amount",
+  "query_section",
+  "query_doctype",
+  "query_date_field",
+  "query_amount_field",
+  "column_break_2",
+  "query_submitted_only",
+  "query_extra_filters",
+  "reminders_section",
+  "default_reminder_rules"
+ ],
+ "fields": [
+  {
+   "fieldname": "type_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Type Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Category",
+   "options": "\nLicense\nPermit\nExcise Duty\nRegulatory Fee\nTax"
+  },
+  {
+   "fieldname": "issuing_authority",
+   "fieldtype": "Data",
+   "label": "Issuing Authority"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "payment_frequency",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Payment Frequency",
+   "options": "\nOne-time\nAnnual\nSemi-Annual\nQuarterly\nMonthly",
+   "reqd": 1
+  },
+  {
+   "fieldname": "auto_renew",
+   "fieldtype": "Check",
+   "label": "Auto-Renew",
+   "description": "Automatically create a new Compliance License record when the current one expires"
+  },
+  {
+   "fieldname": "amount_source",
+   "fieldtype": "Select",
+   "label": "Amount Source",
+   "options": "\nFixed\nQuery",
+   "reqd": 1
+  },
+  {
+   "fieldname": "default_amount",
+   "fieldtype": "Currency",
+   "label": "Default Amount",
+   "depends_on": "eval:doc.amount_source=='Fixed'",
+   "description": "This amount will be pre-filled on new Compliance License records"
+  },
+  {
+   "fieldname": "query_section",
+   "fieldtype": "Section Break",
+   "label": "Query Definition",
+   "depends_on": "eval:doc.amount_source=='Query'"
+  },
+  {
+   "fieldname": "query_doctype",
+   "fieldtype": "Link",
+   "label": "Query DocType",
+   "options": "DocType",
+   "depends_on": "eval:doc.amount_source=='Query'",
+   "description": "The doctype to query for the amount (e.g. Bottling)"
+  },
+  {
+   "fieldname": "query_date_field",
+   "fieldtype": "Data",
+   "label": "Date Field",
+   "depends_on": "eval:doc.amount_source=='Query'",
+   "description": "Field name on the doctype used to filter by period (e.g. bottling_date)"
+  },
+  {
+   "fieldname": "query_amount_field",
+   "fieldtype": "Data",
+   "label": "Amount Field (SUM)",
+   "depends_on": "eval:doc.amount_source=='Query'",
+   "description": "Numeric field to sum (e.g. excise_duty_amount)"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break",
+   "depends_on": "eval:doc.amount_source=='Query'"
+  },
+  {
+   "fieldname": "query_submitted_only",
+   "fieldtype": "Check",
+   "label": "Submitted Records Only",
+   "default": "1",
+   "depends_on": "eval:doc.amount_source=='Query'",
+   "description": "If checked, only includes documents with docstatus = 1"
+  },
+  {
+   "fieldname": "query_extra_filters",
+   "fieldtype": "Code",
+   "label": "Extra Filters (JSON)",
+   "options": "JSON",
+   "depends_on": "eval:doc.amount_source=='Query'",
+   "description": "Optional additional filters as a JSON array, e.g. [[\"wine_batch\",\"!=\",\"\"]]"
+  },
+  {
+   "fieldname": "reminders_section",
+   "fieldtype": "Section Break",
+   "label": "Default Reminder Rules"
+  },
+  {
+   "fieldname": "default_reminder_rules",
+   "fieldtype": "Table",
+   "label": "Default Reminder Rules",
+   "options": "Compliance Reminder Rule",
+   "description": "These rules are copied to each new Compliance License of this type"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-03-31 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Compliance Type",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Winery Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "type_name",
+ "sort_order": "ASC",
+ "states": []
+}

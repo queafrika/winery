@@ -2,7 +2,7 @@
  "actions": [],
  "allow_rename": 1,
  "autoname": "field:farmer_name",
- "creation": "2026-03-10 00:00:00.000000",
+ "creation": "2026-03-10 00:00:00",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -12,14 +12,9 @@
   "column_break_1",
   "phone",
   "email",
-  "farm_name",
-  "section_break_banking",
-  "bank_name",
-  "bank_account_number",
-  "column_break_3",
-  "bank_branch",
-  "mobile_money_number",
   "section_break_erp",
+  "agent",
+  "column_break_oats",
   "supplier",
   "section_break_notes",
   "notes"
@@ -33,16 +28,16 @@
   {
    "fieldname": "farmer_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Farmer Name",
    "reqd": 1,
-   "unique": 1,
-   "in_list_view": 1
+   "unique": 1
   },
   {
    "fieldname": "id_number",
    "fieldtype": "Data",
-   "label": "National ID / Passport No.",
-   "in_list_view": 1
+   "in_list_view": 1,
+   "label": "National ID / Passport No."
   },
   {
    "fieldname": "column_break_1",
@@ -51,8 +46,8 @@
   {
    "fieldname": "phone",
    "fieldtype": "Data",
-   "label": "Phone",
-   "in_list_view": 1
+   "in_list_view": 1,
+   "label": "Phone"
   },
   {
    "fieldname": "email",
@@ -61,54 +56,23 @@
    "options": "Email"
   },
   {
-   "fieldname": "farm_name",
-   "fieldtype": "Link",
-   "label": "Farm",
-   "options": "Farm",
-   "in_list_view": 1,
-   "search_index": 1,
-   "description": "Link to the farmer's farm record"
-  },
-  {
-   "fieldname": "section_break_banking",
-   "fieldtype": "Section Break",
-   "label": "Banking / Payment Details"
-  },
-  {
-   "fieldname": "bank_name",
-   "fieldtype": "Data",
-   "label": "Bank Name"
-  },
-  {
-   "fieldname": "bank_account_number",
-   "fieldtype": "Data",
-   "label": "Bank Account No."
-  },
-  {
-   "fieldname": "column_break_3",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "bank_branch",
-   "fieldtype": "Data",
-   "label": "Bank Branch"
-  },
-  {
-   "fieldname": "mobile_money_number",
-   "fieldtype": "Phone",
-   "label": "Mobile Money Number (M-Pesa)"
-  },
-  {
    "fieldname": "section_break_erp",
    "fieldtype": "Section Break",
    "label": "ERP Link"
   },
   {
+   "description": "Agent who procures bananas on from this farmer",
+   "fieldname": "agent",
+   "fieldtype": "Link",
+   "label": "Agent",
+   "options": "Agent"
+  },
+  {
+   "description": "Linked  Supplier record used for purchase transactions",
    "fieldname": "supplier",
    "fieldtype": "Link",
    "label": "Supplier",
-   "options": "Supplier",
-   "description": "Linked ERPNext Supplier record used for purchase transactions"
+   "options": "Supplier"
   },
   {
    "fieldname": "section_break_notes",
@@ -118,12 +82,22 @@
    "fieldname": "notes",
    "fieldtype": "Small Text",
    "label": "Notes"
+  },
+  {
+   "fieldname": "column_break_oats",
+   "fieldtype": "Column Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2026-03-10 00:00:00.000000",
+ "links": [
+  {
+   "group": "Connections",
+   "link_doctype": "Farm",
+   "link_fieldname": "farmer"
+  }
+ ],
+ "modified": "2026-03-26 06:21:17.488251",
  "modified_by": "Administrator",
  "module": "Winery",
  "name": "Farmer",

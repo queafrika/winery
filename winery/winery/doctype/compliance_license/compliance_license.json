@@ -1,0 +1,205 @@
+{
+ "actions": [],
+ "autoname": "CL-.YYYY.-.#####",
+ "creation": "2026-03-31 00:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "license_name",
+  "compliance_type",
+  "category",
+  "status",
+  "issuing_authority",
+  "reference_number",
+  "issue_date",
+  "expiry_date",
+  "calendar_color",
+  "column_break_1",
+  "payment_frequency",
+  "assigned_to",
+  "amount_source",
+  "amount",
+  "calculated_period",
+  "reminders_section",
+  "reminder_rules",
+  "payment_section",
+  "payment_history",
+  "notes_section",
+  "notes",
+  "attachment"
+ ],
+ "fields": [
+  {
+   "fieldname": "license_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "License / Fee Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "compliance_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Compliance Type",
+   "options": "Compliance Type"
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Data",
+   "label": "Category",
+   "read_only": 1,
+   "fetch_from": "compliance_type.category"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Active\nPending Renewal\nExpired\nSuspended\nCancelled",
+   "default": "Active",
+   "reqd": 1
+  },
+  {
+   "fieldname": "issuing_authority",
+   "fieldtype": "Data",
+   "label": "Issuing Authority"
+  },
+  {
+   "fieldname": "reference_number",
+   "fieldtype": "Data",
+   "label": "Reference / License Number"
+  },
+  {
+   "fieldname": "issue_date",
+   "fieldtype": "Date",
+   "label": "Issue Date"
+  },
+  {
+   "fieldname": "expiry_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Expiry / Due Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "calendar_color",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Calendar Color"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "payment_frequency",
+   "fieldtype": "Select",
+   "label": "Payment Frequency",
+   "options": "\nOne-time\nAnnual\nSemi-Annual\nQuarterly\nMonthly"
+  },
+  {
+   "fieldname": "assigned_to",
+   "fieldtype": "Link",
+   "label": "Assigned To",
+   "options": "User",
+   "description": "This user will receive compliance reminders"
+  },
+  {
+   "fieldname": "amount_source",
+   "fieldtype": "Select",
+   "label": "Amount Source",
+   "options": "\nFixed\nQuery",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Amount"
+  },
+  {
+   "fieldname": "calculated_period",
+   "fieldtype": "Data",
+   "label": "Calculated Period",
+   "read_only": 1,
+   "depends_on": "eval:doc.amount_source=='Query'",
+   "description": "Period used for the last amount calculation"
+  },
+  {
+   "fieldname": "reminders_section",
+   "fieldtype": "Section Break",
+   "label": "Reminder Rules"
+  },
+  {
+   "fieldname": "reminder_rules",
+   "fieldtype": "Table",
+   "label": "Reminder Rules",
+   "options": "Compliance Reminder Rule",
+   "description": "Add one row per reminder threshold. Days Before Expiry = 30 means alert fires 30 days before expiry_date."
+  },
+  {
+   "fieldname": "payment_section",
+   "fieldtype": "Section Break",
+   "label": "Payment History"
+  },
+  {
+   "fieldname": "payment_history",
+   "fieldtype": "Table",
+   "label": "Payment History",
+   "options": "Compliance Payment"
+  },
+  {
+   "fieldname": "notes_section",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "attachment",
+   "fieldtype": "Attach",
+   "label": "License Document"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-03-31 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Compliance License",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Winery Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "expiry_date",
+ "sort_order": "ASC",
+ "states": []
+}

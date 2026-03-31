@@ -1,0 +1,14 @@
+{
+ "doctype": "Page",
+ "module": "Winery",
+ "name": "purchase-bananas",
+ "page_name": "purchase-bananas",
+ "standard": "Yes",
+ "system_page": 0,
+ "title": "Purchase Bananas",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ]
+}

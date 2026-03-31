@@ -147,7 +147,10 @@
   "section_break_approval_notes",
   "approval_notes",
   "section_break_notes",
-  "notes"
+  "notes",
+  "section_break_consumables",
+  "consumables",
+  "consumable_stock_entry"
  ],
  "fields": [
   {
@@ -253,10 +256,10 @@
   },
   {
    "fieldname": "test_type",
-   "fieldtype": "Select",
+   "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Test Type",
-   "options": "\nTemperature Test\nBrix Test\nGravity Test\npH Test\nDissolution Test\nResidual Sugar Test\nSensory Evaluation\nCold Stability Test\nMicrobial Stability Test",
+   "options": "Lab Analysis Test Type",
    "reqd": 1
   },
   {
@@ -814,26 +817,9 @@
   },
   {
    "depends_on": "eval:doc.test_type=='Temperature Test'",
-   "fieldname": "column_break_temp1",
-   "fieldtype": "Column Break"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='Temperature Test'",
    "fieldname": "temp_reading_1",
    "fieldtype": "Float",
    "label": "Reading 1 (\u00b0C)"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='Temperature Test'",
-   "fieldname": "temp_reading_2",
-   "fieldtype": "Float",
-   "label": "Reading 2 (\u00b0C)"
-  },
-  {
-   "depends_on": "eval:doc.test_type=='Temperature Test'",
-   "fieldname": "temp_reading_3",
-   "fieldtype": "Float",
-   "label": "Reading 3 (\u00b0C)"
   },
   {
    "depends_on": "eval:doc.test_type=='Temperature Test'",
@@ -1082,6 +1068,26 @@
    "fieldname": "visual_assessment_column",
    "fieldtype": "Column Break",
    "label": "Visual Assessment"
+  },
+  {
+   "fieldname": "section_break_consumables",
+   "fieldtype": "Section Break",
+   "label": "Consumables Used"
+  },
+  {
+   "description": "Reagents and consumables used in this test. Adjust quantities to actual before submitting.",
+   "fieldname": "consumables",
+   "fieldtype": "Table",
+   "label": "Consumables",
+   "options": "Lab Analysis Consumable"
+  },
+  {
+   "fieldname": "consumable_stock_entry",
+   "fieldtype": "Data",
+   "label": "Consumable Stock Entry",
+   "no_copy": 1,
+   "read_only": 1,
+   "description": "Stock Entry created on submission to consume or expense these reagents"
   }
  ],
  "grid_page_length": 50,

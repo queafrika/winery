@@ -69,26 +69,38 @@ function _show_transfer_dialog(frm) {
 
 	const item_codes = [...new Set(raw_items.map((r) => r.item))];
 
-	// Step 1: fetch item master data (stock item flag, batch/serial, stock UOM)
-	frappe.db.get_list("Item", {
-		filters: [["name", "in", item_codes]],
-		fields: ["name", "is_stock_item", "has_batch_no", "has_serial_no", "stock_uom"],
-		limit: item_codes.length,
-	}).then((item_data) => {
+	// Fetch item master data and Winery Settings in parallel
+	Promise.all([
+		frappe.db.get_list("Item", {
+			filters: [["name", "in", item_codes]],
+			fields: ["name", "is_stock_item", "has_batch_no", "has_serial_no",
+			         "stock_uom", "has_variants", "variant_of"],
+			limit: item_codes.length,
+		}),
+		frappe.db.get_single_value("Winery Settings", "ripe_banana_finger_template"),
+	]).then(([item_data, ripe_tpl]) => {
 		const item_map = {};
 		item_data.forEach((d) => { item_map[d.name] = d; });
 
-		const stock_items = raw_items.filter((r) => item_map[r.item] && item_map[r.item].is_stock_item);
-
+		const stock_items = raw_items.filter(
+			(r) => item_map[r.item] && item_map[r.item].is_stock_item
+		);
 		if (!stock_items.length) {
 			frappe.msgprint(__("None of the listed materials are stock items. No transfer needed."));
 			return;
 		}
 
-		// Step 2: for items where required UOM ≠ stock UOM, fetch conversion factor
+		// For each item, resolve UOM conversion.
+		// The banana template uses a hardcoded 1 Kg = 100 Nos factor.
 		const conversion_promises = stock_items.map((item) => {
-			const stock_uom = item_map[item.item].stock_uom;
+			const info = item_map[item.item];
+			const stock_uom = info.stock_uom;
 			const req_uom = item.uom;
+			const is_banana = ripe_tpl && item.item === ripe_tpl;
+
+			if (is_banana && req_uom === "Kg" && stock_uom === "Nos") {
+				return Promise.resolve({ item: item.item, stock_uom, conversion_factor: 100.0 });
+			}
 			if (req_uom && stock_uom && req_uom !== stock_uom) {
 				return frappe.call({
 					method: "winery.winery.doctype.cellar_operation.cellar_operation.get_uom_conversion",
@@ -101,13 +113,12 @@ function _show_transfer_dialog(frm) {
 		Promise.all(conversion_promises).then((conv_results) => {
 			const conv_map = {};
 			conv_results.forEach((r) => { conv_map[r.item] = r; });
-
-			_build_transfer_dialog(frm, stock_items, item_map, conv_map);
+			_build_transfer_dialog(frm, stock_items, item_map, conv_map, ripe_tpl);
 		});
 	});
 }
 
-function _build_transfer_dialog(frm, stock_items, item_map, conv_map) {
+function _build_transfer_dialog(frm, stock_items, item_map, conv_map, ripe_tpl) {
 	const fields = [
 		{
 			fieldname: "wip_warehouse",
@@ -130,6 +141,9 @@ function _build_transfer_dialog(frm, stock_items, item_map, conv_map) {
 		const req_uom = item.uom;
 		const uom_mismatch = req_uom && stock_uom && req_uom !== stock_uom;
 		const default_cf = conv.conversion_factor || 1.0;
+		// Banana template always uses multi-batch regardless of UOM match
+		const is_banana = ripe_tpl && item.item === ripe_tpl;
+		const use_multibatch = info.has_batch_no && (uom_mismatch || is_banana);
 
 		// Item header
 		fields.push({
@@ -149,8 +163,8 @@ function _build_transfer_dialog(frm, stock_items, item_map, conv_map) {
 			reqd: 1,
 		});
 
-		if (info.has_batch_no && !uom_mismatch) {
-			// UOM-mismatch batch items use the HTML table below instead
+		if (info.has_batch_no && !use_multibatch) {
+			// Multi-batch items (banana template or UOM-mismatch) use the HTML table below
 			fields.push({
 				fieldname: `batch_no_${idx}`,
 				fieldtype: "Link",
@@ -158,7 +172,9 @@ function _build_transfer_dialog(frm, stock_items, item_map, conv_map) {
 				options: "Batch",
 				reqd: 1,
 				get_query() {
-					return { filters: { item: item.item } };
+					// _init_batch_link_field overrides this once a warehouse is selected;
+					// before that, show nothing so the user is prompted to pick a warehouse first.
+					return { filters: { name: "__select_warehouse_first__" } };
 				},
 			});
 		}
@@ -173,7 +189,7 @@ function _build_transfer_dialog(frm, stock_items, item_map, conv_map) {
 			});
 		}
 
-		if (uom_mismatch && info.has_batch_no) {
+		if (use_multibatch) {
 			// Multi-batch: dynamic HTML table — one row per batch
 			fields.push({
 				fieldname: `batch_table_${idx}`,
@@ -233,19 +249,23 @@ function _build_transfer_dialog(frm, stock_items, item_map, conv_map) {
 				const conv = conv_map[item.item] || {};
 				const stock_uom = conv.stock_uom || info.stock_uom;
 				const uom_mismatch = item.uom && stock_uom && item.uom !== stock_uom;
+				const is_banana = ripe_tpl && item.item === ripe_tpl;
+				const use_multibatch = info.has_batch_no && (uom_mismatch || is_banana);
 				const s_warehouse = values[`s_warehouse_${idx}`];
 
-				if (uom_mismatch && info.has_batch_no) {
+				if (use_multibatch) {
 					// Multi-batch: read rows from the HTML table
 					const tbody = dialog.fields_dict[`batch_table_${idx}`].$wrapper.find(".bt-tbody")[0];
 					let has_entry = false;
 					tbody.querySelectorAll("tr").forEach(row => {
-						const batch_no = row.querySelector(".b-no").value.trim();
+						const sel = row.querySelector(".b-no");
+						const batch_no = sel.value.trim();
 						const batch_qty = parseFloat(row.querySelector(".b-qty").value) || 0;
 						if (!batch_no || !batch_qty) return;
 						has_entry = true;
+						const resolved_item = sel.options[sel.selectedIndex]?.dataset?.item || item.item;
 						transfer_items.push({
-							item_code: item.item,
+							item_code: resolved_item,
 							qty: batch_qty,
 							uom: stock_uom,
 							s_warehouse,
@@ -304,9 +324,14 @@ function _build_transfer_dialog(frm, stock_items, item_map, conv_map) {
 		const conv = conv_map[item.item] || {};
 		const stock_uom = conv.stock_uom || info.stock_uom;
 		const req_uom = item.uom;
-		if (!req_uom || !stock_uom || req_uom === stock_uom) return;
-		if (!info.has_batch_no) return;
-		_init_batch_table(dialog, idx, item, stock_uom, req_uom);
+		const uom_mismatch = req_uom && stock_uom && req_uom !== stock_uom;
+		const is_banana = ripe_tpl && item.item === ripe_tpl;
+		const use_multibatch = info.has_batch_no && (uom_mismatch || is_banana);
+		if (use_multibatch) {
+			_init_batch_table(dialog, idx, item, stock_uom, req_uom);
+		} else if (!use_multibatch && info.has_batch_no) {
+			_init_batch_link_field(dialog, idx, item);
+		}
 	});
 
 	dialog.show();
@@ -319,7 +344,7 @@ function _init_batch_table(dialog, idx, item, stock_uom, req_uom) {
 	function buildBatchOptions() {
 		let html = `<option value="">— ${__("Select Batch")} —</option>`;
 		availableBatches.forEach(b => {
-			html += `<option value="${b.batch_no}">${b.batch_no} (${parseFloat(b.qty).toFixed(0)} ${stock_uom})</option>`;
+			html += `<option value="${b.batch_no}" data-item="${b.item_code || ''}">${b.batch_no} (${parseFloat(b.qty).toFixed(0)} ${stock_uom})</option>`;
 		});
 		return html;
 	}
@@ -350,7 +375,7 @@ function _init_batch_table(dialog, idx, item, stock_uom, req_uom) {
 		const orig = wfDict.df.onchange;
 		wfDict.df.onchange = function () {
 			orig?.call(this);
-			loadBatches(this.value);
+			loadBatches(this.get_value());
 		};
 	}
 
@@ -398,6 +423,46 @@ function _init_batch_table(dialog, idx, item, stock_uom, req_uom) {
 
 	addRow(false);  // first row is non-removable
 	addBtn.addEventListener("click", () => addRow(true));
+}
+
+function _init_batch_link_field(dialog, idx, item) {
+	let validBatchNos = [];
+
+	function refreshBatchQuery() {
+		const batchField = dialog.fields_dict[`batch_no_${idx}`];
+		if (!batchField) return;
+		if (validBatchNos.length) {
+			// Filter only by batch name — the batches may belong to a variant item,
+			// so do NOT add item: item.item which would block variant batches.
+			batchField.df.get_query = () => ({
+				filters: { name: ["in", validBatchNos] },
+			});
+		} else {
+			// No stock in selected warehouse — return no results.
+			batchField.df.get_query = () => ({ filters: { name: "__no_stock_in_warehouse__" } });
+		}
+	}
+
+	const wfDict = dialog.fields_dict[`s_warehouse_${idx}`];
+	if (!wfDict) return;
+	const orig = wfDict.df.onchange;
+	wfDict.df.onchange = function () {
+		orig?.call(this);
+		const warehouse = this.get_value();
+		if (!warehouse) {
+			validBatchNos = [];
+			refreshBatchQuery();
+			return;
+		}
+		frappe.call({
+			method: "winery.winery.doctype.cellar_operation.cellar_operation.get_batches_for_item_warehouse",
+			args: { item_code: item.item, warehouse },
+		}).then(r => {
+			validBatchNos = (r.message || []).map(b => b.batch_no);
+			refreshBatchQuery();
+			dialog.set_value(`batch_no_${idx}`, "");
+		});
+	};
 }
 
 function _show_start_dialog(frm) {

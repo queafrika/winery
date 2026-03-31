@@ -13,6 +13,31 @@
  },
  {
   "doctype": "Custom Field",
+  "name": "Purchase Invoice-agent",
+  "dt": "Purchase Invoice",
+  "fieldname": "agent",
+  "fieldtype": "Link",
+  "label": "Agent",
+  "options": "Agent",
+  "insert_after": "farmer",
+  "in_list_view": 0,
+  "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Purchase Invoice-agent_delivery_receipt",
+  "dt": "Purchase Invoice",
+  "fieldname": "agent_delivery_receipt",
+  "fieldtype": "Link",
+  "label": "Agent Delivery Receipt",
+  "options": "Agent Delivery Receipt",
+  "insert_after": "agent",
+  "read_only": 1,
+  "in_list_view": 0,
+  "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
   "name": "Batch-winery_section",
   "dt": "Batch",
   "fieldname": "winery_section",
@@ -44,12 +69,80 @@
  },
  {
   "doctype": "Custom Field",
+  "name": "Batch-farm",
+  "dt": "Batch",
+  "fieldname": "farm",
+  "fieldtype": "Link",
+  "label": "Farm",
+  "options": "Farm",
+  "insert_after": "is_damaged",
+  "read_only": 1,
+  "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Batch-disinfection_section",
+  "dt": "Batch",
+  "fieldname": "disinfection_section",
+  "fieldtype": "Section Break",
+  "label": "Disinfection",
+  "insert_after": "farm",
+  "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Batch-disinfection_log",
+  "dt": "Batch",
+  "fieldname": "disinfection_log",
+  "fieldtype": "Link",
+  "label": "Disinfection Log",
+  "options": "Banana Disinfection Log",
+  "insert_after": "disinfection_section",
+  "read_only": 1,
+  "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Batch-disinfection_date",
+  "dt": "Batch",
+  "fieldname": "disinfection_date",
+  "fieldtype": "Date",
+  "label": "Disinfection Date",
+  "insert_after": "disinfection_log",
+  "read_only": 1,
+  "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Batch-disinfection_time",
+  "dt": "Batch",
+  "fieldname": "disinfection_time",
+  "fieldtype": "Time",
+  "label": "Disinfection Time",
+  "insert_after": "disinfection_date",
+  "read_only": 1,
+  "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Batch-source_batch",
+  "dt": "Batch",
+  "fieldname": "source_batch",
+  "fieldtype": "Link",
+  "label": "Source Raw Batch",
+  "options": "Batch",
+  "insert_after": "disinfection_time",
+  "read_only": 1,
+  "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
   "name": "Batch-ripening_section",
   "dt": "Batch",
   "fieldname": "ripening_section",
   "fieldtype": "Section Break",
   "label": "Ripening",
-  "insert_after": "is_damaged",
+  "insert_after": "source_batch",
   "module": "Winery"
  },
  {

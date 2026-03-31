@@ -9,6 +9,9 @@ fixtures = [
 	{
 		"dt": "Custom Field",
 		"filters": [["module", "=", "Winery"]]
+	},
+	{
+		"dt": "Lab Analysis Test Type"
 	}
 ]
 
@@ -18,12 +21,17 @@ scheduler_events = {
 		"winery.tasks.send_ripening_ready_reminders",
 		"winery.tasks.check_overdue_ripening_batches",
 		"winery.tasks.send_ripening_rack_report",
-	]
+		"winery.tasks.send_compliance_reminders",
+		"winery.tasks.process_compliance_renewals",
+	],
+	"hourly": [
+		"winery.tasks.check_ungraded_adrs",
+	],
 }
 
 app_publisher = "Finesoft Afrika"
 app_description = "Winery Manufacturing System"
-app_email = "jn6028293@gmail.com"
+app_email = "macharianyota@gmail.com"
 app_license = "mit"
 
 # Apps
@@ -158,7 +166,6 @@ required_apps = ["erpnext"]
 # ---------------
 # Hook on document methods and events
 
-after_migrate = ["winery.winery.utils.seed_recipes.seed_recipe_data"]
 
 doc_events = {
 	"Purchase Receipt": {

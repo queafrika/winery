@@ -1,6 +1,6 @@
 {
  "app": "winery",
- "creation": "2026-03-21 00:00:00.000000",
+ "creation": "2026-03-21 00:00:00",
  "docstatus": 0,
  "doctype": "Workspace Sidebar",
  "header_icon": "wine",
@@ -15,6 +15,30 @@
    "label": "Home",
    "link_to": "Winery",
    "link_type": "Workspace",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "money-coins-1",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Purchase Bananas",
+   "link_to": "purchase-bananas",
+   "link_type": "Page",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "arrow-down-to-line",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Agent Delivery Reciept",
+   "link_to": "Agent Delivery Receipt",
+   "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
   },
@@ -114,6 +138,18 @@
    "type": "Link"
   },
   {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "person-standing",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Agent",
+   "link_to": "Agent",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
    "child": 1,
    "collapsible": 1,
    "icon": "",
@@ -193,18 +229,6 @@
    "label": "Batch Process Log",
    "link_to": "Batch Process Log",
    "link_type": "DocType",
-   "show_arrow": 0,
-   "type": "Link"
-  },
-  {
-   "child": 0,
-   "collapsible": 1,
-   "icon": "settings",
-   "indent": 0,
-   "keep_closed": 0,
-   "label": "Settings",
-   "link_to": "Winery Settings",
-   "link_type": "Workspace",
    "show_arrow": 0,
    "type": "Link"
   },
@@ -410,7 +434,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-03-21 00:00:00.000000",
+ "modified": "2026-03-26 19:28:28.489704",
  "modified_by": "Administrator",
  "module": "Winery",
  "name": "Winery",

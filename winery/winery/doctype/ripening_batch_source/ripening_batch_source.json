@@ -5,21 +5,15 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "banana_grading",
   "batch_no",
+  "farm",
+  "variety",
   "quality_grade",
   "available_fingers",
-  "fingers_for_ripening"
+  "fingers_for_ripening",
+  "banana_grading"
  ],
  "fields": [
-  {
-   "fieldname": "banana_grading",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Banana Grading",
-   "options": "Banana Grading",
-   "reqd": 1
-  },
   {
    "fieldname": "batch_no",
    "fieldtype": "Link",
@@ -29,9 +23,25 @@
    "reqd": 1
   },
   {
+   "fieldname": "farm",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Farm",
+   "options": "Farm",
+   "read_only": 1
+  },
+  {
+   "fieldname": "variety",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Variety",
+   "read_only": 1
+  },
+  {
    "fieldname": "quality_grade",
    "fieldtype": "Link",
-   "label": "Quality Grade",
+   "in_list_view": 1,
+   "label": "Grade",
    "options": "Banana Grade",
    "read_only": 1
   },
@@ -48,6 +58,12 @@
    "in_list_view": 1,
    "label": "Fingers for Ripening",
    "reqd": 1
+  },
+  {
+   "fieldname": "banana_grading",
+   "fieldtype": "Link",
+   "label": "Banana Grading",
+   "options": "Banana Grading"
   }
  ],
  "grid_page_length": 50,

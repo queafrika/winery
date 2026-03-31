@@ -11,14 +11,20 @@
   "banana_item",
   "farm",
   "farmer",
+  "agent",
   "column_break_1",
   "warehouse",
   "damaged_warehouse",
+  "agent_delivery_receipt",
   "purchase_invoice",
+  "source_warehouse",
+  "target_warehouse",
   "total_fingers",
   "total_amount",
   "section_break_batches",
   "batches",
+  "section_break_grading_items",
+  "grading_items",
   "section_break_costing",
   "total_good_fingers",
   "total_damaged_fingers",
@@ -31,6 +37,7 @@
   "cost_per_finger_carried_forward",
   "section_break_tracking",
   "purchase_receipt",
+  "stock_entry",
   "section_break_notes",
   "notes",
   "amended_from"
@@ -58,6 +65,14 @@
    "read_only": 1
   },
   {
+   "fetch_from": "purchase_invoice.agent",
+   "fieldname": "agent",
+   "fieldtype": "Link",
+   "label": "Agent",
+   "options": "Agent",
+   "read_only": 1
+  },
+  {
    "fetch_from": "purchase_invoice.custom_farm",
    "fieldname": "farm",
    "fieldtype": "Link",
@@ -70,8 +85,7 @@
    "fieldname": "banana_item",
    "fieldtype": "Link",
    "label": "Grading Item",
-   "options": "Item",
-   "reqd": 1
+   "options": "Item"
   },
   {
    "fieldname": "column_break_1",
@@ -81,8 +95,7 @@
    "fieldname": "warehouse",
    "fieldtype": "Link",
    "label": "Accepted Warehouse",
-   "options": "Warehouse",
-   "reqd": 1
+   "options": "Warehouse"
   },
   {
    "description": "Where damaged (rejected) bananas are stored",
@@ -92,10 +105,31 @@
    "options": "Warehouse"
   },
   {
+   "fieldname": "agent_delivery_receipt",
+   "fieldtype": "Link",
+   "label": "Agent Delivery Receipt",
+   "options": "Agent Delivery Receipt",
+   "search_index": 1
+  },
+  {
    "fieldname": "purchase_invoice",
    "fieldtype": "Link",
    "label": "Purchase Invoice",
    "options": "Purchase Invoice"
+  },
+  {
+   "description": "Warehouse where banana bunches currently sit (auto-filled from ADR receiving warehouse)",
+   "fieldname": "source_warehouse",
+   "fieldtype": "Link",
+   "label": "Source Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "description": "Where graded Raw Banana Fingers (Grade A, B, C) will be transferred",
+   "fieldname": "target_warehouse",
+   "fieldtype": "Link",
+   "label": "Accepted Warehouse",
+   "options": "Warehouse"
   },
   {
    "fieldname": "total_fingers",
@@ -121,7 +155,18 @@
    "fieldtype": "Table",
    "label": "Batches",
    "options": "Banana Grading Batch",
-   "reqd": 1
+   "reqd": 0
+  },
+  {
+   "fieldname": "section_break_grading_items",
+   "fieldtype": "Section Break",
+   "label": "Grading Items"
+  },
+  {
+   "fieldname": "grading_items",
+   "fieldtype": "Table",
+   "label": "Grading Items",
+   "options": "Banana Grading Item"
   },
   {
    "fieldname": "section_break_costing",
@@ -179,6 +224,13 @@
    "fieldtype": "Link",
    "label": "Purchase Receipt",
    "options": "Purchase Receipt",
+   "read_only": 1
+  },
+  {
+   "fieldname": "stock_entry",
+   "fieldtype": "Link",
+   "label": "Repack Stock Entry",
+   "options": "Stock Entry",
    "read_only": 1
   },
   {

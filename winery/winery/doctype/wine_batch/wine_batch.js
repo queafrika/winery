@@ -12,26 +12,6 @@ frappe.ui.form.on("Wine Batch", {
 		_debounced_recalculate(frm);
 	},
 
-	bottling_template(frm) {
-		if (!frm.doc.bottling_template) return;
-		frappe.call({
-			method: "winery.winery.doctype.wine_batch.wine_batch.load_bottling_template",
-			args: { wine_batch: frm.doc.name, template: frm.doc.bottling_template },
-			callback(r) {
-				if (!r.message) return;
-				frm.clear_table("bottling_lines");
-				frm.clear_table("packaging_lines");
-				frm.clear_table("material_lines");
-				(r.message.bottling_lines || []).forEach(row => frm.add_child("bottling_lines", row));
-				(r.message.packaging_lines || []).forEach(row => frm.add_child("packaging_lines", row));
-				(r.message.material_lines || []).forEach(row => frm.add_child("material_lines", row));
-				frm.refresh_field("bottling_lines");
-				frm.refresh_field("packaging_lines");
-				frm.refresh_field("material_lines");
-			},
-		});
-	},
-
 	abv_percentage(frm) {
 		if (!frm.doc.abv_percentage) {
 			frm.set_value("abv_tax_band", null);
@@ -62,6 +42,8 @@ frappe.ui.form.on("Wine Batch", {
 			_show_progress(frm);
 		}
 
+		_fetch_and_render_availability(frm);
+
 		frm.add_custom_button(__("View Cellar Operations"), () => {
 			frappe.set_route("List", "Cellar Operation", { wine_batch: frm.doc.name });
 		});
@@ -69,6 +51,16 @@ frappe.ui.form.on("Wine Batch", {
 		frm.add_custom_button(__("View Lab Analyses"), () => {
 			frappe.set_route("List", "Lab Analysis", { wine_batch: frm.doc.name });
 		});
+
+		if (frm.doc.docstatus === 1 && !frm.is_new()) {
+			frm.add_custom_button(__("New Rebottling"), () => {
+				frappe.new_doc("Wine Batch Rebottling", { wine_batch: frm.doc.name });
+			}).addClass("btn-warning");
+
+			frm.add_custom_button(__("View Rebottlings"), () => {
+				frappe.set_route("List", "Wine Batch Rebottling", { wine_batch: frm.doc.name });
+			});
+		}
 
 		if (frm.doc.docstatus === 1 && !frm.is_new()) {
 			_render_cellar_ops_tab(frm);
@@ -406,31 +398,77 @@ function _show_progress(frm) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 frappe.ui.form.on("Wine Batch Bottling Line", {
-	actual_bottles(frm, cdt, cdn) { _recalc_bottling_line(frm, cdt, cdn); },
-	qc_bottles(frm, cdt, cdn)     { _recalc_bottling_line(frm, cdt, cdn); },
-	sample_bottles(frm, cdt, cdn) { _recalc_bottling_line(frm, cdt, cdn); },
-	bottle_size_ml(frm, cdt, cdn) { _recalc_bottling_line(frm, cdt, cdn); },
+	planned_bottles(frm, cdt, cdn) { _recalc_bottling_line(frm, cdt, cdn); },
+	bottle_size_ml(frm, cdt, cdn)  { _recalc_bottling_line(frm, cdt, cdn); },
 });
 
 function _recalc_bottling_line(_frm, cdt, cdn) {
-	const row = locals[cdt][cdn];
-	const actual   = cint(row.actual_bottles);
-	const qc       = cint(row.qc_bottles);
-	const sample   = Math.max(cint(row.sample_bottles), 1);
-	const net      = Math.max(actual - qc - sample, 0);
-	const vol      = Math.round(actual * cint(row.bottle_size_ml) / 1000 * 10000) / 10000;
-	frappe.model.set_value(cdt, cdn, "net_bottles", net);
-	frappe.model.set_value(cdt, cdn, "volume_litres", vol);
+	const row      = locals[cdt][cdn];
+	const size     = cint(row.bottle_size_ml);
+	const planned  = cint(row.planned_bottles);
+	const planned_vol = Math.round(planned * size / 1000 * 10000) / 10000;
+	frappe.model.set_value(cdt, cdn, "planned_volume_litres", planned_vol);
 }
 
 frappe.ui.form.on("Wine Batch Packaging Line", {
-	cartons(frm, cdt, cdn)          { _recalc_packaging_line(frm, cdt, cdn); },
-	bottles_per_carton(frm, cdt, cdn) { _recalc_packaging_line(frm, cdt, cdn); },
+	bottle_size_ml(frm, cdt, cdn) {
+		_autocalc_cartons(frm, cdt, cdn);
+		_validate_packaging_balance(frm);
+	},
+	bottles_per_carton(frm, cdt, cdn) {
+		_autocalc_cartons(frm, cdt, cdn);
+		_validate_packaging_balance(frm);
+	},
+	cartons(frm, cdt, cdn) {
+		_recalc_packaging_planned(frm, cdt, cdn);
+		_validate_packaging_balance(frm);
+	},
 });
 
-function _recalc_packaging_line(_frm, cdt, cdn) {
+function _autocalc_cartons(frm, cdt, cdn) {
 	const row = locals[cdt][cdn];
-	frappe.model.set_value(cdt, cdn, "total_bottles", cint(row.cartons) * cint(row.bottles_per_carton));
+	const sz  = cint(row.bottle_size_ml);
+	const bpc = cint(row.bottles_per_carton);
+	if (!sz || !bpc) return;
+
+	// Sum planned_bottles from all bottling lines with matching bottle_size_ml
+	let total_planned = 0;
+	(frm.doc.bottling_lines || []).forEach(bl => {
+		if (cint(bl.bottle_size_ml) === sz) total_planned += cint(bl.planned_bottles);
+	});
+
+	const cartons = Math.floor(total_planned / bpc);
+	frappe.model.set_value(cdt, cdn, "cartons", cartons);
+	frappe.model.set_value(cdt, cdn, "total_bottles", cartons * bpc);
+}
+
+function _recalc_packaging_planned(_frm, cdt, cdn) {
+	const row = locals[cdt][cdn];
+	frappe.model.set_value(cdt, cdn, "total_bottles",
+		cint(row.cartons) * cint(row.bottles_per_carton));
+}
+
+function _validate_packaging_balance(frm) {
+	const planned = {};
+	(frm.doc.bottling_lines || []).forEach(r => {
+		if (r.bottle_size_ml)
+			planned[r.bottle_size_ml] = (planned[r.bottle_size_ml] || 0) + cint(r.planned_bottles);
+	});
+	const packaged = {};
+	(frm.doc.packaging_lines || []).forEach(r => {
+		if (r.bottle_size_ml)
+			packaged[r.bottle_size_ml] = (packaged[r.bottle_size_ml] || 0) + cint(r.total_bottles);
+	});
+	const mismatches = Object.keys(packaged).filter(sz => packaged[sz] !== (planned[sz] || 0));
+	if (mismatches.length) {
+		const msgs = mismatches.map(sz =>
+			`${sz}ml: planned ${planned[sz] || 0} bottles, packaging covers ${packaged[sz]} bottles`
+		);
+		frappe.show_alert({
+			message: __("Packaging balance mismatch: ") + msgs.join("; "),
+			indicator: "orange",
+		});
+	}
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -438,50 +476,246 @@ function _recalc_packaging_line(_frm, cdt, cdn) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function _render_bottling_buttons(frm) {
-	if (frm.doc.bottling_status === "Completed") {
+	const status = frm.doc.bottling_status;
+
+	if (status === "Completed") {
 		if (frm.doc.bottling_stock_entry) {
-			frm.add_custom_button(__("View Stock Entry"), () => {
-				frappe.set_route("Form", "Stock Entry", frm.doc.bottling_stock_entry);
-			}).addClass("btn-info");
+			const se_names = frm.doc.bottling_stock_entry.trim().split("\n").filter(Boolean);
+			if (se_names.length === 1) {
+				frm.add_custom_button(__("View Stock Entry"), () =>
+					frappe.set_route("Form", "Stock Entry", se_names[0])
+				).addClass("btn-info");
+			} else {
+				frm.add_custom_button(__("View Stock Entries"), () => {
+					const links = se_names.map(n =>
+						`<li><a href="/app/stock-entry/${n}" target="_blank">${n}</a></li>`
+					).join("");
+					frappe.msgprint({
+						title: __("Bottling Stock Entries"),
+						message: `<ul>${links}</ul>`,
+					});
+				}).addClass("btn-info");
+			}
 		}
 		frm.add_custom_button(__("Cancel Bottling"), () => {
 			frappe.confirm(
 				__("Cancel Bottling & Packaging? This will cancel the stock entry and revert the batch to Active."),
-				() => {
-					frappe.call({
-						method: "winery.winery.doctype.wine_batch.wine_batch.cancel_bottling",
-						args: { wine_batch: frm.doc.name },
-						callback() { frm.reload_doc(); },
-					});
-				}
+				() => frappe.call({
+					method: "winery.winery.doctype.wine_batch.wine_batch.cancel_bottling",
+					args: { wine_batch: frm.doc.name },
+					callback() { frm.reload_doc(); },
+				})
 			);
 		}).addClass("btn-danger");
 		return;
 	}
 
-	// Show "Complete Bottling & Packaging" only when all cellar ops are done
 	frappe.db.get_list("Cellar Operation", {
 		filters: { wine_batch: frm.doc.name, docstatus: 1 },
 		fields: ["name", "status"],
 	}).then((ops) => {
-		if (!ops.length) return;
-		if (!ops.every(op => op.status === "Completed")) return;
+		if (!ops.length || !ops.every(op => op.status === "Completed")) return;
 
-		frm.add_custom_button(__("Complete Bottling & Packaging"), () => {
-			frappe.confirm(
-				__("Submit Bottling & Packaging? This will create a Manufacture Stock Entry and mark this batch as Completed."),
-				() => {
+		// Complete Bottling (or Re-enter)
+		if (status === "Pending" || status === "Bottling Completed") {
+			const label = status === "Bottling Completed"
+				? __("Re-enter Bottling Details") : __("Complete Bottling");
+			frm.add_custom_button(label, () => _show_bottling_modal(frm))
+				.addClass("btn-primary");
+		}
+
+		// Complete Packaging (or Re-enter) + Reset
+		if (status === "Bottling Completed" || status === "Packaging Completed") {
+			const plabel = status === "Packaging Completed"
+				? __("Re-enter Packaging Details") : __("Complete Packaging");
+			frm.add_custom_button(plabel, () => _show_packaging_modal(frm))
+				.addClass("btn-primary");
+
+			frm.add_custom_button(__("Reset to Planning"), () => {
+				frappe.confirm(__("Clear all bottling/packaging actuals and return to Planning?"), () =>
 					frappe.call({
-						method: "winery.winery.doctype.wine_batch.wine_batch.complete_bottling",
+						method: "winery.winery.doctype.wine_batch.wine_batch.reset_bottling_actuals",
 						args: { wine_batch: frm.doc.name },
-						callback(r) {
-							if (r.message) frm.reload_doc();
-						},
-					});
-				}
-			);
-		}).addClass("btn-success");
+						callback() { frm.reload_doc(); },
+					})
+				);
+			}).addClass("btn-danger");
+		}
+
+		// Close Wine Batch
+		if (status === "Packaging Completed") {
+			frm.add_custom_button(__("Close Wine Batch"), () => {
+				frappe.confirm(
+					__("Create Stock Entry and complete this wine batch?"),
+					() => frappe.call({
+						method: "winery.winery.doctype.wine_batch.wine_batch.close_wine_batch",
+						args: { wine_batch: frm.doc.name },
+						callback(r) { if (r.message) frm.reload_doc(); },
+					})
+				);
+			}).addClass("btn-success");
+		}
 	});
+}
+
+function _show_bottling_modal(frm) {
+	const lines = frm.doc.bottling_lines || [];
+	if (!lines.length) {
+		frappe.msgprint(__("Please add Bottling Lines before completing bottling."));
+		return;
+	}
+
+	const fields = [
+		{
+			label: __("Bottling Date"), fieldname: "bottling_date",
+			fieldtype: "Date", reqd: 1,
+			default: frm.doc.bottling_date || frappe.datetime.get_today(),
+		},
+		{
+			label: __("ABV (%)"), fieldname: "abv_percentage",
+			fieldtype: "Float", reqd: 1,
+			default: frm.doc.abv_percentage || 0,
+		},
+	];
+
+	lines.forEach((row, i) => {
+		fields.push({
+			label: `${row.bottle_item || "Line " + (i + 1)} — ${row.bottle_size_ml}ml — Planned: ${row.planned_bottles} bottles`,
+			fieldtype: "Section Break",
+			fieldname: `section_line_${i}`,
+		});
+		fields.push({
+			label: __("Actual Bottles"), fieldname: `actual_bottles_${i}`,
+			fieldtype: "Int", reqd: 1, default: row.actual_bottles || 0,
+		});
+		fields.push({
+			label: __("Bottled Wine Item"), fieldname: `bottled_wine_item_${i}`,
+			fieldtype: "Link", options: "Item",
+			description: __("Filled bottle item — used for samples and remainder stock"),
+			default: row.bottled_wine_item || "",
+		});
+		fields.push({ fieldtype: "Column Break", fieldname: `col_${i}_1` });
+		fields.push({
+			label: __("QC Bottles Reserved"), fieldname: `qc_bottles_${i}`,
+			fieldtype: "Int", default: row.qc_bottles || 0,
+		});
+		fields.push({
+			label: __("Sample Bottles"), fieldname: `sample_bottles_${i}`,
+			fieldtype: "Int", default: row.sample_bottles != null ? row.sample_bottles : 1,
+		});
+		fields.push({
+			label: __("Bottle Warehouse"), fieldname: `bottle_source_warehouse_${i}`,
+			fieldtype: "Link", options: "Warehouse", reqd: 1,
+			default: row.bottle_source_warehouse || "",
+		});
+		fields.push({
+			label: __("Sealing Item"), fieldname: `sealing_item_${i}`,
+			fieldtype: "Link", options: "Item",
+			default: row.sealing_item || "",
+		});
+		fields.push({
+			label: __("Sealing Warehouse"), fieldname: `sealing_source_warehouse_${i}`,
+			fieldtype: "Link", options: "Warehouse",
+			default: row.sealing_source_warehouse || "",
+			depends_on: `eval:doc.sealing_item_${i}`,
+		});
+	});
+
+	const d = new frappe.ui.Dialog({
+		title: __("Complete Bottling"),
+		fields,
+		primary_action_label: __("Save Bottling Actuals"),
+		primary_action(values) {
+			const bottling_lines = lines.map((row, i) => ({
+				name: row.name,
+				actual_bottles: values[`actual_bottles_${i}`] || 0,
+				bottled_wine_item: values[`bottled_wine_item_${i}`] || "",
+				qc_bottles: values[`qc_bottles_${i}`] || 0,
+				sample_bottles: values[`sample_bottles_${i}`] != null ? values[`sample_bottles_${i}`] : 1,
+				bottle_source_warehouse: values[`bottle_source_warehouse_${i}`] || "",
+				sealing_item: values[`sealing_item_${i}`] || "",
+				sealing_source_warehouse: values[`sealing_source_warehouse_${i}`] || "",
+			}));
+
+			frappe.call({
+				method: "winery.winery.doctype.wine_batch.wine_batch.submit_bottling_actuals",
+				args: {
+					wine_batch: frm.doc.name,
+					bottling_date: values.bottling_date,
+					abv_percentage: values.abv_percentage,
+					lines: JSON.stringify(bottling_lines),
+				},
+				callback(r) {
+					if (!r.exc) {
+						d.hide();
+						frm.reload_doc();
+					}
+				},
+			});
+		},
+	});
+	d.show();
+}
+
+function _show_packaging_modal(frm) {
+	const lines = frm.doc.packaging_lines || [];
+	if (!lines.length) {
+		frappe.msgprint(__("Please add Packaging Lines before completing packaging."));
+		return;
+	}
+
+	const fields = [];
+	lines.forEach((row, i) => {
+		fields.push({
+			label: `${row.pack_size || "Line " + (i + 1)} — ${row.bottle_size_ml}ml — Planned: ${row.cartons} cartons`,
+			fieldtype: "Section Break",
+			fieldname: `section_pkg_${i}`,
+		});
+		fields.push({
+			label: __("Actual Cartons"), fieldname: `actual_cartons_${i}`,
+			fieldtype: "Int", reqd: 1, default: row.actual_cartons || 0,
+		});
+		fields.push({ fieldtype: "Column Break", fieldname: `col_pkg_${i}` });
+		fields.push({
+			label: __("Output Item"), fieldname: `output_item_${i}`,
+			fieldtype: "Link", options: "Item", reqd: 1,
+			default: row.output_item || "",
+		});
+		fields.push({
+			label: __("Output Warehouse"), fieldname: `output_warehouse_${i}`,
+			fieldtype: "Link", options: "Warehouse", reqd: 1,
+			default: row.output_warehouse || "",
+		});
+	});
+
+	const d = new frappe.ui.Dialog({
+		title: __("Complete Packaging"),
+		fields,
+		primary_action_label: __("Save Packaging Actuals"),
+		primary_action(values) {
+			const packaging_lines = lines.map((row, i) => ({
+				name: row.name,
+				actual_cartons: values[`actual_cartons_${i}`] || 0,
+				output_item: values[`output_item_${i}`] || "",
+				output_warehouse: values[`output_warehouse_${i}`] || "",
+			}));
+
+			frappe.call({
+				method: "winery.winery.doctype.wine_batch.wine_batch.submit_packaging_actuals",
+				args: {
+					wine_batch: frm.doc.name,
+					lines: JSON.stringify(packaging_lines),
+				},
+				callback(r) {
+					if (!r.exc) {
+						d.hide();
+						frm.reload_doc();
+					}
+				},
+			});
+		},
+	});
+	d.show();
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -498,8 +732,19 @@ async function _render_lab_analyses_tab(frm) {
 	const [analyses, cellar_ops] = await Promise.all([
 		frappe.db.get_list("Lab Analysis", {
 			filters: { wine_batch: frm.doc.name, docstatus: ["!=", 2] },
-			fields: ["name", "test_type", "analysis_date", "analyzed_by",
-			         "cellar_operation", "docstatus"],
+			fields: [
+				"name", "test_type", "analysis_date", "analyzed_by",
+				"cellar_operation", "docstatus",
+				// average / result fields — one per test type
+				"rs_residual_sugar_gl",
+				"brix_average",
+				"average_gravity",
+				"abv_corrected_abv",
+				"temp_reading_1",
+				"ph_average",
+				"diss_clarity_white_bg",
+				"sens_balance",
+			],
 			order_by: "analysis_date asc",
 			limit: 100,
 		}),
@@ -603,6 +848,14 @@ function _build_la_card(la) {
 		? frappe.datetime.str_to_user(la.analysis_date)
 		: "—";
 	const analyst = la.analyzed_by ? la.analyzed_by.split("@")[0] : "—";
+	const { label: avg_label, value: avg_value } = _la_average(la);
+
+	const avg_row = avg_label
+		? `<div class="la-row">
+			<span class="la-label">${avg_label}</span>
+			<span class="la-val">${frappe.utils.escape_html(String(avg_value ?? "—"))}</span>
+		</div>`
+		: "";
 
 	return `<div class="la-card">
 		<div class="la-card-header">${frappe.utils.escape_html(la.test_type || __("Unknown"))}</div>
@@ -615,8 +868,9 @@ function _build_la_card(la) {
 				<span class="la-label">${__("By")}</span>
 				<span class="la-val">${frappe.utils.escape_html(analyst)}</span>
 			</div>
+			${avg_row}
 			<div class="la-row">
-				<span class="la-label">${__("Result")}</span>
+				<span class="la-label">${__("Status")}</span>
 				<span class="la-val">${badge}</span>
 			</div>
 		</div>
@@ -624,6 +878,29 @@ function _build_la_card(la) {
 			<button class="btn btn-default btn-xs la-btn-view" data-name="${la.name}">${__("View →")}</button>
 		</div>
 	</div>`;
+}
+
+function _la_average(la) {
+	switch (la.test_type) {
+		case "Residual Sugar Test":
+			return { label: __("RS (g/L)"), value: la.rs_residual_sugar_gl ?? "—" };
+		case "Brix Test":
+			return { label: __("Avg (°Brix)"), value: la.brix_average ?? "—" };
+		case "Gravity Test":
+			return { label: __("Avg Gravity"), value: la.average_gravity ?? "—" };
+		case "ABV Test":
+			return { label: __("ABV (%)"), value: la.abv_corrected_abv ?? "—" };
+		case "Temperature Test":
+			return { label: __("Temp (°C)"), value: la.temp_reading_1 ?? "—" };
+		case "pH Test":
+			return { label: __("Avg pH"), value: la.ph_average ?? "—" };
+		case "Dissolution Test":
+			return { label: __("Clarity"), value: la.diss_clarity_white_bg ?? "—" };
+		case "Sensory Evaluation":
+			return { label: __("Balance"), value: la.sens_balance ?? "—" };
+		default:
+			return { label: null, value: null };
+	}
 }
 
 function _la_status_badge(docstatus) {
@@ -694,23 +971,38 @@ function _show_co_transfer_dialog(co_name, wine_batch_frm) {
 
 		const item_codes = [...new Set(raw_items.map((r) => r.item))];
 
-		frappe.db.get_list("Item", {
-			filters: [["name", "in", item_codes]],
-			fields: ["name", "is_stock_item", "has_batch_no", "has_serial_no", "stock_uom"],
-			limit: item_codes.length,
-		}).then((item_data) => {
+		// Fetch item master data and Winery Settings in parallel
+		Promise.all([
+			frappe.db.get_list("Item", {
+				filters: [["name", "in", item_codes]],
+				fields: ["name", "is_stock_item", "has_batch_no", "has_serial_no",
+				         "stock_uom", "has_variants", "variant_of"],
+				limit: item_codes.length,
+			}),
+			frappe.db.get_single_value("Winery Settings", "ripe_banana_finger_template"),
+		]).then(([item_data, ripe_tpl]) => {
 			const item_map = {};
 			item_data.forEach((d) => { item_map[d.name] = d; });
 
-			const stock_items = raw_items.filter((r) => item_map[r.item] && item_map[r.item].is_stock_item);
+			const stock_items = raw_items.filter(
+				(r) => item_map[r.item] && item_map[r.item].is_stock_item
+			);
 			if (!stock_items.length) {
 				frappe.msgprint(__("None of the listed materials are stock items. No transfer needed."));
 				return;
 			}
 
+			// For each item, resolve UOM conversion.
+			// The banana template uses a hardcoded 1 Kg = 100 Nos factor.
 			const conversion_promises = stock_items.map((item) => {
-				const stock_uom = item_map[item.item].stock_uom;
+				const info = item_map[item.item];
+				const stock_uom = info.stock_uom;
 				const req_uom = item.uom;
+				const is_banana = ripe_tpl && item.item === ripe_tpl;
+
+				if (is_banana && req_uom === "Kg" && stock_uom === "Nos") {
+					return Promise.resolve({ item: item.item, stock_uom, conversion_factor: 100.0 });
+				}
 				if (req_uom && stock_uom && req_uom !== stock_uom) {
 					return frappe.call({
 						method: "winery.winery.doctype.cellar_operation.cellar_operation.get_uom_conversion",
@@ -723,13 +1015,13 @@ function _show_co_transfer_dialog(co_name, wine_batch_frm) {
 			Promise.all(conversion_promises).then((conv_results) => {
 				const conv_map = {};
 				conv_results.forEach((r) => { conv_map[r.item] = r; });
-				_build_co_transfer_dialog(co_name, stock_items, item_map, conv_map, wine_batch_frm);
+				_build_co_transfer_dialog(co_name, stock_items, item_map, conv_map, wine_batch_frm, ripe_tpl, wine_batch_frm.doc.wip_warehouse);
 			});
 		});
 	});
 }
 
-function _build_co_transfer_dialog(co_name, stock_items, item_map, conv_map, wine_batch_frm) {
+function _build_co_transfer_dialog(co_name, stock_items, item_map, conv_map, wine_batch_frm, ripe_tpl, default_wip) {
 	const fields = [
 		{
 			fieldname: "wip_warehouse",
@@ -737,6 +1029,9 @@ function _build_co_transfer_dialog(co_name, stock_items, item_map, conv_map, win
 			label: __("WIP Warehouse (Destination)"),
 			options: "Warehouse",
 			reqd: 1,
+			default: default_wip || "",
+			read_only: default_wip ? 1 : 0,
+			description: default_wip ? __("Defaulted from Wine Batch") : "",
 		},
 		{
 			fieldname: "items_section",
@@ -752,6 +1047,9 @@ function _build_co_transfer_dialog(co_name, stock_items, item_map, conv_map, win
 		const req_uom = item.uom;
 		const uom_mismatch = req_uom && stock_uom && req_uom !== stock_uom;
 		const default_cf = conv.conversion_factor || 1.0;
+		// Banana template always uses multi-batch regardless of UOM match
+		const is_banana = ripe_tpl && item.item === ripe_tpl;
+		const use_multibatch = info.has_batch_no && (uom_mismatch || is_banana);
 
 		fields.push({
 			fieldname: `item_label_${idx}`,
@@ -770,14 +1068,18 @@ function _build_co_transfer_dialog(co_name, stock_items, item_map, conv_map, win
 			reqd: 1,
 		});
 
-		if (info.has_batch_no && !uom_mismatch) {
+		if (info.has_batch_no && !use_multibatch) {
 			fields.push({
 				fieldname: `batch_no_${idx}`,
 				fieldtype: "Link",
 				label: __("Batch No"),
 				options: "Batch",
 				reqd: 1,
-				get_query() { return { filters: { item: item.item } }; },
+				get_query() {
+					// _init_co_batch_link_field overrides this once a warehouse is selected;
+					// before that, show nothing so the user is prompted to pick a warehouse first.
+					return { filters: { name: "__select_warehouse_first__" } };
+				},
 			});
 		}
 
@@ -791,7 +1093,7 @@ function _build_co_transfer_dialog(co_name, stock_items, item_map, conv_map, win
 			});
 		}
 
-		if (uom_mismatch && info.has_batch_no) {
+		if (use_multibatch) {
 			fields.push({
 				fieldname: `batch_table_${idx}`,
 				fieldtype: "HTML",
@@ -849,18 +1151,22 @@ function _build_co_transfer_dialog(co_name, stock_items, item_map, conv_map, win
 				const conv = conv_map[item.item] || {};
 				const stock_uom = conv.stock_uom || info.stock_uom;
 				const uom_mismatch = item.uom && stock_uom && item.uom !== stock_uom;
+				const is_banana = ripe_tpl && item.item === ripe_tpl;
+				const use_multibatch = info.has_batch_no && (uom_mismatch || is_banana);
 				const s_warehouse = values[`s_warehouse_${idx}`];
 
-				if (uom_mismatch && info.has_batch_no) {
+				if (use_multibatch) {
 					const tbody = dialog.fields_dict[`batch_table_${idx}`].$wrapper.find(".bt-tbody")[0];
 					let has_entry = false;
 					tbody.querySelectorAll("tr").forEach(row => {
-						const batch_no = row.querySelector(".b-no").value.trim();
+						const sel = row.querySelector(".b-no");
+						const batch_no = sel.value.trim();
 						const batch_qty = parseFloat(row.querySelector(".b-qty").value) || 0;
 						if (!batch_no || !batch_qty) return;
 						has_entry = true;
+						const resolved_item = sel.options[sel.selectedIndex]?.dataset?.item || item.item;
 						transfer_items.push({
-							item_code: item.item,
+							item_code: resolved_item,
 							qty: batch_qty,
 							uom: stock_uom,
 							s_warehouse,
@@ -918,9 +1224,14 @@ function _build_co_transfer_dialog(co_name, stock_items, item_map, conv_map, win
 		const conv = conv_map[item.item] || {};
 		const stock_uom = conv.stock_uom || info.stock_uom;
 		const req_uom = item.uom;
-		if (!req_uom || !stock_uom || req_uom === stock_uom) return;
-		if (!info.has_batch_no) return;
-		_init_co_batch_table(dialog, idx, item, stock_uom, req_uom);
+		const uom_mismatch = req_uom && stock_uom && req_uom !== stock_uom;
+		const is_banana = ripe_tpl && item.item === ripe_tpl;
+		const use_multibatch = info.has_batch_no && (uom_mismatch || is_banana);
+		if (use_multibatch) {
+			_init_co_batch_table(dialog, idx, item, stock_uom, req_uom);
+		} else if (!use_multibatch && info.has_batch_no) {
+			_init_co_batch_link_field(dialog, idx, item);
+		}
 	});
 
 	dialog.show();
@@ -933,7 +1244,7 @@ function _init_co_batch_table(dialog, idx, item, stock_uom, req_uom) {
 	function buildBatchOptions() {
 		let html = `<option value="">— ${__("Select Batch")} —</option>`;
 		availableBatches.forEach(b => {
-			html += `<option value="${b.batch_no}">${b.batch_no} (${parseFloat(b.qty).toFixed(0)} ${stock_uom})</option>`;
+			html += `<option value="${b.batch_no}" data-item="${b.item_code || ''}">${b.batch_no} (${parseFloat(b.qty).toFixed(0)} ${stock_uom})</option>`;
 		});
 		return html;
 	}
@@ -963,7 +1274,7 @@ function _init_co_batch_table(dialog, idx, item, stock_uom, req_uom) {
 		const orig = wfDict.df.onchange;
 		wfDict.df.onchange = function () {
 			orig?.call(this);
-			loadBatches(this.value);
+			loadBatches(this.get_value());
 		};
 	}
 
@@ -1006,5 +1317,93 @@ function _init_co_batch_table(dialog, idx, item, stock_uom, req_uom) {
 
 	addRow(false);
 	addBtn.addEventListener("click", () => addRow(true));
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Required Materials — Stock Availability Indicators
+// ─────────────────────────────────────────────────────────────────────────────
+
+function _fetch_and_render_availability(frm) {
+	const rows = (frm.doc.required_materials || []).filter(r => r.item);
+	if (!rows.length) return;
+
+	const items = rows.map(r => ({ item: r.item, quantity: r.quantity, uom: r.uom }));
+
+	frappe.call({
+		method: "winery.winery.doctype.wine_batch.wine_batch.check_materials_availability",
+		args: { items: JSON.stringify(items) },
+		callback(r) {
+			if (!r.message) return;
+			frm._material_availability = r.message;
+			_apply_availability_formatter(frm);
+		},
+	});
+}
+
+function _apply_availability_formatter(frm) {
+	const grid = frm.fields_dict.required_materials.grid;
+	if (!grid || !grid.columns || !grid.columns.length) return;
+
+	const item_col = grid.columns.find(c => c.df && c.df.fieldname === "item");
+	if (!item_col) return;
+
+	// Install formatter (idempotent — replace on each call so frm ref stays current)
+	item_col.df.formatter = function (value) {
+		const avail = frm._material_availability || {};
+		const info = avail[value];
+		const label = frappe.utils.escape_html(value || "");
+		if (!info) return label;
+		const color = info.available ? "#28a745" : "#e24c4c";
+		const title = info.available
+			? __("In Stock")
+			: __("Insufficient Stock");
+		return (
+			`<span style="color:${color};font-size:9px;margin-right:4px;vertical-align:middle;" ` +
+			`title="${title}">●</span>` +
+			label
+		);
+	};
+
+	grid.refresh();
+}
+
+function _init_co_batch_link_field(dialog, idx, item) {
+	let validBatchNos = [];
+
+	function refreshBatchQuery() {
+		const batchField = dialog.fields_dict[`batch_no_${idx}`];
+		if (!batchField) return;
+		if (validBatchNos.length) {
+			// Filter only by batch name — the batches may belong to a variant item,
+			// so do NOT add item: item.item which would block variant batches.
+			batchField.df.get_query = () => ({
+				filters: { name: ["in", validBatchNos] },
+			});
+		} else {
+			// No stock in selected warehouse — return no results.
+			batchField.df.get_query = () => ({ filters: { name: "__no_stock_in_warehouse__" } });
+		}
+	}
+
+	const wfDict = dialog.fields_dict[`s_warehouse_${idx}`];
+	if (!wfDict) return;
+	const orig = wfDict.df.onchange;
+	wfDict.df.onchange = function () {
+		orig?.call(this);
+		const warehouse = this.get_value();
+		if (!warehouse) {
+			validBatchNos = [];
+			refreshBatchQuery();
+			return;
+		}
+		frappe.call({
+			method: "winery.winery.doctype.cellar_operation.cellar_operation.get_batches_for_item_warehouse",
+			args: { item_code: item.item, warehouse },
+		}).then(r => {
+			validBatchNos = (r.message || []).map(b => b.batch_no);
+			refreshBatchQuery();
+			dialog.set_value(`batch_no_${idx}`, "");
+		});
+	};
 }
 

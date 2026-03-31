@@ -1,0 +1,94 @@
+{
+ "actions": [],
+ "creation": "2026-03-26 00:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "purchase_invoice",
+  "posting_date",
+  "farmer",
+  "item_code",
+  "item_name",
+  "expected_qty",
+  "received_qty",
+  "shortage"
+ ],
+ "fields": [
+  {
+   "fieldname": "purchase_invoice",
+   "fieldtype": "Link",
+   "label": "Purchase Invoice",
+   "options": "Purchase Invoice",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fetch_from": "purchase_invoice.posting_date",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Invoice Date",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "purchase_invoice.custom_farm",
+   "fieldname": "farmer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Farm",
+   "options": "Farm",
+   "read_only": 1
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item",
+   "options": "Item",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fetch_from": "item_code.item_name",
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "label": "Item Name",
+   "read_only": 1
+  },
+  {
+   "description": "Quantity reported on the Purchase Invoice line",
+   "fieldname": "expected_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Expected Qty",
+   "read_only": 1
+  },
+  {
+   "description": "Actual quantity physically delivered \u2014 edit to record any shortage",
+   "fieldname": "received_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Received Qty"
+  },
+  {
+   "description": "Expected minus Received \u2014 positive value means a shortfall",
+   "fieldname": "shortage",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Shortage",
+   "read_only": 1
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-26 07:21:15.901776",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Agent Delivery Receipt Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

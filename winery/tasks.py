@@ -1,5 +1,15 @@
 import frappe
-from frappe.utils import today, add_days, getdate, date_diff
+from frappe.utils import (
+	add_days,
+	add_months,
+	date_diff,
+	formatdate,
+	getdate,
+	now_datetime,
+	add_to_date,
+	time_diff_in_hours,
+	today,
+)
 
 
 def send_lab_analysis_reminders():
@@ -435,3 +445,216 @@ def _send_rack_report_email(rack_rows):
 			"for_user": email,
 			"type": "Alert",
 		}).insert(ignore_permissions=True)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  Ungraded ADR Alert  (runs hourly)
+# ─────────────────────────────────────────────────────────────────────────────
+
+def check_ungraded_adrs():
+	"""Hourly: send a one-time alert when an ADR stays ungraded for over 24 hours."""
+	cutoff = add_to_date(now_datetime(), hours=-24)
+
+	overdue = frappe.db.sql(
+		"""
+		SELECT name, agent, delivery_date, total_received, modified
+		FROM `tabAgent Delivery Receipt`
+		WHERE status = 'Received'
+		  AND docstatus = 1
+		  AND ungraded_alert_sent = 0
+		  AND modified <= %s
+		""",
+		cutoff,
+		as_dict=True,
+	)
+
+	if not overdue:
+		return
+
+	recipients = _get_winery_alert_recipients()
+
+	for adr in overdue:
+		agent_email = frappe.db.get_value("Agent", adr.agent, "email")
+		adr_recipients = list(set(recipients + ([agent_email] if agent_email else [])))
+
+		_send_ungraded_adr_alert(adr, adr_recipients)
+		frappe.db.set_value("Agent Delivery Receipt", adr.name, "ungraded_alert_sent", 1)
+
+	frappe.db.commit()
+
+
+def _send_ungraded_adr_alert(adr, recipients):
+	hours_waiting = round(time_diff_in_hours(now_datetime(), adr.modified), 1)
+	subject = f"⚠️ Bananas Ungraded for {hours_waiting}h — ADR {adr.name}"
+	body = f"""
+<h3 style="color:#c0392b;">Bananas Awaiting Grading — Action Required</h3>
+<p>The following Agent Delivery Receipt has been in <b>Received</b> status for over 24 hours.
+Bananas must be graded promptly to avoid quality degradation.</p>
+<table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;">
+  <tr><td><b>ADR</b></td><td>{adr.name}</td></tr>
+  <tr><td><b>Agent</b></td><td>{adr.agent}</td></tr>
+  <tr><td><b>Delivery Date</b></td><td>{adr.delivery_date}</td></tr>
+  <tr><td><b>Received Qty (bunches)</b></td><td>{adr.total_received}</td></tr>
+  <tr><td><b>Time Since Receipt</b></td><td style="color:#c0392b;"><b>{hours_waiting} hours</b></td></tr>
+</table>
+<p>Please grade the bananas immediately or investigate the delay.</p>
+"""
+	for email in recipients:
+		try:
+			frappe.sendmail(recipients=[email], subject=subject, message=body, now=True)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Ungraded ADR Alert Email Failed")
+
+		frappe.get_doc({
+			"doctype": "Notification Log",
+			"subject": subject,
+			"email_content": body,
+			"for_user": email,
+			"type": "Alert",
+			"document_type": "Agent Delivery Receipt",
+			"document_name": adr.name,
+		}).insert(ignore_permissions=True)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  Compliance Reminders
+# ─────────────────────────────────────────────────────────────────────────────
+
+def send_compliance_reminders():
+	"""Daily: fire reminder alerts for each Compliance License reminder rule that is due."""
+	records = frappe.get_all(
+		"Compliance License",
+		filters={
+			"status": ["in", ["Active", "Pending Renewal"]],
+			"assigned_to": ["is", "set"],
+			"expiry_date": ["is", "set"],
+		},
+		fields=["name", "license_name", "expiry_date", "assigned_to"],
+	)
+
+	for rec in records:
+		rules = frappe.get_all(
+			"Compliance Reminder Rule",
+			filters={"parent": rec.name, "parenttype": "Compliance License", "reminder_sent": 0},
+			fields=["name", "days_before"],
+		)
+		for rule in rules:
+			trigger_date = add_days(rec.expiry_date, -rule.days_before)
+			if getdate(today()) >= getdate(trigger_date):
+				_send_compliance_alert(rec, rule.days_before)
+				frappe.db.set_value("Compliance Reminder Rule", rule.name, "reminder_sent", 1)
+
+	frappe.db.commit()
+
+
+def _send_compliance_alert(rec, days_before):
+	days_left = (getdate(rec.expiry_date) - getdate(today())).days
+
+	if days_left < 0:
+		urgency = f"OVERDUE by {abs(days_left)} day(s)"
+		indicator = "red"
+	elif days_left == 0:
+		urgency = "due TODAY"
+		indicator = "red"
+	else:
+		urgency = f"due in {days_left} day(s) on {rec.expiry_date}"
+		indicator = "orange"
+
+	subject = f"Compliance Reminder — {rec.license_name} ({urgency})"
+	body = f"""
+<h3>Compliance License Reminder</h3>
+<table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;">
+  <tr><td><b>License / Fee</b></td><td>{rec.license_name}</td></tr>
+  <tr><td><b>Expiry / Due Date</b></td><td><b>{rec.expiry_date}</b></td></tr>
+  <tr><td><b>Status</b></td><td style="color:{'#e74c3c' if days_left <= 0 else '#e67e22'};">{urgency}</td></tr>
+</table>
+<br>
+<p><b>Action Required:</b> Please ensure this license or fee is renewed/paid before the due date.</p>
+<p><a href="/app/compliance-license/{rec.name}">View Compliance Record →</a></p>
+"""
+
+	user_email = frappe.db.get_value("User", rec.assigned_to, "email") or rec.assigned_to
+
+	try:
+		frappe.sendmail(recipients=[user_email], subject=subject, message=body, now=True)
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Compliance Reminder Email Failed")
+
+	frappe.get_doc({
+		"doctype": "Notification Log",
+		"subject": subject,
+		"email_content": body,
+		"for_user": rec.assigned_to,
+		"type": "Alert",
+		"document_type": "Compliance License",
+		"document_name": rec.name,
+	}).insert(ignore_permissions=True)
+
+	frappe.publish_realtime(
+		"msgprint",
+		{"message": f"Compliance Reminder: {rec.license_name} is {urgency}.", "alert": True, "indicator": indicator},
+		user=rec.assigned_to,
+	)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  Compliance Auto-Renewal
+# ─────────────────────────────────────────────────────────────────────────────
+
+_FREQUENCY_MONTHS = {
+	"Annual": 12,
+	"Semi-Annual": 6,
+	"Quarterly": 3,
+	"Monthly": 1,
+}
+
+
+def process_compliance_renewals():
+	"""Daily: expire overdue Compliance Licenses and auto-create renewals where configured."""
+	expired = frappe.get_all(
+		"Compliance License",
+		filters={
+			"status": ["in", ["Active", "Pending Renewal"]],
+			"expiry_date": ["<", today()],
+		},
+		fields=["name", "compliance_type", "payment_frequency"],
+	)
+
+	for rec in expired:
+		frappe.db.set_value("Compliance License", rec.name, "status", "Expired")
+
+		if not rec.compliance_type:
+			continue
+
+		auto_renew = frappe.db.get_value("Compliance Type", rec.compliance_type, "auto_renew")
+		if not auto_renew:
+			continue
+
+		# Skip if an active or pending renewal already exists for this type
+		already_active = frappe.db.exists(
+			"Compliance License",
+			{"compliance_type": rec.compliance_type, "status": ["in", ["Active", "Pending Renewal"]]},
+		)
+		if already_active:
+			continue
+
+		old_doc = frappe.get_doc("Compliance License", rec.name)
+		new_expiry = _next_expiry(old_doc.expiry_date, rec.payment_frequency)
+
+		new_doc = frappe.copy_doc(old_doc)
+		new_doc.status = "Pending Renewal"
+		new_doc.issue_date = today()
+		new_doc.expiry_date = new_expiry
+		new_doc.amount = 0
+		new_doc.calculated_period = ""
+		for rule in new_doc.reminder_rules:
+			rule.reminder_sent = 0
+		new_doc.payment_history = []
+		new_doc.insert(ignore_permissions=True)
+
+	frappe.db.commit()
+
+
+def _next_expiry(expiry_date, frequency):
+	months = _FREQUENCY_MONTHS.get(frequency, 12)
+	return add_months(expiry_date, months)

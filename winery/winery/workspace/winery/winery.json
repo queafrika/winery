@@ -1,7 +1,7 @@
 {
  "app": "winery",
  "charts": [],
- "content": "[{\"id\":\"wh1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"ws1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Banana Grading\",\"col\":3}},{\"id\":\"ws2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Ripening Batch\",\"col\":3}},{\"id\":\"ws3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Wine Batch\",\"col\":3}},{\"id\":\"ws4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Lab Analysis\",\"col\":3}},{\"id\":\"wsp1\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"wh2\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Transactions</b></span>\",\"col\":12}},{\"id\":\"wc1\",\"type\":\"card\",\"data\":{\"card_name\":\"Procurement\",\"col\":4}},{\"id\":\"wc2\",\"type\":\"card\",\"data\":{\"card_name\":\"Ripening\",\"col\":4}},{\"id\":\"wc3\",\"type\":\"card\",\"data\":{\"card_name\":\"Wine Production\",\"col\":4}},{\"id\":\"wsp2\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"wc4\",\"type\":\"card\",\"data\":{\"card_name\":\"Quality &amp; Lab\",\"col\":4}},{\"id\":\"wc5\",\"type\":\"card\",\"data\":{\"card_name\":\"Cellar &amp; Vessel\",\"col\":4}},{\"id\":\"wc6\",\"type\":\"card\",\"data\":{\"card_name\":\"Bottling &amp; Packaging\",\"col\":4}}]",
+ "content": "[{\"id\":\"wh1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"ws1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Banana Grading\",\"col\":3}},{\"id\":\"ws2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Ripening Batch\",\"col\":3}},{\"id\":\"ws3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Wine Batch\",\"col\":3}},{\"id\":\"ws4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Lab Analysis\",\"col\":3}},{\"id\":\"ws5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Compliance License\",\"col\":3}},{\"id\":\"wsp1\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"wh2\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Transactions</b></span>\",\"col\":12}},{\"id\":\"wc1\",\"type\":\"card\",\"data\":{\"card_name\":\"Procurement\",\"col\":4}},{\"id\":\"wc2\",\"type\":\"card\",\"data\":{\"card_name\":\"Ripening\",\"col\":4}},{\"id\":\"wc3\",\"type\":\"card\",\"data\":{\"card_name\":\"Wine Production\",\"col\":4}},{\"id\":\"wsp2\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"wc4\",\"type\":\"card\",\"data\":{\"card_name\":\"Quality &amp; Lab\",\"col\":4}},{\"id\":\"wc5\",\"type\":\"card\",\"data\":{\"card_name\":\"Cellar &amp; Vessel\",\"col\":4}},{\"id\":\"wc6\",\"type\":\"card\",\"data\":{\"card_name\":\"Bottling &amp; Packaging\",\"col\":4}},{\"id\":\"wsp3\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"wc7\",\"type\":\"card\",\"data\":{\"card_name\":\"Compliance\",\"col\":4}}]",
  "creation": "2026-03-07 00:00:00",
  "custom_blocks": [],
  "docstatus": 0,
@@ -18,10 +18,20 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Procurement",
-   "link_count": 1,
+   "link_count": 4,
    "link_type": "DocType",
    "onboard": 1,
    "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Agent Delivery Receipt",
+   "link_count": 0,
+   "link_to": "Agent Delivery Receipt",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
   },
   {
    "hidden": 0,
@@ -31,6 +41,16 @@
    "link_to": "Banana Grading",
    "link_type": "DocType",
    "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Banana Disinfection Log",
+   "link_count": 0,
+   "link_to": "Banana Disinfection Log",
+   "link_type": "DocType",
+   "onboard": 0,
    "type": "Link"
   },
   {
@@ -187,6 +207,35 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Compliance",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Compliance License",
+   "link_count": 0,
+   "link_to": "Compliance License",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Compliance Type",
+   "link_count": 0,
+   "link_to": "Compliance Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
  "modified": "2026-03-16 00:00:00.000000",
@@ -230,6 +279,14 @@
    "doc_view": "List",
    "label": "Lab Analysis",
    "link_to": "Lab Analysis",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Red",
+   "doc_view": "List",
+   "label": "Compliance License",
+   "link_to": "Compliance License",
    "stats_filter": "[]",
    "type": "DocType"
   }

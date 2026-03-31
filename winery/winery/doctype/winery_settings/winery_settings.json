@@ -8,7 +8,11 @@
   "batch_number_series",
   "section_break_warehouses",
   "sample_warehouse",
-  "unpackaged_bottle_warehouse"
+  "unpackaged_bottle_warehouse",
+  "section_break_procurement",
+  "banana_bunch_template",
+  "raw_banana_finger_template",
+  "ripe_banana_finger_template"
  ],
  "fields": [
   {
@@ -41,6 +45,32 @@
    "label": "Unpackaged Bottle Warehouse",
    "options": "Warehouse",
    "description": "Destination warehouse for remainder filled bottles not allocated to any packaging line"
+  },
+  {
+   "fieldname": "section_break_procurement",
+   "fieldtype": "Section Break",
+   "label": "Procurement"
+  },
+  {
+   "fieldname": "banana_bunch_template",
+   "fieldtype": "Link",
+   "label": "Banana Bunch Template Item",
+   "options": "Item",
+   "description": "Item template whose variants are used when agents purchase banana bunches"
+  },
+  {
+   "fieldname": "raw_banana_finger_template",
+   "fieldtype": "Link",
+   "label": "Raw Banana Finger Template Item",
+   "options": "Item",
+   "description": "Item template whose variants are the output of grading (Raw Banana Fingers by variety)"
+  },
+  {
+   "fieldname": "ripe_banana_finger_template",
+   "fieldtype": "Link",
+   "label": "Ripe Banana Finger Template Item",
+   "options": "Item",
+   "description": "Item template whose variants are produced after ripening (Ripe Banana Fingers by variety)"
   }
  ],
  "index_web_pages_for_search": 0,

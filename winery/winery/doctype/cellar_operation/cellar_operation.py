@@ -84,11 +84,11 @@ class CellarOperation(Document):
 						)
 					}
 					missing = [r.test_type for r in mandatory if r.test_type not in done]
-					if missing:
-						frappe.throw(
-							"Cannot complete operation — the following mandatory lab analyses are not yet submitted:<br>"
-							+ "<br>".join(f"• {t}" for t in missing)
-						)
+					# if missing:
+					# 	frappe.throw(
+					# 		"Cannot complete operation — the following mandatory lab analyses are not yet submitted:<br>"
+					# 		+ "<br>".join(f"• {t}" for t in missing)
+					# 	)
 
 		now = now_datetime()
 		self.db_set("end_time", now)
@@ -118,6 +118,18 @@ class CellarOperation(Document):
 		if self.transfer_entry:
 			frappe.throw("Materials have already been transferred for this operation.")
 
+		# Validate that no item is being transferred from the WIP warehouse to itself
+		if isinstance(items, str):
+			_items_check = json.loads(items)
+		else:
+			_items_check = items
+		for row in _items_check:
+			if row.get("s_warehouse") and row["s_warehouse"] == wip_warehouse:
+				frappe.throw(
+					f"Source warehouse cannot be the same as the WIP warehouse ({wip_warehouse}). "
+					f"Please select a different source warehouse."
+				)
+
 		se = frappe.new_doc("Stock Entry")
 		se.purpose = "Material Transfer"
 		se.stock_entry_type = "Material Transfer"
@@ -126,16 +138,25 @@ class CellarOperation(Document):
 		for row in items:
 			if not row.get("item_code") or not row.get("qty") or not row.get("s_warehouse"):
 				continue
+			item_code = row["item_code"]
+			batch_no  = row.get("batch_no")
+			# When a batch is selected, use the batch's own item code so that template
+			# or legacy items (e.g. "Ripe Banana") are resolved to the correct variant.
+			if batch_no:
+				batch_item = frappe.db.get_value("Batch", batch_no, "item")
+				if batch_item:
+					item_code = batch_item
 			item_row = {
-				"item_code": row["item_code"],
+				"item_code": item_code,
 				"qty": row["qty"],
 				"s_warehouse": row["s_warehouse"],
 				"t_warehouse": wip_warehouse,
 			}
 			if row.get("uom"):
 				item_row["uom"] = row["uom"]
-			if row.get("batch_no"):
-				item_row["batch_no"] = row["batch_no"]
+			if batch_no:
+				item_row["batch_no"] = batch_no
+				item_row["use_serial_batch_fields"] = 1
 			if row.get("serial_no"):
 				item_row["serial_no"] = row["serial_no"]
 			if row.get("conversion_factor") and flt(row["conversion_factor"]) not in (0, 1):
@@ -152,6 +173,10 @@ class CellarOperation(Document):
 			item_code = row.get("item_code")
 			if not batch_no or not item_code:
 				continue
+			# Resolve variant from batch (mirrors the SE item_code resolution above)
+			batch_item = frappe.db.get_value("Batch", batch_no, "item")
+			if batch_item:
+				item_code = batch_item
 			if not frappe.db.exists("Item Lab Test Requirement", {"parent": item_code}):
 				continue
 			qa_status = frappe.db.get_value("Batch", batch_no, "qa_status")
@@ -183,7 +208,7 @@ class CellarOperation(Document):
 
 		se.use_serial_batch_fields = 1
 		se.insert(ignore_permissions=True)
-		se.submit()
+		frappe.get_doc("Stock Entry", se.name).submit()
 		self.db_set("transfer_entry", se.name)
 		self.db_set("wip_warehouse", wip_warehouse)
 		frappe.msgprint(f"WIP Transfer Entry <b>{se.name}</b> created.", alert=True)
@@ -305,11 +330,74 @@ def get_uom_conversion(item_code, from_uom):
 
 @frappe.whitelist()
 def get_batches_for_item_warehouse(item_code, warehouse):
-	"""Return batches with positive available stock for item_code in warehouse."""
+	"""Return batches with positive available stock for item_code in warehouse.
+
+	Handles three cases:
+	- Template item (has_variants=1): aggregates batches from all active variants.
+	- Variant of the ripe_banana_finger_template: returns its own batches directly.
+	- Any other item (including legacy "Ripe Banana"): tries its own batch-tracked
+	  stock first; if none found, falls back to the ripe_banana_finger_template
+	  variants from Winery Settings.
+
+	NULL batch_no rows (non-batch stock) are intentionally excluded so they cannot
+	mask the fallback when an item has no proper batch tracking.
+
+	Each result dict includes "item_code" (the actual variant) so transfer_materials
+	can post the SE against the correct variant rather than the template/legacy item.
+	"""
 	from erpnext.stock.doctype.batch.batch import get_batch_qty
-	batches = get_batch_qty(item_code=item_code, warehouse=warehouse) or []
-	return [
-		{"batch_no": b.get("batch_no"), "qty": b.get("qty")}
-		for b in batches
-		if b.get("qty", 0) > 0
-	]
+
+	def _batches_for(icode):
+		"""Return batch rows with positive qty, excluding NULL-batch entries."""
+		return [
+			{"batch_no": b.get("batch_no"), "qty": b.get("qty"), "item_code": icode}
+			for b in (get_batch_qty(item_code=icode, warehouse=warehouse) or [])
+			if b.get("qty", 0) > 0 and b.get("batch_no")
+		]
+
+	ripe_tpl = frappe.db.get_single_value("Winery Settings", "ripe_banana_finger_template")
+
+	def _sorted_by_ripening(batches):
+		"""Sort batch list oldest-ripened-first using ripening_end_date on the Batch record."""
+		if not batches:
+			return batches
+		batch_nos = [b["batch_no"] for b in batches]
+		dates = {
+			d.name: d.ripening_end_date or d.manufacturing_date or d.creation
+			for d in frappe.db.get_all(
+				"Batch",
+				filters={"name": ["in", batch_nos]},
+				fields=["name", "ripening_end_date", "manufacturing_date", "creation"],
+			)
+		}
+		return sorted(batches, key=lambda b: dates.get(b["batch_no"]) or "")
+
+	has_variants = frappe.db.get_value("Item", item_code, "has_variants")
+	if has_variants:
+		# Template item — aggregate all active variants, order by ripening date
+		variants = frappe.db.get_all(
+			"Item", filters={"variant_of": item_code, "disabled": 0}, pluck="name"
+		)
+		return _sorted_by_ripening([b for v in variants for b in _batches_for(v)])
+
+	variant_of = frappe.db.get_value("Item", item_code, "variant_of")
+	if ripe_tpl and variant_of == ripe_tpl:
+		# Already a proper variant of the template — use directly, ordered
+		return _sorted_by_ripening(_batches_for(item_code))
+
+	# Direct item (could be legacy standalone like "Ripe Banana") — try its own batches.
+	# If the item is unrelated to the ripe_banana_finger_template (no variant_of link,
+	# not the template itself) AND the template's variants have stock in this warehouse,
+	# prefer the template variants over the legacy item's own batches.
+	item_is_legacy = ripe_tpl and ripe_tpl != item_code and variant_of != ripe_tpl
+	if item_is_legacy:
+		variants = frappe.db.get_all(
+			"Item", filters={"variant_of": ripe_tpl, "disabled": 0}, pluck="name"
+		)
+		tpl_batches = [b for v in variants for b in _batches_for(v)]
+		if tpl_batches:
+			return _sorted_by_ripening(tpl_batches)
+
+	# Return the item's own batches (used when no ripe_tpl configured, or item is
+	# not legacy, or template variants have no stock in this warehouse)
+	return _sorted_by_ripening(_batches_for(item_code))

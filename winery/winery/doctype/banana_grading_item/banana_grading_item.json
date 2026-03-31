@@ -1,0 +1,150 @@
+{
+ "actions": [],
+ "creation": "2026-03-26 00:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "banana_item",
+  "item_name",
+  "farm",
+  "raw_finger_item",
+  "bunches_received",
+  "grade_a_qty",
+  "grade_b_qty",
+  "grade_c_qty",
+  "damaged_qty",
+  "total_fingers",
+  "valuation_amount",
+  "cost_per_finger",
+  "grade_a_batch",
+  "grade_b_batch",
+  "grade_c_batch",
+  "damaged_batch"
+ ],
+ "fields": [
+  {
+   "fieldname": "banana_item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Banana Bunch Item",
+   "options": "Item",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fetch_from": "banana_item.item_name",
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "farm",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Farm",
+   "options": "Farm",
+   "read_only": 1
+  },
+  {
+   "fieldname": "raw_finger_item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Raw Finger Item",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "description": "Received bunches from the ADR — the source quantity for repacking",
+   "fieldname": "bunches_received",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Bunches Received",
+   "read_only": 1
+  },
+  {
+   "fieldname": "grade_a_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Grade A Fingers"
+  },
+  {
+   "fieldname": "grade_b_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Grade B Fingers"
+  },
+  {
+   "fieldname": "grade_c_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Grade C Fingers"
+  },
+  {
+   "fieldname": "damaged_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Damaged Fingers"
+  },
+  {
+   "fieldname": "total_fingers",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Total Fingers",
+   "read_only": 1
+  },
+  {
+   "description": "Proportional share of the ADR total amount based on bunches received",
+   "fieldname": "valuation_amount",
+   "fieldtype": "Currency",
+   "label": "Valuation Amount",
+   "read_only": 1
+  },
+  {
+   "description": "Valuation amount divided by total fingers — effective cost per finger",
+   "fieldname": "cost_per_finger",
+   "fieldtype": "Currency",
+   "label": "Cost / Finger",
+   "read_only": 1
+  },
+  {
+   "fieldname": "grade_a_batch",
+   "fieldtype": "Data",
+   "label": "Grade A Batch",
+   "read_only": 1
+  },
+  {
+   "fieldname": "grade_b_batch",
+   "fieldtype": "Data",
+   "label": "Grade B Batch",
+   "read_only": 1
+  },
+  {
+   "fieldname": "grade_c_batch",
+   "fieldtype": "Data",
+   "label": "Grade C Batch",
+   "read_only": 1
+  },
+  {
+   "fieldname": "damaged_batch",
+   "fieldtype": "Data",
+   "label": "Damaged Batch",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-26 00:00:00",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Banana Grading Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

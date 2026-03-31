@@ -1,0 +1,85 @@
+{
+ "actions": [],
+ "creation": "2026-03-30 00:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "source_item",
+  "source_warehouse",
+  "bottle_size_ml",
+  "bottles_per_unit",
+  "planned_quantity",
+  "column_break_1",
+  "actual_quantity"
+ ],
+ "fields": [
+  {
+   "allow_on_submit": 1,
+   "fieldname": "source_item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Source Item",
+   "options": "Item",
+   "reqd": 1,
+   "description": "Bottled wine item or packaged carton item being processed back"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "source_warehouse",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Source Warehouse",
+   "options": "Warehouse",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "bottle_size_ml",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Bottle Size (ml)",
+   "description": "Size of the source bottles — used for volume calculation"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "1",
+   "fieldname": "bottles_per_unit",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Bottles per Unit",
+   "description": "1 for individual bottles; N if source is a carton of N bottles"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "planned_quantity",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Planned Qty"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "actual_quantity",
+   "fieldtype": "Float",
+   "label": "Actual Qty",
+   "read_only": 1,
+   "no_copy": 1
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-30 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Wine Batch Rebottling Source Line",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

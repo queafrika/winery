@@ -1,0 +1,227 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "RB-.YYYY.-.#####",
+ "creation": "2026-03-30 00:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_header",
+  "wine_batch",
+  "rebottling_date",
+  "column_break_header1",
+  "status",
+  "rebottling_stock_entries",
+  "section_break_reason",
+  "reason",
+  "section_break_results",
+  "process_loss_bottles",
+  "process_loss_litres",
+  "yield_pct",
+  "column_break_results1",
+  "packaging_process_loss",
+  "packaging_yield_pct",
+  "section_source",
+  "source_lines",
+  "section_rebottling",
+  "rebottling_lines",
+  "section_repackaging",
+  "repackaging_lines",
+  "section_materials",
+  "material_lines",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_header",
+   "fieldtype": "Section Break",
+   "label": "Rebottling Details"
+  },
+  {
+   "fieldname": "wine_batch",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Wine Batch",
+   "options": "Wine Batch",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "rebottling_date",
+   "fieldtype": "Date",
+   "label": "Rebottling Date"
+  },
+  {
+   "fieldname": "column_break_header1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Pending\nRebottling Completed\nRepackaging Completed\nCompleted",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rebottling_stock_entries",
+   "fieldtype": "Small Text",
+   "label": "Rebottling Stock Entries",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_reason",
+   "fieldtype": "Section Break",
+   "label": "Reason"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "reason",
+   "fieldtype": "Small Text",
+   "label": "Reason for Rebottling",
+   "description": "Why is this wine being rebottled or repackaged?"
+  },
+  {
+   "fieldname": "section_break_results",
+   "fieldtype": "Section Break",
+   "label": "Results"
+  },
+  {
+   "fieldname": "process_loss_bottles",
+   "fieldtype": "Int",
+   "label": "Process Loss (bottles)",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "process_loss_litres",
+   "fieldtype": "Float",
+   "label": "Process Loss (L)",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "yield_pct",
+   "fieldtype": "Float",
+   "label": "Yield (%)",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_results1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "packaging_process_loss",
+   "fieldtype": "Int",
+   "label": "Packaging Process Loss (bottles)",
+   "no_copy": 1,
+   "read_only": 1,
+   "description": "Total net bottles that were not packaged"
+  },
+  {
+   "fieldname": "packaging_yield_pct",
+   "fieldtype": "Float",
+   "label": "Packaging Yield (%)",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_source",
+   "fieldtype": "Section Break",
+   "label": "Source (what goes in)"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "source_lines",
+   "fieldtype": "Table",
+   "label": "Source Lines",
+   "options": "Wine Batch Rebottling Source Line"
+  },
+  {
+   "fieldname": "section_rebottling",
+   "fieldtype": "Section Break",
+   "label": "New Bottling Output"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "rebottling_lines",
+   "fieldtype": "Table",
+   "label": "Rebottling Lines",
+   "options": "Wine Batch Rebottling Line"
+  },
+  {
+   "fieldname": "section_repackaging",
+   "fieldtype": "Section Break",
+   "label": "New Packaging"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "repackaging_lines",
+   "fieldtype": "Table",
+   "label": "Repackaging Lines",
+   "options": "Wine Batch Repackaging Line"
+  },
+  {
+   "fieldname": "section_materials",
+   "fieldtype": "Section Break",
+   "label": "Materials"
+  },
+  {
+   "allow_on_submit": 1,
+   "description": "Consumables used during rebottling \u2014 corks, labels, carton boxes, etc. Mark reusable items to return them to stock.",
+   "fieldname": "material_lines",
+   "fieldtype": "Table",
+   "label": "Materials",
+   "options": "Wine Batch Rebottling Material Line"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Wine Batch Rebottling",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [
+  {
+   "group": "Wine Batch",
+   "link_doctype": "Wine Batch",
+   "link_fieldname": "wine_batch"
+  }
+ ],
+ "modified": "2026-03-30 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Wine Batch Rebottling",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

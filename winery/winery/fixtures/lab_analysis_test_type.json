@@ -1,0 +1,72 @@
+[
+ {
+  "doctype": "Lab Analysis Test Type",
+  "name": "Temperature Test",
+  "test_type_name": "Temperature Test",
+  "description": "Measures the temperature of the wine or must to verify it is within the target range for the current operation.",
+  "expected_consumables": []
+ },
+ {
+  "doctype": "Lab Analysis Test Type",
+  "name": "Brix Test",
+  "test_type_name": "Brix Test",
+  "description": "Measures the sugar content (degrees Brix) of must or juice using a refractometer or hydrometer.",
+  "expected_consumables": []
+ },
+ {
+  "doctype": "Lab Analysis Test Type",
+  "name": "Gravity Test",
+  "test_type_name": "Gravity Test",
+  "description": "Measures specific gravity to track fermentation progress.",
+  "expected_consumables": []
+ },
+ {
+  "doctype": "Lab Analysis Test Type",
+  "name": "pH Test",
+  "test_type_name": "pH Test",
+  "description": "Measures the pH of wine or must to assess acidity and microbial stability.",
+  "expected_consumables": []
+ },
+ {
+  "doctype": "Lab Analysis Test Type",
+  "name": "Dissolution Test",
+  "test_type_name": "Dissolution Test",
+  "description": "Evaluates clarity and sediment after dissolution — used for fining and filtration assessments.",
+  "expected_consumables": []
+ },
+ {
+  "doctype": "Lab Analysis Test Type",
+  "name": "ABV Test",
+  "test_type_name": "ABV Test",
+  "description": "Measures the alcohol by volume (ABV) of wine using an ebulliometer or distillation method, with optional temperature correction.",
+  "expected_consumables": []
+ },
+ {
+  "doctype": "Lab Analysis Test Type",
+  "name": "Residual Sugar Test",
+  "test_type_name": "Residual Sugar Test",
+  "description": "Determines residual sugar concentration (g/L) in finished wine using final gravity readings.",
+  "expected_consumables": []
+ },
+ {
+  "doctype": "Lab Analysis Test Type",
+  "name": "Sensory Evaluation",
+  "test_type_name": "Sensory Evaluation",
+  "description": "Organoleptic assessment of wine appearance, aroma, and taste by trained tasters.",
+  "expected_consumables": []
+ },
+ {
+  "doctype": "Lab Analysis Test Type",
+  "name": "Cold Stability Test",
+  "test_type_name": "Cold Stability Test",
+  "description": "Tests wine for tartrate crystal formation under cold temperatures to determine cold-stabilisation need.",
+  "expected_consumables": []
+ },
+ {
+  "doctype": "Lab Analysis Test Type",
+  "name": "Microbial Stability Test",
+  "test_type_name": "Microbial Stability Test",
+  "description": "Incubation test to detect microbial activity — turbidity, film, gas, or colour change — before bottling.",
+  "expected_consumables": []
+ }
+]

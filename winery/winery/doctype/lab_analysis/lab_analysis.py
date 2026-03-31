@@ -3,6 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
+from frappe.utils import flt, today
 
 
 class LabAnalysis(Document):
@@ -13,6 +14,7 @@ class LabAnalysis(Document):
 			frappe.throw("Wine Batch is required for a Wine Batch analysis.")
 		self._calc_residual_sugar()
 		self._calc_brix()
+		self._calc_gravity()
 		self._calc_abv()
 		self._calc_temperature()
 		self._calc_ph()
@@ -20,7 +22,7 @@ class LabAnalysis(Document):
 	def _calc_residual_sugar(self):
 		if self.test_type != "Residual Sugar Test":
 			return
-		readings = [v for v in [self.rs_reading_1, self.rs_reading_2, self.rs_reading_3] if v]
+		readings = [v for v in [self.rs_reading_1, self.rs_reading_2, self.rs_reading_3] if v is not None]
 		if not readings:
 			return
 		avg = sum(readings) / len(readings)
@@ -50,16 +52,24 @@ class LabAnalysis(Document):
 	def _calc_brix(self):
 		if self.test_type != "Brix Test":
 			return
-		readings = [v for v in [self.brix_reading_1, self.brix_reading_2, self.brix_reading_3] if v]
+		readings = [v for v in [self.brix_reading_1, self.brix_reading_2, self.brix_reading_3] if v is not None]
 		if not readings:
 			return
 		avg = round(sum(readings) / len(readings), 2)
 		self.brix_average = avg
 
+	def _calc_gravity(self):
+		if self.test_type != "Gravity Test":
+			return
+		readings = [v for v in [self.gravity_reading_1, self.gravity_reading_2, self.gravity_reading_3] if v is not None]
+		if not readings:
+			return
+		self.average_gravity = round(sum(readings) / len(readings), 3)
+
 	def _calc_abv(self):
 		if self.test_type != "ABV Test":
 			return
-		readings = [v for v in [self.abv_reading_1, self.abv_reading_2, self.abv_reading_3] if v]
+		readings = [v for v in [self.abv_reading_1, self.abv_reading_2, self.abv_reading_3] if v is not None]
 		if not readings:
 			return
 		avg = round(sum(readings) / len(readings), 2)
@@ -70,15 +80,14 @@ class LabAnalysis(Document):
 	def _calc_temperature(self):
 		if self.test_type != "Temperature Test":
 			return
-		readings = [v for v in [self.temp_reading_1, self.temp_reading_2, self.temp_reading_3] if v]
-		if not readings:
+		if self.temp_reading_1 is None:
 			return
-		avg = round(sum(readings) / len(readings), 1)
-		self.temp_average = avg
+		reading = self.temp_reading_1
+		self.temp_average = round(reading, 1)
 		temp_min = self.temp_target_min
 		temp_max = self.temp_target_max
-		out = (temp_min is not None and any(t < temp_min for t in readings)) or \
-		      (temp_max is not None and any(t > temp_max for t in readings))
+		out = (temp_min is not None and reading < temp_min) or \
+		      (temp_max is not None and reading > temp_max)
 		self.temp_out_of_range = 1 if out else 0
 
 	def _calc_ph(self):
@@ -86,7 +95,7 @@ class LabAnalysis(Document):
 			return
 
 		# Average of readings
-		readings = [v for v in [self.ph_reading_1, self.ph_reading_2, self.ph_reading_3] if v is not None and v != 0]
+		readings = [v for v in [self.ph_reading_1, self.ph_reading_2, self.ph_reading_3] if v is not None]
 		if not readings:
 			return
 		avg = round(sum(readings) / len(readings), 2)
@@ -101,8 +110,81 @@ class LabAnalysis(Document):
 	def on_submit(self):
 		if self.analysis_source == "Purchased Item":
 			self._release_batch_if_complete()
+			self._expense_consumables()
 		else:
 			self._mark_cellar_task_complete()
+			self._transfer_consumables_to_wip()
+
+	def on_cancel(self):
+		self._cancel_consumable_stock_entry()
+
+	def _transfer_consumables_to_wip(self):
+		"""On submit of a Wine Batch Lab Analysis, transfer consumables to the WIP warehouse."""
+		if not self.consumables:
+			return
+		if not self.wine_batch:
+			return
+		wip_warehouse = frappe.db.get_value("Wine Batch", self.wine_batch, "wip_warehouse")
+		if not wip_warehouse:
+			frappe.throw(
+				f"Please set a WIP Warehouse on Wine Batch <b>{self.wine_batch}</b> before submitting "
+				f"a Lab Analysis with consumables."
+			)
+		se = frappe.new_doc("Stock Entry")
+		se.stock_entry_type = "Material Transfer"
+		se.posting_date = (
+			self.analysis_date.date() if self.analysis_date else today()
+		)
+		for row in self.consumables:
+			if not row.item or not flt(row.quantity):
+				continue
+			se.append("items", {
+				"item_code": row.item,
+				"qty": flt(row.quantity),
+				"uom": row.uom or None,
+				"s_warehouse": row.source_warehouse,
+				"t_warehouse": wip_warehouse,
+			})
+		if not se.items:
+			return
+		se.insert(ignore_permissions=True)
+		se.submit()
+		self.db_set("consumable_stock_entry", se.name)
+
+	def _expense_consumables(self):
+		"""On submit of a Purchased Item Lab Analysis, expense consumables via Material Issue."""
+		if not self.consumables:
+			return
+		se = frappe.new_doc("Stock Entry")
+		se.stock_entry_type = "Material Issue"
+		se.posting_date = (
+			self.analysis_date.date() if self.analysis_date else today()
+		)
+		for row in self.consumables:
+			if not row.item or not flt(row.quantity):
+				continue
+			se.append("items", {
+				"item_code": row.item,
+				"qty": flt(row.quantity),
+				"uom": row.uom or None,
+				"s_warehouse": row.source_warehouse,
+			})
+		if not se.items:
+			return
+		se.insert(ignore_permissions=True)
+		se.submit()
+		self.db_set("consumable_stock_entry", se.name)
+
+	def _cancel_consumable_stock_entry(self):
+		"""Cancel the consumable SE when the Lab Analysis is cancelled."""
+		if not self.consumable_stock_entry:
+			return
+		try:
+			se = frappe.get_doc("Stock Entry", self.consumable_stock_entry)
+			if se.docstatus == 1:
+				se.cancel()
+		except frappe.DoesNotExistError:
+			pass
 
 	def _release_batch_if_complete(self):
 		"""Release the batch QA hold once all mandatory tests have been submitted."""

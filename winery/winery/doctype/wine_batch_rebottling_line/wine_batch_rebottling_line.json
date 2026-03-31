@@ -1,0 +1,159 @@
+{
+ "actions": [],
+ "creation": "2026-03-30 00:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "bottle_item",
+  "bottle_size_ml",
+  "planned_bottles",
+  "planned_volume_litres",
+  "column_break_1",
+  "bottled_wine_item",
+  "actual_bottles",
+  "qc_bottles",
+  "sample_bottles",
+  "net_bottles",
+  "volume_litres",
+  "remaining_volume_litres",
+  "bottle_source_warehouse",
+  "sealing_item",
+  "sealing_source_warehouse"
+ ],
+ "fields": [
+  {
+   "allow_on_submit": 1,
+   "fieldname": "bottle_item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Bottle / Container",
+   "options": "Item",
+   "description": "New empty bottle to use — leave blank if reusing the same bottle"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "bottle_size_ml",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Bottle Size (ml)",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "planned_bottles",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Planned Bottles",
+   "description": "Expected bottles for this size — ignore process loss"
+  },
+  {
+   "allow_on_submit": 1,
+   "description": "Planned Bottles \u00d7 Bottle Size \u00f7 1000",
+   "fieldname": "planned_volume_litres",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Planned Volume (L)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "description": "Filled but unpackaged bottle item \u2014 used for sample and remainder SE lines",
+   "fieldname": "bottled_wine_item",
+   "fieldtype": "Link",
+   "label": "Bottled Wine Item",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "actual_bottles",
+   "fieldtype": "Int",
+   "label": "Actual Bottles",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "qc_bottles",
+   "fieldtype": "Int",
+   "label": "QC Bottles Reserved",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "1",
+   "description": "Bottles to retain as samples (minimum 1)",
+   "fieldname": "sample_bottles",
+   "fieldtype": "Int",
+   "label": "Sample Bottles",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "description": "Actual \u2212 QC \u2212 Sample",
+   "fieldname": "net_bottles",
+   "fieldtype": "Int",
+   "label": "Net Bottles",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "description": "Actual Bottles \u00d7 Bottle Size \u00f7 1000",
+   "fieldname": "volume_litres",
+   "fieldtype": "Float",
+   "label": "Volume (Litres)",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "description": "Planned Volume \u2212 Actual Volume (unaccounted litres)",
+   "fieldname": "remaining_volume_litres",
+   "fieldtype": "Float",
+   "label": "Remaining Volume (L)",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "bottle_source_warehouse",
+   "fieldtype": "Link",
+   "label": "Bottle Warehouse",
+   "options": "Warehouse",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "description": "e.g. cork, cap, foil seal",
+   "fieldname": "sealing_item",
+   "fieldtype": "Link",
+   "label": "Sealing Item",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "depends_on": "sealing_item",
+   "fieldname": "sealing_source_warehouse",
+   "fieldtype": "Link",
+   "label": "Sealing Warehouse",
+   "options": "Warehouse",
+   "read_only": 1
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-30 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Wine Batch Rebottling Line",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

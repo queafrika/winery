@@ -42,11 +42,20 @@ frappe.ui.form.on("Lab Analysis", {
 		_suggest_test_type_from_recipe(frm);
 	},
 
+	test_type(frm) {
+		_populate_consumables_from_test_type(frm);
+	},
+
 	// ── Residual Sugar ──────────────────────────────────────────────
 	rs_reading_1(frm) { _calc_residual_sugar(frm); },
 	rs_reading_2(frm) { _calc_residual_sugar(frm); },
 	rs_reading_3(frm) { _calc_residual_sugar(frm); },
 	rs_temp_correction(frm) { _calc_residual_sugar(frm); },
+
+	// ── Gravity ──────────────────────────────────────────────────────
+	gravity_reading_1(frm) { _calc_gravity(frm); },
+	gravity_reading_2(frm) { _calc_gravity(frm); },
+	gravity_reading_3(frm) { _calc_gravity(frm); },
 
 	// ── Brix ────────────────────────────────────────────────────────
 	brix_reading_1(frm) { _calc_brix(frm); },
@@ -61,8 +70,6 @@ frappe.ui.form.on("Lab Analysis", {
 
 	// ── Temperature Test ─────────────────────────────────────────────
 	temp_reading_1(frm) { _calc_temp(frm); },
-	temp_reading_2(frm) { _calc_temp(frm); },
-	temp_reading_3(frm) { _calc_temp(frm); },
 	temp_target_min(frm) { _calc_temp(frm); },
 	temp_target_max(frm) { _calc_temp(frm); },
 
@@ -75,7 +82,7 @@ frappe.ui.form.on("Lab Analysis", {
 // ── Residual Sugar calculation ───────────────────────────────────────────────
 function _calc_residual_sugar(frm) {
 	const readings = [frm.doc.rs_reading_1, frm.doc.rs_reading_2, frm.doc.rs_reading_3].filter(
-		(v) => v !== undefined && v !== null && v !== 0
+		(v) => v !== undefined && v !== null
 	);
 	if (!readings.length) return;
 
@@ -110,10 +117,21 @@ function _calc_residual_sugar(frm) {
 	frm.set_value("rs_wine_classification", classification);
 }
 
+// ── Gravity calculation ──────────────────────────────────────────────────────
+function _calc_gravity(frm) {
+	const readings = [frm.doc.gravity_reading_1, frm.doc.gravity_reading_2, frm.doc.gravity_reading_3].filter(
+		(v) => v !== undefined && v !== null
+	);
+	if (!readings.length) return;
+
+	const avg = flt(readings.reduce((a, b) => a + b, 0) / readings.length, 3);
+	frm.set_value("average_gravity", avg);
+}
+
 // ── Brix calculation ─────────────────────────────────────────────────────────
 function _calc_brix(frm) {
 	const readings = [frm.doc.brix_reading_1, frm.doc.brix_reading_2, frm.doc.brix_reading_3].filter(
-		(v) => v !== undefined && v !== null && v !== 0
+		(v) => v !== undefined && v !== null
 	);
 	if (!readings.length) return;
 
@@ -124,7 +142,7 @@ function _calc_brix(frm) {
 // ── ABV calculation ──────────────────────────────────────────────────────────
 function _calc_abv(frm) {
 	const readings = [frm.doc.abv_reading_1, frm.doc.abv_reading_2, frm.doc.abv_reading_3].filter(
-		(v) => v !== undefined && v !== null && v !== 0
+		(v) => v !== undefined && v !== null
 	);
 	if (!readings.length) return;
 
@@ -137,24 +155,21 @@ function _calc_abv(frm) {
 
 // ── Temperature Test calculation ─────────────────────────────────────────────
 function _calc_temp(frm) {
-	const readings = [frm.doc.temp_reading_1, frm.doc.temp_reading_2, frm.doc.temp_reading_3].filter(
-		(v) => v !== undefined && v !== null && v !== 0
-	);
-	if (!readings.length) return;
+	const reading = frm.doc.temp_reading_1;
+	if (reading === undefined || reading === null) return;
 
-	const avg = flt(readings.reduce((a, b) => a + b, 0) / readings.length, 1);
-	frm.set_value("temp_average", avg);
+	frm.set_value("temp_average", flt(reading, 1));
 
 	const min = frm.doc.temp_target_min;
 	const max = frm.doc.temp_target_max;
-	const out_of_range = (min !== null && min !== undefined && readings.some(t => t < min)) ||
-	                     (max !== null && max !== undefined && readings.some(t => t > max));
+	const out_of_range = (min !== null && min !== undefined && reading < min) ||
+	                     (max !== null && max !== undefined && reading > max);
 
 	frm.set_value("temp_out_of_range", out_of_range ? 1 : 0);
 
 	if (out_of_range) {
 		frappe.show_alert({
-			message: `Temperature out of range! Average: ${avg}°C (target: ${min ?? "?"}–${max ?? "?"}°C)`,
+			message: `Temperature out of range! ${reading}°C (target: ${min ?? "?"}–${max ?? "?"}°C)`,
 			indicator: "red",
 		}, 8);
 	}
@@ -163,7 +178,7 @@ function _calc_temp(frm) {
 // ── pH Test ──────────────────────────────────────────────────────────────────
 function _calc_ph(frm) {
 	const readings = [frm.doc.ph_reading_1, frm.doc.ph_reading_2, frm.doc.ph_reading_3].filter(
-		(v) => v !== undefined && v !== null && v !== 0
+		(v) => v !== undefined && v !== null
 	);
 	if (!readings.length) return;
 
@@ -269,5 +284,30 @@ function _render_batch_qa_status(frm) {
 			`<b>${__("Batch QA Status")}:</b> ${status_badge} &nbsp;&nbsp; ${rows}`,
 			qa_status === "Released" ? "green" : "orange"
 		);
+	});
+}
+
+
+function _populate_consumables_from_test_type(frm) {
+	if (!frm.doc.test_type) return;
+	// Only auto-populate if the table is currently empty (do not overwrite manual edits)
+	if (frm.doc.consumables && frm.doc.consumables.length > 0) return;
+	frappe.call({
+		method: "frappe.client.get",
+		args: { doctype: "Lab Analysis Test Type", name: frm.doc.test_type },
+		callback(r) {
+			if (!r.message || !(r.message.expected_consumables || []).length) return;
+			frm.clear_table("consumables");
+			(r.message.expected_consumables || []).forEach(row => {
+				frm.add_child("consumables", {
+					item: row.item,
+					description: row.description,
+					quantity: row.quantity,
+					uom: row.uom,
+					source_warehouse: row.source_warehouse,
+				});
+			});
+			frm.refresh_field("consumables");
+		},
 	});
 }

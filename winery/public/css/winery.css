@@ -104,3 +104,154 @@
   color: #6B2D8B;
   border-color: #6B2D8B;
 }
+
+/* ── 9. Desktop home — app icon chips (gold bg, white icons) */
+/* Targets .icon-container that holds an SVG .icon (not app-logo images) */
+.icon-container:has(.icon) {
+  background-color: #F5A800 !important;
+}
+
+/* White SVG strokes inside the gold chip */
+.icon-container .icon,
+.icon-container .icon svg,
+.icon-container .icon svg path,
+.icon-container .icon svg circle,
+.icon-container .icon svg rect,
+.icon-container .icon svg polyline,
+.icon-container .icon svg line {
+  --icon-stroke: #ffffff;
+  stroke: #ffffff !important;
+}
+
+/* Workspace shortcut widgets (same gold treatment) */
+.shortcut-widget-box .widget-icon,
+.shortcut-widget-box .widget-icon.blue,
+.shortcut-widget-box .widget-icon.green,
+.shortcut-widget-box .widget-icon.orange,
+.shortcut-widget-box .widget-icon.cyan,
+.shortcut-widget-box .widget-icon.red,
+.shortcut-widget-box .widget-icon.purple,
+.shortcut-widget-box .widget-icon.yellow,
+.shortcut-widget-box .widget-icon.pink,
+.shortcut-widget-box .widget-icon.grey {
+  background-color: #F5A800 !important;
+  --icon-fill-bg: #F5A800;
+  --icon-stroke:  #ffffff;
+}
+
+.shortcut-widget-box .widget-icon svg,
+.shortcut-widget-box .widget-icon svg path,
+.shortcut-widget-box .widget-icon svg circle,
+.shortcut-widget-box .widget-icon svg rect {
+  stroke: #ffffff !important;
+}
+
+/* ── 10. Child table headers — dark green bg, white text ──── */
+.form-grid .grid-heading-row,
+.form-grid .grid-heading-row .grid-row {
+  background-color: #1A5C2A !important;
+  border-color: #1A5C2A !important;
+}
+
+.form-grid .grid-heading-row .col,
+.form-grid .grid-heading-row .col .static-area,
+.form-grid .grid-heading-row .col .sort-selector,
+.form-grid .grid-heading-row label {
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+/* Sort/filter arrow icons in child table headers */
+.form-grid .grid-heading-row .col svg,
+.form-grid .grid-heading-row .col svg path {
+  stroke: #ffffff !important;
+}
+
+/* ── 11. List view table headers — dark green bg, white text  */
+.list-row-head {
+  background-color: #1A5C2A !important;
+  border-color: #1A5C2A !important;
+}
+
+.list-row-head .list-header-subject,
+.list-row-head .list-header-meta,
+.list-row-head .col,
+.list-row-head span,
+.list-row-head .list-col-title,
+.list-row-head .sortable-handle {
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+/* Sort arrow icons in list headers */
+.list-row-head svg,
+.list-row-head svg path,
+.list-row-head svg polyline {
+  stroke: #ffffff !important;
+}
+
+/* ── 12. Form right sidebar icons (Assign, Attachments, etc.) */
+/* Icon circles / buttons in the form sidebar actions */
+.form-sidebar .form-assignments .btn .icon,
+.form-sidebar .form-attachments .btn .icon,
+.form-sidebar .sidebar-standard-actions .sidebar-action svg,
+.form-sidebar .sidebar-standard-actions .sidebar-action .icon,
+.form-sidebar .form-sidebar-items .sidebar-standard-actions a svg,
+.form-sidebar .sidebar-list-item svg {
+  stroke: #1A5C2A !important;
+}
+
+/* The action icon label text */
+.form-sidebar .sidebar-standard-actions .sidebar-action,
+.form-sidebar .form-sidebar-items .sidebar-standard-actions a {
+  color: #1A5C2A !important;
+}
+
+/* Frappe v15: sidebar action icon containers */
+.form-sidebar .icon-btn,
+.form-sidebar .sidebar-standard-actions .btn-icon {
+  color: #1A5C2A !important;
+  border-color: #1A5C2A !important;
+}
+
+.form-sidebar .icon-btn:hover,
+.form-sidebar .sidebar-standard-actions .btn-icon:hover {
+  background-color: #1A5C2A !important;
+  color: #ffffff !important;
+}
+
+.form-sidebar .icon-btn:hover svg,
+.form-sidebar .sidebar-standard-actions .btn-icon:hover svg,
+.form-sidebar .icon-btn:hover svg path {
+  stroke: #ffffff !important;
+}
+
+/* ── 13. .level-right — dark green bg, white text ────────── */
+.level-right {
+  background-color: #1A5C2A !important;
+  color: #ffffff !important;
+}
+
+.level-right svg,
+.level-right svg path,
+.level-right svg circle,
+.level-right svg polyline,
+.level-right svg line {
+  stroke: #ffffff !important;
+}
+
+.level-right a,
+.level-right span,
+.level-right .btn-link {
+  color: #ffffff !important;
+}
+
+/* ── 14. Child table header cols — dark green bg ────────── */
+.form-grid .grid-heading-row .col,
+.form-grid .grid-heading-row .col .static-area,
+.form-grid .grid-heading-row .col .sort-selector,
+.form-grid .grid-heading-row label {
+  background-color: #1A5C2A !important;
+  color: #ffffff !important;
+  font-weight: 600;
+}

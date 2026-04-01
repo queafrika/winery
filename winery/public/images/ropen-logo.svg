@@ -1,0 +1,51 @@
+<svg width="320" height="90" viewBox="0 0 320 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ovalFill" x1="38" y1="5" x2="38" y2="85" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2E7A2E"/>
+      <stop offset="100%" stop-color="#1A5C2A"/>
+    </linearGradient>
+    <!-- Subtle inner highlight on oval -->
+    <radialGradient id="ovalShine" cx="35%" cy="30%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- ── Oval portrait frame ── -->
+  <ellipse cx="38" cy="45" rx="33" ry="40" fill="url(#ovalFill)"/>
+  <ellipse cx="38" cy="45" rx="33" ry="40" fill="url(#ovalShine)"/>
+  <!-- Oval border: tricolor gradient stroke simulated as three arcs via overlay ellipses -->
+  <ellipse cx="38" cy="45" rx="33" ry="40" fill="none" stroke="#F5A800" stroke-width="2.5" stroke-dasharray="69 139"/>
+  <ellipse cx="38" cy="45" rx="33" ry="40" fill="none" stroke="#6B2D8B" stroke-width="2.5" stroke-dasharray="69 139" stroke-dashoffset="-69"/>
+  <ellipse cx="38" cy="45" rx="33" ry="40" fill="none" stroke="#2E7A2E" stroke-width="2.5" stroke-dasharray="70 138" stroke-dashoffset="-138"/>
+
+  <!-- Stylised portrait silhouette inside oval -->
+  <!-- Head -->
+  <ellipse cx="38" cy="30" rx="9" ry="11" fill="#ffffff" fill-opacity="0.88"/>
+  <!-- Shoulders / body -->
+  <path d="M20 70 Q22 52 38 50 Q54 52 56 70 Z" fill="#ffffff" fill-opacity="0.88"/>
+  <!-- Collar detail -->
+  <path d="M32 50 Q38 56 44 50" stroke="#1A5C2A" stroke-width="1" fill="none"/>
+
+  <!-- ── Tricolor ribbon stripes below oval ── -->
+  <rect x="22" y="85" width="11" height="5" rx="1.5" fill="#F5A800"/>
+  <rect x="33" y="85" width="11" height="5" rx="1.5" fill="#6B2D8B"/>
+  <rect x="44" y="85" width="11" height="5" rx="1.5" fill="#2E7A2E"/>
+
+  <!-- ── Company name text ── -->
+  <!-- "Ropen Coffee &" line -->
+  <text x="85" y="38"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="22" font-weight="700"
+        fill="#1A5C2A" letter-spacing="0.5">Ropen Coffee &amp;</text>
+  <!-- "Fine Foods Limited" line -->
+  <text x="85" y="66"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="22" font-weight="700"
+        fill="#1A5C2A" letter-spacing="0.5">Fine Foods Limited</text>
+
+  <!-- Gold underline accent -->
+  <rect x="85" y="72" width="210" height="2.5" rx="1.25" fill="#F5A800"/>
+  <!-- Purple underline accent (thinner, offset) -->
+  <rect x="85" y="76" width="130" height="1.5" rx="0.75" fill="#6B2D8B"/>
+</svg>

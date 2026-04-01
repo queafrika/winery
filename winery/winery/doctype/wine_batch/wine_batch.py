@@ -708,6 +708,7 @@ def close_wine_batch(wine_batch):
 				"uom": wip["uom"],
 				"s_warehouse": wip["wip_warehouse"],
 				"batch_no": wip["batch_no"] or None,
+				"use_serial_batch_fields": 1 if wip["batch_no"] else 0,
 				"is_finished_item": 0,
 			})
 
@@ -778,6 +779,7 @@ def close_wine_batch(wine_batch):
 			"qty": cint(row.actual_cartons),
 			"t_warehouse": row.output_warehouse,
 			"batch_no": row.output_batch_no or None,
+			"use_serial_batch_fields": 1 if row.output_batch_no else 0,
 			"is_finished_item": 1,
 			"basic_rate": round(basic_rate, 4),
 		})
@@ -820,7 +822,7 @@ def close_wine_batch(wine_batch):
 						})
 
 		se.insert(ignore_permissions=True)
-		se.submit()
+		frappe.get_doc("Stock Entry", se.name).submit()
 		se_names.append(se.name)
 
 	stock_entries_str = "\n".join(se_names)
@@ -916,3 +918,46 @@ def cancel_bottling(wine_batch):
 	})
 
 	frappe.msgprint("Bottling & Packaging cancelled. Wine Batch reverted to Active.", alert=True)
+
+
+@frappe.whitelist()
+def create_rebottling_from_batch(wine_batch_name):
+	"""
+	Create a draft Wine Batch Rebottling pre-populated with source lines
+	derived from the Wine Batch's completed packaging lines.
+	Returns the name of the new rebottling document.
+	"""
+	wb = frappe.get_doc("Wine Batch", wine_batch_name)
+	if wb.bottling_status != "Completed":
+		frappe.throw(
+			"Wine Batch must be fully closed (status: Completed) before creating a rebottling."
+		)
+
+	active_lines = [
+		pl for pl in wb.packaging_lines
+		if pl.output_item and cint(pl.actual_cartons)
+	]
+	if not active_lines:
+		frappe.throw(
+			"No completed packaging lines found on this Wine Batch. "
+			"Please close the wine batch first."
+		)
+
+	rb = frappe.new_doc("Wine Batch Rebottling")
+	rb.wine_batch = wine_batch_name
+	rb.is_auto_created = 1
+
+	for pl in active_lines:
+		rb.append("source_lines", {
+			"source_item":        pl.output_item,
+			"source_warehouse":   pl.output_warehouse,
+			"source_batch_no":    pl.output_batch_no or None,
+			"bottle_size_ml":     cint(pl.bottle_size_ml),
+			"bottles_per_unit":   cint(pl.bottles_per_carton),
+			"pack_size":          pl.pack_size or "",
+			"available_quantity": cint(pl.actual_cartons),
+			"planned_quantity":   0,
+		})
+
+	rb.insert(ignore_permissions=True)
+	return rb.name

@@ -1,9 +1,25 @@
 // Copyright (c) 2026, Finesoft Afrika and contributors
 // For license information, please see license.txt
 
+// ---------------------------------------------------------------------------
+// List view — prevent direct creation; rebottlings must come from Wine Batch
+// ---------------------------------------------------------------------------
+frappe.listview_settings["Wine Batch Rebottling"] = {
+    onload(listview) {
+        listview.page.remove_inner_button(__("Wine Batch Rebottling"));
+        // Also hide the standard "New" button text if present
+        const $new = listview.page.btn_primary;
+        if ($new) $new.hide();
+    },
+};
+
+// ---------------------------------------------------------------------------
+// Form
+// ---------------------------------------------------------------------------
 frappe.ui.form.on("Wine Batch Rebottling", {
     refresh(frm) {
         _render_rebottling_buttons(frm);
+        _show_volume_hint(frm);
     },
 
     onload(frm) {
@@ -26,6 +42,16 @@ function _recalc_rebottling_line(frm, cdt, cdn) {
     frappe.model.set_value(cdt, cdn, "planned_volume_litres", Math.round(vol * 10000) / 10000);
     _validate_repackaging_balance(frm);
 }
+
+// ---------------------------------------------------------------------------
+// Child table handlers — Source Lines (recalc volume hint on qty change)
+// ---------------------------------------------------------------------------
+frappe.ui.form.on("Wine Batch Rebottling Source Line", {
+    planned_quantity(frm) {
+        _show_volume_hint(frm);
+        _validate_repackaging_balance(frm);
+    },
+});
 
 // ---------------------------------------------------------------------------
 // Child table handlers — Repackaging Lines
@@ -51,7 +77,6 @@ function _autocalc_repackaging_cartons(frm, cdt, cdn) {
     const bpc = cint(row.bottles_per_carton);
     if (!sz || !bpc) return;
 
-    // Sum planned_bottles for this bottle size across all rebottling lines
     let total_planned = 0;
     (frm.doc.rebottling_lines || []).forEach(r => {
         if (cint(r.bottle_size_ml) === sz) total_planned += cint(r.planned_bottles);
@@ -63,35 +88,45 @@ function _autocalc_repackaging_cartons(frm, cdt, cdn) {
 
 function _recalc_repackaging_planned(frm, cdt, cdn) {
     const row = frappe.get_doc(cdt, cdn);
-    const total = cint(row.cartons) * cint(row.bottles_per_carton);
-    frappe.model.set_value(cdt, cdn, "total_bottles", total);
+    frappe.model.set_value(cdt, cdn, "total_bottles", cint(row.cartons) * cint(row.bottles_per_carton));
 }
 
 function _validate_repackaging_balance(frm) {
     const planned = {};
     (frm.doc.rebottling_lines || []).forEach(r => {
-        if (r.bottle_size_ml) {
-            planned[r.bottle_size_ml] = (planned[r.bottle_size_ml] || 0) + cint(r.planned_bottles);
-        }
+        if (r.bottle_size_ml) planned[r.bottle_size_ml] = (planned[r.bottle_size_ml] || 0) + cint(r.planned_bottles);
     });
     const packaged = {};
     (frm.doc.repackaging_lines || []).forEach(r => {
-        if (r.bottle_size_ml) {
-            packaged[r.bottle_size_ml] = (packaged[r.bottle_size_ml] || 0) + cint(r.total_bottles);
-        }
+        if (r.bottle_size_ml) packaged[r.bottle_size_ml] = (packaged[r.bottle_size_ml] || 0) + cint(r.total_bottles);
     });
-    const mismatches = Object.keys(packaged).filter(
-        sz => packaged[sz] !== (planned[sz] || 0)
-    );
+    const mismatches = Object.keys(packaged).filter(sz => packaged[sz] !== (planned[sz] || 0));
     if (mismatches.length) {
         const msgs = mismatches.map(sz =>
             `${sz}ml: planned ${planned[sz] || 0} bottles, packaging covers ${packaged[sz]} bottles`
         );
-        frappe.show_alert({
-            message: __("Repackaging balance mismatch: ") + msgs.join("; "),
-            indicator: "orange",
-        });
+        frappe.show_alert({ message: __("Repackaging balance mismatch: ") + msgs.join("; "), indicator: "orange" });
     }
+}
+
+// ---------------------------------------------------------------------------
+// Volume hint — display planned wine volume in form intro
+// ---------------------------------------------------------------------------
+function _show_volume_hint(frm) {
+    if (frm.doc.docstatus !== 0) return;
+    const vol = _calc_source_volume(frm);
+    if (vol > 0) {
+        frm.set_intro(
+            __("Planned wine volume from source lines: <b>{0} L</b>", [vol.toFixed(3)]),
+            "blue"
+        );
+    }
+}
+
+function _calc_source_volume(frm) {
+    return (frm.doc.source_lines || []).reduce((sum, r) => {
+        return sum + (flt(r.planned_quantity) * cint(r.bottles_per_unit) * cint(r.bottle_size_ml) / 1000);
+    }, 0);
 }
 
 // ---------------------------------------------------------------------------
@@ -114,10 +149,7 @@ function _render_rebottling_buttons(frm) {
                     const links = se_names.map(n =>
                         `<li><a href="/app/stock-entry/${n}" target="_blank">${n}</a></li>`
                     ).join("");
-                    frappe.msgprint({
-                        title: __("Rebottling Stock Entries"),
-                        message: `<ul>${links}</ul>`,
-                    });
+                    frappe.msgprint({ title: __("Rebottling Stock Entries"), message: `<ul>${links}</ul>` });
                 }).addClass("btn-info");
             }
         }
@@ -133,7 +165,6 @@ function _render_rebottling_buttons(frm) {
         return;
     }
 
-    // Pending or Rebottling Completed → show Complete Rebottling / Re-enter
     if (status === "Pending" || status === "Rebottling Completed") {
         const label = status === "Rebottling Completed"
             ? __("Re-enter Rebottling Details")
@@ -141,7 +172,6 @@ function _render_rebottling_buttons(frm) {
         frm.add_custom_button(label, () => _show_rebottling_modal(frm)).addClass("btn-primary");
     }
 
-    // Rebottling or Repackaging Completed → show packaging options + Reset
     if (status === "Rebottling Completed" || status === "Repackaging Completed") {
         const plabel = status === "Repackaging Completed"
             ? __("Re-enter Repackaging Details")
@@ -160,7 +190,6 @@ function _render_rebottling_buttons(frm) {
         }).addClass("btn-danger");
     }
 
-    // Repackaging Completed → show Close Rebottling
     if (status === "Repackaging Completed") {
         frm.add_custom_button(__("Close Rebottling"), () => {
             frappe.confirm(
@@ -168,9 +197,7 @@ function _render_rebottling_buttons(frm) {
                 () => frappe.call({
                     method: "winery.winery.doctype.wine_batch_rebottling.wine_batch_rebottling.close_rebottling",
                     args: { rebottling_doc: frm.doc.name },
-                    callback(r) {
-                        if (r.message) frm.reload_doc();
-                    },
+                    callback(r) { if (r.message) frm.reload_doc(); },
                 })
             );
         }).addClass("btn-success");
@@ -178,14 +205,21 @@ function _render_rebottling_buttons(frm) {
 }
 
 // ---------------------------------------------------------------------------
-// Complete Rebottling modal
+// Complete Rebottling modal — new bottle actuals only (no source actuals)
 // ---------------------------------------------------------------------------
 function _show_rebottling_modal(frm) {
-    const source_lines = frm.doc.source_lines || [];
     const rebottling_lines = frm.doc.rebottling_lines || [];
+    const source_lines = frm.doc.source_lines || [];
 
-    if (!source_lines.length && !rebottling_lines.length) {
-        frappe.msgprint(__("Please add source lines and rebottling lines before completing."));
+    if (!rebottling_lines.length) {
+        frappe.msgprint(__("Please add rebottling lines (new bottle sizes) before completing."));
+        return;
+    }
+
+    // Validate source quantities are set
+    const missing_qty = source_lines.filter(sl => !flt(sl.planned_quantity));
+    if (missing_qty.length) {
+        frappe.msgprint(__("Please set 'Qty to Rebottle' on all source lines before completing."));
         return;
     }
 
@@ -197,24 +231,28 @@ function _show_rebottling_modal(frm) {
             reqd: 1,
             default: frm.doc.rebottling_date || frappe.datetime.get_today(),
         },
-        { fieldname: "sb_sources", fieldtype: "Section Break", label: __("Source Quantities") },
     ];
 
-    // Source line fields
-    source_lines.forEach((sl, i) => {
+    // Source lines summary (read-only display, not editable)
+    if (source_lines.length) {
+        fields.push({ fieldname: "sb_src_info", fieldtype: "Section Break", label: __("Source Summary") });
+        const src_html = source_lines.map(sl =>
+            `<tr><td>${sl.pack_size || sl.source_item}</td>` +
+            `<td>${sl.planned_quantity}</td>` +
+            `<td>${sl.bottles_per_unit} × ${sl.bottle_size_ml}ml</td>` +
+            `<td>${sl.source_warehouse}</td></tr>`
+        ).join("");
         fields.push({
-            fieldname: `actual_quantity_${i}`,
-            fieldtype: "Float",
-            label: `${sl.source_item} — Planned: ${sl.planned_quantity || 0}`,
-            default: sl.actual_quantity || sl.planned_quantity || 0,
-            reqd: 1,
-            description: `Warehouse: ${sl.source_warehouse || ""}`,
+            fieldname: "src_summary_html",
+            fieldtype: "HTML",
+            options: `<table class="table table-bordered table-condensed">
+                <thead><tr><th>Item</th><th>Qty to Rebottle</th><th>Bottle Config</th><th>Warehouse</th></tr></thead>
+                <tbody>${src_html}</tbody></table>`,
         });
-    });
+    }
 
     fields.push({ fieldname: "sb_output", fieldtype: "Section Break", label: __("New Bottle Output") });
 
-    // Rebottling line fields
     rebottling_lines.forEach((bl, i) => {
         const heading = `${bl.bottle_item || "Bottle"} — ${bl.bottle_size_ml}ml — Planned: ${bl.planned_bottles || 0} bottles`;
         fields.push(
@@ -255,7 +293,6 @@ function _show_rebottling_modal(frm) {
                 label: __("Bottle Warehouse"),
                 options: "Warehouse",
                 default: bl.bottle_source_warehouse || "",
-                depends_on: bl.bottle_item ? `eval:1` : undefined,
             },
             {
                 fieldname: `sealing_item_${i}`,
@@ -279,10 +316,6 @@ function _show_rebottling_modal(frm) {
         fields: fields,
         primary_action_label: __("Confirm"),
         primary_action(values) {
-            const source_actuals = source_lines.map((sl, i) => ({
-                name: sl.name,
-                actual_quantity: flt(values[`actual_quantity_${i}`] || 0),
-            }));
             const line_actuals = rebottling_lines.map((bl, i) => ({
                 name: bl.name,
                 actual_bottles: cint(values[`actual_bottles_${i}`] || 0),
@@ -294,7 +327,6 @@ function _show_rebottling_modal(frm) {
                 sealing_source_warehouse: values[`sealing_source_warehouse_${i}`] || "",
             }));
 
-            // Validate required bottled_wine_item
             for (let i = 0; i < line_actuals.length; i++) {
                 if (!line_actuals[i].bottled_wine_item) {
                     frappe.msgprint(__("Bottled Wine Item is required for all rebottling lines."));
@@ -307,7 +339,6 @@ function _show_rebottling_modal(frm) {
                 args: {
                     rebottling_doc: frm.doc.name,
                     rebottling_date: values.rebottling_date,
-                    source_actuals: JSON.stringify(source_actuals),
                     line_actuals: JSON.stringify(line_actuals),
                 },
                 callback(r) {
@@ -326,7 +357,6 @@ function _show_rebottling_modal(frm) {
 // ---------------------------------------------------------------------------
 function _show_repackaging_modal(frm) {
     const repackaging_lines = frm.doc.repackaging_lines || [];
-
     if (!repackaging_lines.length) {
         frappe.msgprint(__("Please add repackaging lines before completing."));
         return;

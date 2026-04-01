@@ -18,8 +18,8 @@ scheduler_events = {
 		"winery.tasks.send_ripening_ready_reminders",
 		"winery.tasks.check_overdue_ripening_batches",
 		"winery.tasks.send_ripening_rack_report",
-		"winery.tasks.send_compliance_reminders",
-		"winery.tasks.process_compliance_renewals",
+		"winery.tasks.generate_compliance_tasks",
+		"winery.tasks.send_compliance_task_reminders",
 	],
 	"hourly": [
 		"winery.tasks.check_ungraded_adrs",
@@ -55,7 +55,7 @@ app_include_css = ["/assets/winery/css/winery.css"]
 # app_include_js = "/assets/winery/js/winery.js"
 
 # include js, css files in header of web template
-# web_include_css = "/assets/winery/css/winery.css"
+web_include_css = ["/assets/winery/css/winery-login.css"]
 # web_include_js = "/assets/winery/js/winery.js"
 
 # include custom scss in every website theme (without file extension ".scss")

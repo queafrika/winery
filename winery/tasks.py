@@ -517,38 +517,91 @@ Bananas must be graded promptly to avoid quality degradation.</p>
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-#  Compliance Reminders
+#  Compliance Task Generation & Reminders
 # ─────────────────────────────────────────────────────────────────────────────
 
-def send_compliance_reminders():
-	"""Daily: fire reminder alerts for each Compliance License reminder rule that is due."""
-	records = frappe.get_all(
-		"Compliance License",
-		filters={
-			"status": ["in", ["Active", "Pending Renewal"]],
-			"assigned_to": ["is", "set"],
-			"expiry_date": ["is", "set"],
-		},
-		fields=["name", "license_name", "expiry_date", "assigned_to"],
-	)
+def generate_compliance_tasks():
+	"""
+	Daily: scan all Compliance Types for recurring task definitions and create
+	Compliance Task records when today falls within the generation lead window.
+	"""
+	import calendar as _cal
 
-	for rec in records:
-		rules = frappe.get_all(
-			"Compliance Reminder Rule",
-			filters={"parent": rec.name, "parenttype": "Compliance License", "reminder_sent": 0},
-			fields=["name", "days_before"],
+	compliance_types = frappe.get_all("Compliance Type", fields=["name"])
+	for ct in compliance_types:
+		task_defs = frappe.get_all(
+			"Compliance Type Task",
+			filters={"parent": ct.name, "parenttype": "Compliance Type", "is_recurring": 1},
+			fields=[
+				"name", "task_name", "task_type", "assigned_to", "reminder_days_before",
+				"frequency", "day_of_month", "generate_days_in_advance",
+				"amount_source", "fixed_amount", "amount_sql",
+			],
 		)
-		for rule in rules:
-			trigger_date = add_days(rec.expiry_date, -rule.days_before)
-			if getdate(today()) >= getdate(trigger_date):
-				_send_compliance_alert(rec, rule.days_before)
-				frappe.db.set_value("Compliance Reminder Rule", rule.name, "reminder_sent", 1)
+		for td in task_defs:
+			if not td.frequency or not td.day_of_month:
+				continue
+			advance = td.generate_days_in_advance or 14
+			# Determine the next due date(s) to consider
+			upcoming = _upcoming_due_dates(td.frequency, td.day_of_month, advance)
+			for due_date in upcoming:
+				# Skip if already generated for this source_task + due_date
+				already = frappe.db.exists(
+					"Compliance Task",
+					{"source_task": td.name, "due_date": str(due_date)},
+				)
+				if already:
+					continue
+				period_start, period_end = _period_bounds(td.frequency, due_date)
+				title = _build_task_title(td.task_name, td.frequency, due_date, ct.name)
+				new_task = frappe.get_doc({
+					"doctype": "Compliance Task",
+					"task_title": title,
+					"compliance_type": ct.name,
+					"source_task": td.name,
+					"task_type": td.task_type,
+					"status": "Open",
+					"due_date": str(due_date),
+					"period_start": str(period_start),
+					"period_end": str(period_end),
+					"assigned_to": td.assigned_to,
+					"reminder_days_before": td.reminder_days_before or 7,
+					"reminder_sent": 0,
+					"amount_source": td.amount_source or "",
+					"amount_sql": td.amount_sql or "",
+					"amount": td.fixed_amount if td.amount_source == "Fixed" else 0,
+				})
+				new_task.insert(ignore_permissions=True)
 
 	frappe.db.commit()
 
 
-def _send_compliance_alert(rec, days_before):
-	days_left = (getdate(rec.expiry_date) - getdate(today())).days
+def send_compliance_task_reminders():
+	"""Daily: send reminders for open/in-progress Compliance Tasks approaching due date."""
+	tasks = frappe.get_all(
+		"Compliance Task",
+		filters={
+			"status": ["in", ["Open", "In Progress"]],
+			"assigned_to": ["is", "set"],
+			"due_date": ["is", "set"],
+			"reminder_sent": 0,
+		},
+		fields=["name", "task_title", "due_date", "assigned_to", "reminder_days_before",
+				"task_type", "amount"],
+	)
+
+	for task in tasks:
+		reminder_days = task.reminder_days_before or 7
+		trigger_date = add_days(task.due_date, -reminder_days)
+		if getdate(today()) >= getdate(trigger_date):
+			_send_task_reminder(task)
+			frappe.db.set_value("Compliance Task", task.name, "reminder_sent", 1)
+
+	frappe.db.commit()
+
+
+def _send_task_reminder(task):
+	days_left = (getdate(task.due_date) - getdate(today())).days
 
 	if days_left < 0:
 		urgency = f"OVERDUE by {abs(days_left)} day(s)"
@@ -557,104 +610,185 @@ def _send_compliance_alert(rec, days_before):
 		urgency = "due TODAY"
 		indicator = "red"
 	else:
-		urgency = f"due in {days_left} day(s) on {rec.expiry_date}"
+		urgency = f"due in {days_left} day(s) on {task.due_date}"
 		indicator = "orange"
 
-	subject = f"Compliance Reminder — {rec.license_name} ({urgency})"
+	amount_row = ""
+	if task.task_type == "Payment" and task.amount:
+		amount_row = f"<tr><td><b>Amount</b></td><td>{frappe.utils.fmt_money(task.amount)}</td></tr>"
+
+	subject = f"Compliance Task Reminder — {task.task_title} ({urgency})"
 	body = f"""
-<h3>Compliance License Reminder</h3>
+<h3>Compliance Task Reminder</h3>
 <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;">
-  <tr><td><b>License / Fee</b></td><td>{rec.license_name}</td></tr>
-  <tr><td><b>Expiry / Due Date</b></td><td><b>{rec.expiry_date}</b></td></tr>
+  <tr><td><b>Task</b></td><td>{task.task_title}</td></tr>
+  <tr><td><b>Type</b></td><td>{task.task_type}</td></tr>
+  <tr><td><b>Due Date</b></td><td><b>{task.due_date}</b></td></tr>
+  {amount_row}
   <tr><td><b>Status</b></td><td style="color:{'#e74c3c' if days_left <= 0 else '#e67e22'};">{urgency}</td></tr>
 </table>
 <br>
-<p><b>Action Required:</b> Please ensure this license or fee is renewed/paid before the due date.</p>
-<p><a href="/app/compliance-license/{rec.name}">View Compliance Record →</a></p>
+<p><b>Action Required:</b> Please complete or update this compliance task before the due date.</p>
+<p><a href="/app/compliance-task/{task.name}">View Compliance Task →</a></p>
 """
 
-	user_email = frappe.db.get_value("User", rec.assigned_to, "email") or rec.assigned_to
+	user_email = frappe.db.get_value("User", task.assigned_to, "email") or task.assigned_to
 
 	try:
 		frappe.sendmail(recipients=[user_email], subject=subject, message=body, now=True)
 	except Exception:
-		frappe.log_error(frappe.get_traceback(), "Compliance Reminder Email Failed")
+		frappe.log_error(frappe.get_traceback(), "Compliance Task Reminder Email Failed")
 
 	frappe.get_doc({
 		"doctype": "Notification Log",
 		"subject": subject,
 		"email_content": body,
-		"for_user": rec.assigned_to,
+		"for_user": task.assigned_to,
 		"type": "Alert",
-		"document_type": "Compliance License",
-		"document_name": rec.name,
+		"document_type": "Compliance Task",
+		"document_name": task.name,
 	}).insert(ignore_permissions=True)
 
 	frappe.publish_realtime(
 		"msgprint",
-		{"message": f"Compliance Reminder: {rec.license_name} is {urgency}.", "alert": True, "indicator": indicator},
-		user=rec.assigned_to,
-	)
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-#  Compliance Auto-Renewal
-# ─────────────────────────────────────────────────────────────────────────────
-
-_FREQUENCY_MONTHS = {
-	"Annual": 12,
-	"Semi-Annual": 6,
-	"Quarterly": 3,
-	"Monthly": 1,
-}
-
-
-def process_compliance_renewals():
-	"""Daily: expire overdue Compliance Licenses and auto-create renewals where configured."""
-	expired = frappe.get_all(
-		"Compliance License",
-		filters={
-			"status": ["in", ["Active", "Pending Renewal"]],
-			"expiry_date": ["<", today()],
+		{
+			"message": f"Compliance Task '{task.task_title}' is {urgency}.",
+			"alert": True,
+			"indicator": indicator,
 		},
-		fields=["name", "compliance_type", "payment_frequency"],
+		user=task.assigned_to,
 	)
 
-	for rec in expired:
-		frappe.db.set_value("Compliance License", rec.name, "status", "Expired")
 
-		if not rec.compliance_type:
+# ─── Compliance schedule helpers ──────────────────────────────────────────────
+
+def _upcoming_due_dates(frequency, day_of_month, advance_days):
+	"""
+	Return a list of upcoming due dates (as date objects) where today is within
+	the generation lead window (today + advance_days >= due_date > today).
+	"""
+	import calendar as _cal
+	from datetime import date, timedelta
+
+	today_date = getdate(today())
+	window_end = today_date + timedelta(days=advance_days)
+	due_dates = []
+
+	# Generate candidate due dates for the next few cycles
+	for months_ahead in range(0, 15):  # look up to ~15 months forward
+		candidate = _compute_due_date(frequency, day_of_month, today_date, months_ahead)
+		if candidate is None:
 			continue
-
-		auto_renew = frappe.db.get_value("Compliance Type", rec.compliance_type, "auto_renew")
-		if not auto_renew:
+		if candidate <= today_date:
 			continue
+		if candidate > window_end:
+			break
+		due_dates.append(candidate)
 
-		# Skip if an active or pending renewal already exists for this type
-		already_active = frappe.db.exists(
-			"Compliance License",
-			{"compliance_type": rec.compliance_type, "status": ["in", ["Active", "Pending Renewal"]]},
+	return due_dates
+
+
+def _compute_due_date(frequency, day_of_month, base_date, months_ahead):
+	"""Compute a single due date for a given frequency and offset."""
+	import calendar as _cal
+	from datetime import date
+
+	if frequency == "Monthly":
+		# Each month
+		target_month = base_date.month + months_ahead
+		target_year = base_date.year + (target_month - 1) // 12
+		target_month = ((target_month - 1) % 12) + 1
+		max_day = _cal.monthrange(target_year, target_month)[1]
+		day = min(day_of_month, max_day)
+		return date(target_year, target_month, day)
+
+	elif frequency == "Quarterly":
+		# Quarter-end months: 3, 6, 9, 12
+		quarter_ends = [3, 6, 9, 12]
+		current_quarter_end = next(
+			(m for m in quarter_ends if m >= base_date.month), quarter_ends[0]
 		)
-		if already_active:
-			continue
+		# Advance by quarters
+		idx = quarter_ends.index(current_quarter_end)
+		idx = (idx + months_ahead) % 4
+		target_month = quarter_ends[idx]
+		target_year = base_date.year + (base_date.month + months_ahead * 3 - 1) // 12
+		max_day = _cal.monthrange(target_year, target_month)[1]
+		day = min(day_of_month, max_day)
+		return date(target_year, target_month, day)
 
-		old_doc = frappe.get_doc("Compliance License", rec.name)
-		new_expiry = _next_expiry(old_doc.expiry_date, rec.payment_frequency)
+	elif frequency == "Semi-Annual":
+		# Half-year end months: 6, 12
+		half_ends = [6, 12]
+		current_half = next((m for m in half_ends if m >= base_date.month), half_ends[0])
+		idx = half_ends.index(current_half)
+		idx = (idx + months_ahead) % 2
+		target_month = half_ends[idx]
+		target_year = base_date.year + (base_date.month + months_ahead * 6 - 1) // 12
+		max_day = _cal.monthrange(target_year, target_month)[1]
+		day = min(day_of_month, max_day)
+		return date(target_year, target_month, day)
 
-		new_doc = frappe.copy_doc(old_doc)
-		new_doc.status = "Pending Renewal"
-		new_doc.issue_date = today()
-		new_doc.expiry_date = new_expiry
-		new_doc.amount = 0
-		new_doc.calculated_period = ""
-		for rule in new_doc.reminder_rules:
-			rule.reminder_sent = 0
-		new_doc.payment_history = []
-		new_doc.insert(ignore_permissions=True)
+	elif frequency == "Annual":
+		if months_ahead > 1:
+			return None  # Only generate one year ahead
+		target_year = base_date.year + months_ahead
+		max_day = _cal.monthrange(target_year, 12)[1]
+		day = min(day_of_month, max_day)
+		return date(target_year, 12, day)
 
-	frappe.db.commit()
+	return None
 
 
-def _next_expiry(expiry_date, frequency):
-	months = _FREQUENCY_MONTHS.get(frequency, 12)
-	return add_months(expiry_date, months)
+def _period_bounds(frequency, due_date):
+	"""Return (period_start, period_end) for a given frequency and due date."""
+	from datetime import date
+
+	if frequency == "Monthly":
+		period_start = due_date.replace(day=1)
+		period_end = due_date
+
+	elif frequency == "Quarterly":
+		quarter_start_month = ((due_date.month - 1) // 3) * 3 + 1
+		period_start = date(due_date.year, quarter_start_month, 1)
+		period_end = due_date
+
+	elif frequency == "Semi-Annual":
+		half_start_month = 1 if due_date.month <= 6 else 7
+		period_start = date(due_date.year, half_start_month, 1)
+		period_end = due_date
+
+	elif frequency == "Annual":
+		period_start = date(due_date.year, 1, 1)
+		period_end = due_date
+
+	else:
+		period_start = due_date
+		period_end = due_date
+
+	return period_start, period_end
+
+
+def _build_task_title(task_name, frequency, due_date, compliance_type_name):
+	"""Build a human-readable task title based on frequency and due date."""
+	import calendar as _cal
+
+	month_name = due_date.strftime("%B")
+	year = due_date.year
+
+	if frequency == "Monthly":
+		period_label = f"{month_name} {year}"
+	elif frequency == "Quarterly":
+		quarter = (due_date.month - 1) // 3 + 1
+		period_label = f"Q{quarter} {year}"
+	elif frequency == "Semi-Annual":
+		half = 1 if due_date.month <= 6 else 2
+		period_label = f"H{half} {year}"
+	elif frequency == "Annual":
+		period_label = str(year)
+	else:
+		period_label = ""
+
+	if period_label:
+		return f"{period_label} {task_name} for {compliance_type_name}"
+	return f"{task_name} for {compliance_type_name}"

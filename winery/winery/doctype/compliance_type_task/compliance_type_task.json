@@ -1,0 +1,133 @@
+{
+ "actions": [],
+ "creation": "2026-04-01 00:00:00",
+ "doctype": "DocType",
+ "editable_grid": 0,
+ "engine": "InnoDB",
+ "field_order": [
+  "task_name",
+  "task_type",
+  "description",
+  "assigned_to",
+  "reminder_days_before",
+  "schedule_section",
+  "is_recurring",
+  "frequency",
+  "day_of_month",
+  "generate_days_in_advance",
+  "amount_section",
+  "amount_source",
+  "fixed_amount",
+  "amount_sql"
+ ],
+ "fields": [
+  {
+   "fieldname": "task_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Task Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "task_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Task Type",
+   "options": "General\nPayment",
+   "reqd": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "assigned_to",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Assigned To",
+   "options": "User",
+   "description": "User who will receive reminders and notifications for this task"
+  },
+  {
+   "fieldname": "reminder_days_before",
+   "fieldtype": "Int",
+   "label": "Remind (Days Before Due)",
+   "default": "7",
+   "description": "Send a reminder this many days before the task is due"
+  },
+  {
+   "fieldname": "schedule_section",
+   "fieldtype": "Section Break",
+   "label": "Schedule"
+  },
+  {
+   "fieldname": "is_recurring",
+   "fieldtype": "Check",
+   "label": "Recurring Task",
+   "description": "If checked, the system will automatically create new Compliance Task records on schedule"
+  },
+  {
+   "fieldname": "frequency",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Frequency",
+   "options": "\nMonthly\nQuarterly\nSemi-Annual\nAnnual",
+   "depends_on": "eval:doc.is_recurring==1"
+  },
+  {
+   "fieldname": "day_of_month",
+   "fieldtype": "Int",
+   "label": "Day of Month",
+   "depends_on": "eval:doc.is_recurring==1",
+   "description": "Day (1-28) within the period on which the task is due. E.g. 25 = 25th of each month"
+  },
+  {
+   "fieldname": "generate_days_in_advance",
+   "fieldtype": "Int",
+   "label": "Generate (Days in Advance)",
+   "default": "14",
+   "depends_on": "eval:doc.is_recurring==1",
+   "description": "Create the Compliance Task this many days before it is due"
+  },
+  {
+   "fieldname": "amount_section",
+   "fieldtype": "Section Break",
+   "label": "Payment Amount",
+   "depends_on": "eval:doc.task_type=='Payment'"
+  },
+  {
+   "fieldname": "amount_source",
+   "fieldtype": "Select",
+   "label": "Amount Source",
+   "options": "\nFixed\nSQL Query",
+   "depends_on": "eval:doc.task_type=='Payment'"
+  },
+  {
+   "fieldname": "fixed_amount",
+   "fieldtype": "Currency",
+   "label": "Fixed Amount",
+   "depends_on": "eval:doc.task_type=='Payment' && doc.amount_source=='Fixed'"
+  },
+  {
+   "fieldname": "amount_sql",
+   "fieldtype": "Code",
+   "label": "SQL Query",
+   "options": "SQL",
+   "depends_on": "eval:doc.task_type=='Payment' && doc.amount_source=='SQL Query'",
+   "description": "Write a SELECT statement that returns a single numeric value. This will be executed when 'Calculate Amount' is clicked on the Compliance Task."
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-04-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Compliance Type Task",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "task_name",
+ "sort_order": "ASC",
+ "states": []
+}

@@ -6,13 +6,21 @@ from frappe.model.document import Document
 from frappe.utils import flt, cint, today
 from frappe.model.naming import make_autoname
 
-# Import shared helper from wine_batch module
 from winery.winery.doctype.wine_batch.wine_batch import _get_bin_rate
 
 
 class WineBatchRebottling(Document):
+    def before_insert(self):
+        if not self.is_auto_created:
+            frappe.throw(
+                "Please create a Rebottling from the Wine Batch form using the "
+                "'New Rebottling' button.",
+                title="Use Wine Batch Form"
+            )
+
     def validate(self):
         self._validate_source_lines()
+        self._recalc_source_volume()
         self._recalc_rebottling_planned()
         self._recalc_repackaging_planned()
 
@@ -20,6 +28,19 @@ class WineBatchRebottling(Document):
         for row in self.source_lines:
             if cint(row.bottles_per_unit) < 1:
                 row.bottles_per_unit = 1
+            if flt(row.planned_quantity) > cint(row.available_quantity):
+                frappe.throw(
+                    f"Planned quantity ({row.planned_quantity}) for "
+                    f"<b>{row.source_item}</b> exceeds available quantity "
+                    f"({row.available_quantity})."
+                )
+
+    def _recalc_source_volume(self):
+        total_ml = sum(
+            flt(r.planned_quantity) * cint(r.bottles_per_unit) * cint(r.bottle_size_ml)
+            for r in self.source_lines
+        )
+        self.planned_wine_volume_litres = round(total_ml / 1000, 4)
 
     def _recalc_rebottling_planned(self):
         for row in self.rebottling_lines:
@@ -37,14 +58,13 @@ class WineBatchRebottling(Document):
 # ---------------------------------------------------------------------------
 
 @frappe.whitelist()
-def submit_rebottling_actuals(rebottling_doc, rebottling_date, source_actuals, line_actuals):
+def submit_rebottling_actuals(rebottling_doc, rebottling_date, line_actuals):
     """
-    Save source actuals and rebottling line actuals from the Complete Rebottling modal.
+    Save rebottling line actuals from the Complete Rebottling modal.
+    Source quantities are taken directly from source_lines.planned_quantity.
     Sets status to "Rebottling Completed".
     """
     import json as _json
-    if isinstance(source_actuals, str):
-        source_actuals = _json.loads(source_actuals)
     if isinstance(line_actuals, str):
         line_actuals = _json.loads(line_actuals)
 
@@ -59,15 +79,6 @@ def submit_rebottling_actuals(rebottling_doc, rebottling_date, source_actuals, l
         frappe.db.set_value("Wine Batch Rebottling", rebottling_doc, {
             "packaging_process_loss": 0,
             "packaging_yield_pct": 0,
-        })
-
-    # Save source actuals
-    for sd in source_actuals:
-        sl_name = sd.get("name")
-        if not sl_name:
-            continue
-        frappe.db.set_value("Wine Batch Rebottling Source Line", sl_name, {
-            "actual_quantity": flt(sd.get("actual_quantity", 0)),
         })
 
     # Save rebottling line actuals
@@ -97,13 +108,13 @@ def submit_rebottling_actuals(rebottling_doc, rebottling_date, source_actuals, l
 
     rb.reload()
 
-    # Compute process loss based on source volume vs output volume
+    # Compute process loss: source wine volume vs actual output volume
     total_source_vol = sum(
-        flt(r.actual_quantity) * cint(r.bottles_per_unit) * cint(r.bottle_size_ml) / 1000
+        flt(r.planned_quantity) * cint(r.bottles_per_unit) * cint(r.bottle_size_ml) / 1000
         for r in rb.source_lines
     )
     total_source_bottles = sum(
-        int(flt(r.actual_quantity) * cint(r.bottles_per_unit))
+        int(flt(r.planned_quantity) * cint(r.bottles_per_unit))
         for r in rb.source_lines
     )
     total_output_bottles = sum(cint(r.actual_bottles) for r in rb.rebottling_lines)
@@ -201,11 +212,6 @@ def reset_rebottling_actuals(rebottling_doc):
     if rb.status not in ("Rebottling Completed", "Repackaging Completed"):
         frappe.throw("Nothing to reset.")
 
-    for row in rb.source_lines:
-        frappe.db.set_value("Wine Batch Rebottling Source Line", row.name, {
-            "actual_quantity": 0,
-        })
-
     for row in rb.rebottling_lines:
         frappe.db.set_value("Wine Batch Rebottling Line", row.name, {
             "actual_bottles": 0, "qc_bottles": 0, "sample_bottles": 1,
@@ -231,8 +237,18 @@ def reset_rebottling_actuals(rebottling_doc):
 @frappe.whitelist()
 def close_rebottling(rebottling_doc):
     """
-    Create and submit one Manufacture SE per repackaging line.
-    Stores SE names in rebottling_stock_entries.
+    Create one Manufacture SE per repackaging line.
+
+    Inputs per SE:
+    - Proportional source cartons consumed from their original warehouse/batch
+    - New empty bottles + sealings
+    - New materials (reusable: returned at same rate; unreusable: expensed into output)
+
+    Output per SE:
+    - One new carton item with basic_rate = wine_cost_per_ml * new_size + new_materials
+
+    The difference_account (Rebottling Expenses Account) absorbs the gap between
+    the old packaging value consumed and the new packaging value produced.
     """
     rb = frappe.get_doc("Wine Batch Rebottling", rebottling_doc)
 
@@ -246,8 +262,27 @@ def close_rebottling(rebottling_doc):
         frappe.throw("Please configure a Sample Warehouse in Winery Settings.")
     sample_warehouse = settings.sample_warehouse
     unpackaged_warehouse = settings.unpackaged_bottle_warehouse
+    rebottling_expense_account = settings.rebottling_expense_account or None
 
-    # ---- Build size → rebottling line lookup ---------------------------------
+    # ---- Source cost & volume totals ----------------------------------------
+    total_source_volume_ml = sum(
+        flt(sl.planned_quantity) * cint(sl.bottles_per_unit) * cint(sl.bottle_size_ml)
+        for sl in rb.source_lines
+    )
+    total_source_cost = sum(
+        flt(sl.planned_quantity) * _get_bin_rate(sl.source_item, sl.source_warehouse)
+        for sl in rb.source_lines
+    )
+    wine_cost_per_ml = total_source_cost / total_source_volume_ml if total_source_volume_ml else 0.0
+
+    # ---- New output totals ---------------------------------------------------
+    total_new_bottles = sum(cint(r.actual_bottles) for r in rb.rebottling_lines)
+    total_new_volume_ml = sum(
+        cint(r.actual_bottles) * cint(r.bottle_size_ml)
+        for r in rb.rebottling_lines
+    )
+
+    # ---- Size → rebottling line lookup ---------------------------------------
     size_to_bl_rows = {}
     for row in rb.rebottling_lines:
         sz = cint(row.bottle_size_ml)
@@ -257,13 +292,6 @@ def close_rebottling(rebottling_doc):
         sz: sum(cint(r.actual_bottles) for r in rows)
         for sz, rows in size_to_bl_rows.items()
     }
-
-    # ---- Volume / bottle totals for proportional split -----------------------
-    total_new_volume_ml = sum(
-        cint(r.actual_bottles) * cint(r.bottle_size_ml)
-        for r in rb.rebottling_lines
-    )
-    total_new_bottles = sum(cint(r.actual_bottles) for r in rb.rebottling_lines)
 
     # ---- Create ERPNext Batch per unique output_item -------------------------
     seen_output_items = {}
@@ -288,7 +316,7 @@ def close_rebottling(rebottling_doc):
     # ---- Active repackaging lines --------------------------------------------
     active_lines = [r for r in rb.repackaging_lines if r.output_item and cint(r.actual_cartons)]
 
-    mat_consumed = {}   # mat.name → qty consumed so far
+    mat_consumed = {}   # keyed by prefixed name to track across loop
     size_first_se = set()
     se_names = []
 
@@ -302,43 +330,27 @@ def close_rebottling(rebottling_doc):
         se = frappe.new_doc("Stock Entry")
         se.stock_entry_type = "Manufacture"
         se.posting_date = rb.rebottling_date or today()
+        if rebottling_expense_account:
+            se.difference_account = rebottling_expense_account
 
-        # ---- Source items (proportional by new volume; last SE takes remainder) ---
-        src_consumed_this_se = {}
+        # ---- Source cartons consumed (proportional; last SE takes remainder) ----
         for sl in rb.source_lines:
-            total_src_qty = flt(sl.actual_quantity)
-            # Use vol_fraction; last SE gets the true remainder
-            # We track per-source across the loop via a closure-level accumulator
-            # Since we can't easily track across iterations here, use vol_fraction for all
-            # and let last SE take the remainder via a two-pass approach.
-            qty = round(total_src_qty * vol_fraction, 6) if not is_last else 0.0
-            src_consumed_this_se[sl.name] = qty
-
-        if is_last:
-            # Compute what's left after all previous SEs
-            # We need to track across loop — use mat_consumed pattern for sources too
-            pass
-
-        # Rebuild with proper accumulator (use mat_consumed pattern)
-        # Reset and redo with accumulator stored in mat_consumed under a src_ prefix
-        src_consumed_this_se = {}
-        for sl in rb.source_lines:
-            total_src_qty = flt(sl.actual_quantity)
             key = f"__src_{sl.name}"
             prev = mat_consumed.get(key, 0.0)
-            qty = (round(total_src_qty - prev, 6) if is_last
-                   else round(total_src_qty * vol_fraction, 6))
+            qty = (round(flt(sl.planned_quantity) - prev, 6) if is_last
+                   else round(flt(sl.planned_quantity) * vol_fraction, 6))
             mat_consumed[key] = prev + qty
-            src_consumed_this_se[sl.name] = qty
             if qty > 0:
                 se.append("items", {
                     "item_code": sl.source_item,
                     "qty": qty,
                     "s_warehouse": sl.source_warehouse,
+                    "batch_no": sl.source_batch_no or None,
+                    "use_serial_batch_fields": 1 if sl.source_batch_no else 0,
                     "is_finished_item": 0,
                 })
 
-        # ---- New empty bottles + sealings (exact for this size) ---------------
+        # ---- New empty bottles + sealings ------------------------------------
         size_total = total_bottles_by_size.get(sz, 0)
         for bl in size_to_bl_rows.get(sz, []):
             if not size_total:
@@ -360,7 +372,7 @@ def close_rebottling(rebottling_doc):
                     "is_finished_item": 0,
                 })
 
-        # ---- Materials -------------------------------------------------------
+        # ---- Materials (reusable: net-zero; unreusable: consumed into cost) ---
         unreusable_cost = 0.0
         for mat in rb.material_lines:
             if not mat.item or not flt(mat.quantity):
@@ -392,25 +404,19 @@ def close_rebottling(rebottling_doc):
             else:
                 unreusable_cost += qty * rate
 
-        # ---- Valuation for finished carton -----------------------------------
+        # ---- New carton basic_rate -------------------------------------------
         bl_list = size_to_bl_rows.get(sz, [])
-        source_cost_for_se = sum(
-            src_consumed_this_se.get(sl.name, 0.0) * _get_bin_rate(sl.source_item, sl.source_warehouse)
-            for sl in rb.source_lines
-        )
         pl_btls = cint(row.actual_total_bottles)
-        source_cost_per_bottle = source_cost_for_se / pl_btls if pl_btls else 0.0
-
+        wine_cost_per_new_bottle = wine_cost_per_ml * sz
         new_bottle_rate = 0.0
         new_sealing_rate = 0.0
         if bl_list:
             bl = bl_list[0]
             new_bottle_rate = _get_bin_rate(bl.bottle_item, bl.bottle_source_warehouse) if bl.bottle_item else 0.0
             new_sealing_rate = _get_bin_rate(bl.sealing_item, bl.sealing_source_warehouse) if bl.sealing_item else 0.0
-
         unreusable_per_bottle = unreusable_cost / pl_btls if pl_btls else 0.0
-        cost_per_bottle = source_cost_per_bottle + new_bottle_rate + new_sealing_rate + unreusable_per_bottle
-        basic_rate = round(cost_per_bottle * cint(row.bottles_per_carton), 4)
+        cost_per_new_bottle = wine_cost_per_new_bottle + new_bottle_rate + new_sealing_rate + unreusable_per_bottle
+        basic_rate = round(cost_per_new_bottle * cint(row.bottles_per_carton), 4)
 
         # ---- Finished item (ONE per SE) --------------------------------------
         se.append("items", {
@@ -418,6 +424,7 @@ def close_rebottling(rebottling_doc):
             "qty": cint(row.actual_cartons),
             "t_warehouse": row.output_warehouse,
             "batch_no": row.output_batch_no or None,
+            "use_serial_batch_fields": 1 if row.output_batch_no else 0,
             "is_finished_item": 1,
             "basic_rate": basic_rate,
         })
@@ -427,7 +434,7 @@ def close_rebottling(rebottling_doc):
             size_first_se.add(sz)
             for bl in size_to_bl_rows.get(sz, []):
                 sample_qty = max(cint(bl.sample_bottles), 1)
-                bl_cost = cost_per_bottle
+                bl_cost = cost_per_new_bottle
                 if bl.bottled_wine_item:
                     se.append("items", {
                         "item_code": bl.bottled_wine_item,
@@ -483,9 +490,6 @@ def cancel_rebottling(rebottling_doc):
                 se.cancel()
         except frappe.DoesNotExistError:
             pass
-
-    for row in rb.source_lines:
-        frappe.db.set_value("Wine Batch Rebottling Source Line", row.name, "actual_quantity", 0)
 
     for row in rb.rebottling_lines:
         frappe.db.set_value("Wine Batch Rebottling Line", row.name, {

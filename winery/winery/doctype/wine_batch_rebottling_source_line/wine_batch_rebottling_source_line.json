@@ -5,15 +5,25 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "pack_size",
   "source_item",
+  "source_batch_no",
   "source_warehouse",
   "bottle_size_ml",
   "bottles_per_unit",
-  "planned_quantity",
-  "column_break_1",
-  "actual_quantity"
+  "available_quantity",
+  "planned_quantity"
  ],
  "fields": [
+  {
+   "allow_on_submit": 1,
+   "fieldname": "pack_size",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Pack Size",
+   "read_only": 1,
+   "description": "e.g. 6-Pack, 12-Pack — from original packaging"
+  },
   {
    "allow_on_submit": 1,
    "fieldname": "source_item",
@@ -21,8 +31,18 @@
    "in_list_view": 1,
    "label": "Source Item",
    "options": "Item",
-   "reqd": 1,
-   "description": "Bottled wine item or packaged carton item being processed back"
+   "read_only": 1,
+   "description": "Packaged item being broken down for rebottling"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "source_batch_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Batch No",
+   "options": "Batch",
+   "read_only": 1,
+   "description": "Batch assigned during original bottling close"
   },
   {
    "allow_on_submit": 1,
@@ -31,43 +51,39 @@
    "in_list_view": 1,
    "label": "Source Warehouse",
    "options": "Warehouse",
-   "reqd": 1
+   "read_only": 1
   },
   {
    "allow_on_submit": 1,
    "fieldname": "bottle_size_ml",
    "fieldtype": "Int",
-   "in_list_view": 1,
    "label": "Bottle Size (ml)",
-   "description": "Size of the source bottles — used for volume calculation"
+   "read_only": 1
   },
   {
    "allow_on_submit": 1,
    "default": "1",
    "fieldname": "bottles_per_unit",
    "fieldtype": "Int",
-   "in_list_view": 1,
-   "label": "Bottles per Unit",
-   "description": "1 for individual bottles; N if source is a carton of N bottles"
+   "label": "Bottles per Pack",
+   "read_only": 1,
+   "description": "Bottles contained in each source package"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "available_quantity",
+   "fieldtype": "Int",
+   "label": "Available Qty",
+   "read_only": 1,
+   "description": "Total cartons/packages produced in original bottling"
   },
   {
    "allow_on_submit": 1,
    "fieldname": "planned_quantity",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Planned Qty"
-  },
-  {
-   "fieldname": "column_break_1",
-   "fieldtype": "Column Break"
-  },
-  {
-   "allow_on_submit": 1,
-   "fieldname": "actual_quantity",
-   "fieldtype": "Float",
-   "label": "Actual Qty",
-   "read_only": 1,
-   "no_copy": 1
+   "label": "Qty to Rebottle",
+   "description": "How many cartons/packages you plan to rebottle — must not exceed available quantity"
   }
  ],
  "istable": 1,

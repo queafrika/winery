@@ -1,7 +1,7 @@
 {
  "app": "winery",
  "charts": [],
- "content": "[{\"id\":\"wh1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"ws1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Banana Grading\",\"col\":3}},{\"id\":\"ws2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Ripening Batch\",\"col\":3}},{\"id\":\"ws3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Wine Batch\",\"col\":3}},{\"id\":\"ws4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Lab Analysis\",\"col\":3}},{\"id\":\"ws5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Compliance License\",\"col\":3}},{\"id\":\"wsp1\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"wh2\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Transactions</b></span>\",\"col\":12}},{\"id\":\"wc1\",\"type\":\"card\",\"data\":{\"card_name\":\"Procurement\",\"col\":4}},{\"id\":\"wc2\",\"type\":\"card\",\"data\":{\"card_name\":\"Ripening\",\"col\":4}},{\"id\":\"wc3\",\"type\":\"card\",\"data\":{\"card_name\":\"Wine Production\",\"col\":4}},{\"id\":\"wsp2\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"wc4\",\"type\":\"card\",\"data\":{\"card_name\":\"Quality &amp; Lab\",\"col\":4}},{\"id\":\"wc5\",\"type\":\"card\",\"data\":{\"card_name\":\"Cellar &amp; Vessel\",\"col\":4}},{\"id\":\"wc6\",\"type\":\"card\",\"data\":{\"card_name\":\"Bottling &amp; Packaging\",\"col\":4}},{\"id\":\"wsp3\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"wc7\",\"type\":\"card\",\"data\":{\"card_name\":\"Compliance\",\"col\":4}}]",
+ "content": "[{\"id\":\"wh1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"ws1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Banana Grading\",\"col\":3}},{\"id\":\"ws2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Ripening Batch\",\"col\":3}},{\"id\":\"ws3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Wine Batch\",\"col\":3}},{\"id\":\"ws4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Lab Analysis\",\"col\":3}},{\"id\":\"ws5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Compliance Task\",\"col\":3}},{\"id\":\"wsp1\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"wh2\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Transactions</b></span>\",\"col\":12}},{\"id\":\"wc1\",\"type\":\"card\",\"data\":{\"card_name\":\"Procurement\",\"col\":4}},{\"id\":\"wc2\",\"type\":\"card\",\"data\":{\"card_name\":\"Ripening\",\"col\":4}},{\"id\":\"wc3\",\"type\":\"card\",\"data\":{\"card_name\":\"Wine Production\",\"col\":4}},{\"id\":\"wsp2\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"wc4\",\"type\":\"card\",\"data\":{\"card_name\":\"Quality &amp; Lab\",\"col\":4}},{\"id\":\"wc5\",\"type\":\"card\",\"data\":{\"card_name\":\"Cellar &amp; Vessel\",\"col\":4}},{\"id\":\"wc6\",\"type\":\"card\",\"data\":{\"card_name\":\"Bottling &amp; Packaging\",\"col\":4}},{\"id\":\"wsp3\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"wc7\",\"type\":\"card\",\"data\":{\"card_name\":\"Compliance\",\"col\":4}}]",
  "creation": "2026-03-07 00:00:00",
  "custom_blocks": [],
  "docstatus": 0,
@@ -220,9 +220,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Compliance License",
+   "label": "Compliance Task",
    "link_count": 0,
-   "link_to": "Compliance License",
+   "link_to": "Compliance Task",
    "link_type": "DocType",
    "onboard": 1,
    "type": "Link"
@@ -284,9 +284,9 @@
   },
   {
    "color": "Red",
-   "doc_view": "List",
-   "label": "Compliance License",
-   "link_to": "Compliance License",
+   "doc_view": "Calendar",
+   "label": "Compliance Task",
+   "link_to": "Compliance Task",
    "stats_filter": "[]",
    "type": "DocType"
   }

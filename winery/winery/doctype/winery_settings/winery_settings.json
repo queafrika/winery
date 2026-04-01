@@ -12,7 +12,9 @@
   "section_break_procurement",
   "banana_bunch_template",
   "raw_banana_finger_template",
-  "ripe_banana_finger_template"
+  "ripe_banana_finger_template",
+  "section_break_accounts",
+  "rebottling_expense_account"
  ],
  "fields": [
   {
@@ -71,6 +73,18 @@
    "label": "Ripe Banana Finger Template Item",
    "options": "Item",
    "description": "Item template whose variants are produced after ripening (Ripe Banana Fingers by variety)"
+  },
+  {
+   "fieldname": "section_break_accounts",
+   "fieldtype": "Section Break",
+   "label": "Financial Accounts"
+  },
+  {
+   "fieldname": "rebottling_expense_account",
+   "fieldtype": "Link",
+   "label": "Rebottling Expenses Account",
+   "options": "Account",
+   "description": "Account where the cost difference (old packaging value destroyed) is posted when closing a rebottling"
   }
  ],
  "index_web_pages_for_search": 0,

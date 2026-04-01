@@ -15,12 +15,14 @@
   "section_break_reason",
   "reason",
   "section_break_results",
+  "planned_wine_volume_litres",
   "process_loss_bottles",
   "process_loss_litres",
   "yield_pct",
   "column_break_results1",
   "packaging_process_loss",
   "packaging_yield_pct",
+  "is_auto_created",
   "section_source",
   "source_lines",
   "section_rebottling",
@@ -87,6 +89,22 @@
    "fieldname": "section_break_results",
    "fieldtype": "Section Break",
    "label": "Results"
+  },
+  {
+   "fieldname": "planned_wine_volume_litres",
+   "fieldtype": "Float",
+   "label": "Planned Wine Volume (L)",
+   "read_only": 1,
+   "no_copy": 1,
+   "description": "Total wine volume available for rebottling, derived from source line quantities"
+  },
+  {
+   "fieldname": "is_auto_created",
+   "fieldtype": "Check",
+   "label": "Auto Created",
+   "hidden": 1,
+   "no_copy": 1,
+   "default": "0"
   },
   {
    "fieldname": "process_loss_bottles",
@@ -191,13 +209,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [
-  {
-   "group": "Wine Batch",
-   "link_doctype": "Wine Batch",
-   "link_fieldname": "wine_batch"
-  }
- ],
+ "links": [],
  "modified": "2026-03-30 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Winery",

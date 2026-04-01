@@ -1,0 +1,170 @@
+/* =============================================================
+   Ropen Coffee & Fine Foods Limited — Login Page Theme
+   Targets: Frappe v15 /login web page
+   ============================================================= */
+
+/* ── 1. Full-page background ─────────────────────────────── */
+body[frappe-session-status="logged-out"] {
+  background:
+    linear-gradient(135deg, #1A5C2A 0%, #2E7A2E 40%, #1A5C2A 100%);
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle tricolor diagonal stripe overlay */
+body[frappe-session-status="logged-out"]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -55deg,
+    rgba(245, 168,   0, 0.04) 0px,
+    rgba(245, 168,   0, 0.04) 30px,
+    rgba(107,  45, 139, 0.04) 30px,
+    rgba(107,  45, 139, 0.04) 60px,
+    rgba( 46, 122,  46, 0.04) 60px,
+    rgba( 46, 122,  46, 0.04) 90px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── 2. Logo area — replace default Frappe logo ──────────── */
+.page-card-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 24px 16px;
+  background: transparent;
+}
+
+/* Hide the default small app-logo img */
+.page-card-head .app-logo {
+  display: none !important;
+}
+
+/* Inject Ropen logo as a block above the card title */
+.page-card-head::before {
+  content: "";
+  display: block;
+  width: 340px;
+  height: 96px;
+  background: url("/assets/winery/images/ropen-logo.png") no-repeat center / contain;
+  margin-bottom: 12px;
+}
+
+/* Page title "Login to …" */
+.page-card-head h4 {
+  color: #ffffff !important;
+  font-weight: 600;
+  font-size: 15px;
+  margin: 0;
+  letter-spacing: 0.3px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+/* ── 3. Login card ───────────────────────────────────────── */
+.login-content.page-card {
+  position: relative;
+  z-index: 1;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 40px rgba(26, 92, 42, 0.35), 0 2px 8px rgba(0,0,0,0.12) !important;
+  border: none !important;
+  overflow: hidden;
+  /* Gold top bar accent */
+  border-top: 4px solid #F5A800 !important;
+}
+
+/* Tricolor bottom bar */
+.login-content.page-card::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(to right, #F5A800 33.3%, #6B2D8B 33.3% 66.6%, #2E7A2E 66.6%);
+}
+
+/* ── 4. Input fields ─────────────────────────────────────── */
+.login-content .form-control,
+.login-content input[type="email"],
+.login-content input[type="password"],
+.login-content input[type="text"] {
+  border-color: #d0d0d0 !important;
+  border-radius: 8px !important;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.login-content .form-control:focus,
+.login-content input:focus {
+  border-color: #6B2D8B !important;
+  box-shadow: 0 0 0 3px rgba(107, 45, 139, 0.18) !important;
+  outline: none !important;
+}
+
+/* ── 5. Login button ─────────────────────────────────────── */
+.login-content .btn-login,
+.login-content .btn-primary {
+  background-color: #6B2D8B !important;
+  border-color: #6B2D8B !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.login-content .btn-login:hover,
+.login-content .btn-primary:hover {
+  background-color: #4e1f67 !important;
+  border-color: #4e1f67 !important;
+  transform: translateY(-1px);
+}
+
+.login-content .btn-login:active,
+.login-content .btn-primary:active {
+  transform: translateY(0);
+}
+
+/* ── 6. Links (forgot password, sign up) ─────────────────── */
+.login-content a,
+.sign-up-message a {
+  color: #6B2D8B !important;
+  font-weight: 500;
+}
+
+.login-content a:hover,
+.sign-up-message a:hover {
+  color: #4e1f67 !important;
+  text-decoration: underline;
+}
+
+/* Sign-up message text below card */
+.sign-up-message {
+  color: rgba(255, 255, 255, 0.85) !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── 7. Social login divider ─────────────────────────────── */
+.login-divider {
+  color: #888 !important;
+}
+
+/* ── 8. Social login buttons ─────────────────────────────── */
+.login-content .social-login-buttons .btn {
+  border-radius: 8px !important;
+  border-color: #d0d0d0 !important;
+  transition: border-color 0.2s;
+}
+
+.login-content .social-login-buttons .btn:hover {
+  border-color: #6B2D8B !important;
+}
+
+/* ── 9. Navbar — hide on login page ──────────────────────── */
+body[frappe-session-status="logged-out"] .navbar {
+  display: none !important;
+}

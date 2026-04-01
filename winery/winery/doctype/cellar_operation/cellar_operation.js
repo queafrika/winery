@@ -69,7 +69,12 @@ function _show_transfer_dialog(frm) {
 
 	const item_codes = [...new Set(raw_items.map((r) => r.item))];
 
-	// Fetch item master data and Winery Settings in parallel
+	// Fetch item master data, Winery Settings, and Wine Batch WIP warehouse in parallel
+	const wip_promise = frm.doc.wine_batch
+		? frappe.db.get_value("Wine Batch", frm.doc.wine_batch, "wip_warehouse")
+			.then(r => r.message && r.message.wip_warehouse || null)
+		: Promise.resolve(null);
+
 	Promise.all([
 		frappe.db.get_list("Item", {
 			filters: [["name", "in", item_codes]],
@@ -78,7 +83,8 @@ function _show_transfer_dialog(frm) {
 			limit: item_codes.length,
 		}),
 		frappe.db.get_single_value("Winery Settings", "ripe_banana_finger_template"),
-	]).then(([item_data, ripe_tpl]) => {
+		wip_promise,
+	]).then(([item_data, ripe_tpl, wip_warehouse]) => {
 		const item_map = {};
 		item_data.forEach((d) => { item_map[d.name] = d; });
 
@@ -113,12 +119,12 @@ function _show_transfer_dialog(frm) {
 		Promise.all(conversion_promises).then((conv_results) => {
 			const conv_map = {};
 			conv_results.forEach((r) => { conv_map[r.item] = r; });
-			_build_transfer_dialog(frm, stock_items, item_map, conv_map, ripe_tpl);
+			_build_transfer_dialog(frm, stock_items, item_map, conv_map, ripe_tpl, wip_warehouse);
 		});
 	});
 }
 
-function _build_transfer_dialog(frm, stock_items, item_map, conv_map, ripe_tpl) {
+function _build_transfer_dialog(frm, stock_items, item_map, conv_map, ripe_tpl, default_wip) {
 	const fields = [
 		{
 			fieldname: "wip_warehouse",
@@ -126,6 +132,9 @@ function _build_transfer_dialog(frm, stock_items, item_map, conv_map, ripe_tpl) 
 			label: __("WIP Warehouse (Destination)"),
 			options: "Warehouse",
 			reqd: 1,
+			default: default_wip || "",
+			read_only: default_wip ? 1 : 0,
+			description: default_wip ? __("Defaulted from Wine Batch") : "",
 		},
 		{
 			fieldname: "items_section",

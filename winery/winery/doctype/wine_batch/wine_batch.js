@@ -54,7 +54,15 @@ frappe.ui.form.on("Wine Batch", {
 
 		if (frm.doc.docstatus === 1 && !frm.is_new()) {
 			frm.add_custom_button(__("New Rebottling"), () => {
-				frappe.new_doc("Wine Batch Rebottling", { wine_batch: frm.doc.name });
+				frappe.call({
+					method: "winery.winery.doctype.wine_batch.wine_batch.create_rebottling_from_batch",
+					args: { wine_batch_name: frm.doc.name },
+					callback(r) {
+						if (r.message) {
+							frappe.set_route("Form", "Wine Batch Rebottling", r.message);
+						}
+					},
+				});
 			}).addClass("btn-warning");
 
 			frm.add_custom_button(__("View Rebottlings"), () => {

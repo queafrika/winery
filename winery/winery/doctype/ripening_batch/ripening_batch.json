@@ -119,6 +119,7 @@
    "label": "Ripening Period"
   },
   {
+   "default": "Today",
    "fieldname": "start_date",
    "fieldtype": "Date",
    "label": "Start Date",

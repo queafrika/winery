@@ -212,9 +212,9 @@ function _build_op_card(op_type, co, is_next, stage_num) {
 				<button class="btn btn-warning btn-xs co-btn-transfer" data-name="${co_name}">
 					${__("Transfer Stock")}
 				</button>
-				<button class="btn btn-default btn-xs co-btn-start" data-name="${co_name}">
-					${__("Start")}
-				</button>`;
+				<div class="text-muted" style="font-size:11px;text-align:center;padding:2px 0">
+					${__("Transfer stock before starting")}
+				</div>`;
 		} else {
 			footer = `<button class="btn btn-primary btn-xs co-btn-start" data-name="${co_name}">
 				${__("▶ Start")}

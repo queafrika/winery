@@ -98,6 +98,10 @@
   color: #6B2D8B;
 }
 
+.app-icon {
+  background-color: #F5A800 !important;
+}
+
 /* ── 8. Filter tags & tab underline active ───────────────── */
 .filter-tag,
 .tab-underline .nav-item .nav-link.active {
@@ -254,4 +258,185 @@
   background-color: #1A5C2A !important;
   color: #ffffff !important;
   font-weight: 600;
+}
+
+/* ── 15. Sidebar header logo — enlarged to 64px ─────────── */
+.body-sidebar .sidebar-header .header-logo {
+  width: 64px !important;
+  height: 64px !important;
+}
+
+/* ── 16. Desktop home — white letter inside alphabet icons ── */
+.icon-container .desktop-alphabet {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+/* ── 17. Desktop home — split layout: icons left, logo right  */
+.desktop-container {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 40px 60px !important;
+  gap: 40px !important;
+  min-height: calc(100vh - var(--desktop-navbar-height)) !important;
+}
+
+.desktop-logo-panel {
+  flex: 0 0 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+}
+
+.desktop-brand-logo {
+  max-width: 420px;
+  max-height: 420px;
+  width: 100%;
+  object-fit: contain;
+}
+
+.desktop-container .icons-container {
+  flex: 1 1 auto;
+  margin-top: 0 !important;
+  padding-left: 80px !important;
+}
+
+/* ── 18. Input fields — gold border & tint (all states) ─────*/
+:root,
+[data-theme="light"] {
+  --ropen-gold-border:   #D4900A;
+  --ropen-gold-bg:       #FEF3D7;
+  /* Override Frappe's own control background variables so every
+     rendering path (editable input, read-only div, disabled)
+     picks up the gold tint automatically. */
+  --control-bg:          #FEF3D7;
+  --control-bg-on-gray:  #FEF3D7;
+  --disabled-control-bg: #FFF8E8;
+}
+
+/* Editable inputs & textareas */
+.form-control,
+.input-with-feedback,
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="tel"],
+input[type="url"],
+input[type="date"],
+input[type="time"],
+textarea,
+.frappe-control .form-control,
+.frappe-control select.form-control {
+  border-color: var(--ropen-gold-border) !important;
+  background-color: var(--ropen-gold-bg) !important;
+}
+
+/* Read / display mode — Frappe renders these as divs, not inputs */
+.frappe-control .control-value,
+.frappe-control .like-disabled-input,
+.control-value.like-disabled-input {
+  background-color: var(--disabled-control-bg) !important;
+  border: 1px solid #F5D98A !important;
+  border-radius: var(--border-radius-sm);
+}
+
+/* Focus */
+.form-control:focus,
+.frappe-control .form-control:focus,
+textarea:focus {
+  border-color: var(--ropen-gold) !important;
+  box-shadow: 0 0 0 2px rgba(245, 168, 0, 0.20) !important;
+  background-color: var(--ropen-gold-bg) !important;
+}
+
+/* Disabled / truly read-only inputs */
+.form-control[disabled],
+.form-control[readonly] {
+  border-color: #F5D98A !important;
+  background-color: #FFF8E8 !important;
+}
+
+/* ── 19. Dirty form tab bar ───────────────────────────────── */
+#winery-dirty-bar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2000;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #1a1a1a;
+  border-top: 2px solid var(--ropen-gold);
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.25);
+}
+
+#winery-dirty-bar.winery-dirty-bar--visible {
+  display: flex;
+}
+
+.winery-dirty-bar__label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ropen-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-right: 4px;
+  white-space: nowrap;
+}
+
+.winery-dirty-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 8px;
+  background: #2c2c2c;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.winery-dirty-tab:hover {
+  background: #3a3a3a;
+  border-color: var(--ropen-gold);
+}
+
+.winery-dirty-tab__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ropen-gold);
+  flex-shrink: 0;
+}
+
+.winery-dirty-tab__name {
+  font-size: 12px;
+  color: #e0e0e0;
+  white-space: nowrap;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.winery-dirty-tab__close {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0 0 0 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.winery-dirty-tab__close:hover {
+  color: #ff6b6b;
 }

@@ -7,10 +7,6 @@ frappe.ui.form.on("Ripening Batch", {
 			frm.add_custom_button(__("End Ripening"), () => {
 				show_end_ripening_dialog(frm);
 			}, __("Actions"));
-
-			frm.add_custom_button(__("Start Wine Production"), () => {
-				frappe.new_doc("Wine Batch", { ripening_batch: frm.doc.name });
-			}, __("Actions"));
 		}
 		if (frm.doc.rack) {
 			frm.add_custom_button(__("View Rack"), () => {

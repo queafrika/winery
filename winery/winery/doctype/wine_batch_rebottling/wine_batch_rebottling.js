@@ -273,19 +273,6 @@ function _show_rebottling_modal(frm) {
                 default: bl.bottled_wine_item || "",
                 description: __("Filled but unpackaged bottle item (for samples & remainder)"),
             },
-            {
-                fieldname: `qc_bottles_${i}`,
-                fieldtype: "Int",
-                label: __("QC Bottles Reserved"),
-                default: bl.qc_bottles || 0,
-            },
-            {
-                fieldname: `sample_bottles_${i}`,
-                fieldtype: "Int",
-                label: __("Sample Bottles"),
-                default: bl.sample_bottles || 1,
-                description: __("Minimum 1"),
-            },
             { fieldname: `cb_bl_${i}`, fieldtype: "Column Break" },
             {
                 fieldname: `bottle_source_warehouse_${i}`,
@@ -320,8 +307,6 @@ function _show_rebottling_modal(frm) {
                 name: bl.name,
                 actual_bottles: cint(values[`actual_bottles_${i}`] || 0),
                 bottled_wine_item: values[`bottled_wine_item_${i}`] || "",
-                qc_bottles: cint(values[`qc_bottles_${i}`] || 0),
-                sample_bottles: cint(values[`sample_bottles_${i}`] || 1),
                 bottle_source_warehouse: values[`bottle_source_warehouse_${i}`] || "",
                 sealing_item: values[`sealing_item_${i}`] || "",
                 sealing_source_warehouse: values[`sealing_source_warehouse_${i}`] || "",

@@ -4,7 +4,18 @@ from winery.winery.doctype.farmer.kenya_location_data import KENYA_LOCATIONS
 
 
 class Farmer(Document):
-	pass
+	def after_insert(self):
+		self.create_supplier()
+
+	def create_supplier(self):
+		supplier = frappe.get_doc({
+			"doctype": "Supplier",
+			"supplier_name": self.farmer_name,
+			"supplier_group": "All Supplier Groups",
+			"supplier_type": "Individual",
+		})
+		supplier.insert(ignore_permissions=True)
+		self.db_set("supplier", supplier.name, notify=True)
 
 
 @frappe.whitelist()

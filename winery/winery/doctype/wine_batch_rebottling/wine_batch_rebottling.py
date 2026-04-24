@@ -88,15 +88,11 @@ def submit_rebottling_actuals(rebottling_doc, rebottling_date, line_actuals):
         if not row:
             continue
         actual = cint(ld.get("actual_bottles", 0))
-        qc = cint(ld.get("qc_bottles", 0))
-        sample = max(cint(ld.get("sample_bottles", 1)), 1)
-        net = max(actual - qc - sample, 0)
+        net = actual
         vol = round(actual * cint(row.bottle_size_ml) / 1000, 4)
         planned_vol = round(cint(row.planned_bottles) * cint(row.bottle_size_ml) / 1000, 4)
         frappe.db.set_value("Wine Batch Rebottling Line", bl_name, {
             "actual_bottles": actual,
-            "qc_bottles": qc,
-            "sample_bottles": sample,
             "net_bottles": net,
             "volume_litres": vol,
             "remaining_volume_litres": round(max(planned_vol - vol, 0), 4),
@@ -214,7 +210,7 @@ def reset_rebottling_actuals(rebottling_doc):
 
     for row in rb.rebottling_lines:
         frappe.db.set_value("Wine Batch Rebottling Line", row.name, {
-            "actual_bottles": 0, "qc_bottles": 0, "sample_bottles": 1,
+            "actual_bottles": 0,
             "net_bottles": 0, "volume_litres": 0, "remaining_volume_litres": 0,
             "bottled_wine_item": None,
             "bottle_source_warehouse": None,
@@ -258,9 +254,6 @@ def close_rebottling(rebottling_doc):
         frappe.throw("Please complete repackaging before closing.")
 
     settings = frappe.get_single("Winery Settings")
-    if not settings.sample_warehouse:
-        frappe.throw("Please configure a Sample Warehouse in Winery Settings.")
-    sample_warehouse = settings.sample_warehouse
     unpackaged_warehouse = settings.unpackaged_bottle_warehouse
     rebottling_expense_account = settings.rebottling_expense_account or None
 
@@ -429,27 +422,10 @@ def close_rebottling(rebottling_doc):
             "basic_rate": basic_rate,
         })
 
-        # ---- Samples + remainder (first SE per bottle size only) -------------
+        # ---- Remainder (first SE per bottle size only) -----------------------
         if sz not in size_first_se:
             size_first_se.add(sz)
             for bl in size_to_bl_rows.get(sz, []):
-                sample_qty = max(cint(bl.sample_bottles), 1)
-                bl_cost = cost_per_new_bottle
-                if bl.bottled_wine_item:
-                    se.append("items", {
-                        "item_code": bl.bottled_wine_item,
-                        "qty": sample_qty,
-                        "t_warehouse": sample_warehouse,
-                        "is_finished_item": 0,
-                        "basic_rate": round(bl_cost, 4),
-                    })
-                elif bl.bottle_item:
-                    se.append("items", {
-                        "item_code": bl.bottle_item,
-                        "qty": sample_qty,
-                        "t_warehouse": sample_warehouse,
-                        "is_finished_item": 0,
-                    })
                 if unpackaged_warehouse and bl.bottled_wine_item:
                     remainder = cint(bl.net_bottles) - packaged_by_size.get(sz, 0)
                     if remainder > 0:
@@ -458,7 +434,7 @@ def close_rebottling(rebottling_doc):
                             "qty": remainder,
                             "t_warehouse": unpackaged_warehouse,
                             "is_finished_item": 0,
-                            "basic_rate": round(bl_cost, 4),
+                            "basic_rate": round(cost_per_new_bottle, 4),
                         })
 
         se.insert(ignore_permissions=True)
@@ -493,7 +469,7 @@ def cancel_rebottling(rebottling_doc):
 
     for row in rb.rebottling_lines:
         frappe.db.set_value("Wine Batch Rebottling Line", row.name, {
-            "actual_bottles": 0, "qc_bottles": 0, "sample_bottles": 1,
+            "actual_bottles": 0,
             "net_bottles": 0, "volume_litres": 0, "remaining_volume_litres": 0,
             "bottled_wine_item": None,
             "bottle_source_warehouse": None,

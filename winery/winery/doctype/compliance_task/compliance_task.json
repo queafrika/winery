@@ -2,6 +2,7 @@
  "actions": [],
  "autoname": "CK-.YYYY.-.#####",
  "creation": "2026-04-01 00:00:00",
+ "default_view": "Calendar",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -43,12 +44,12 @@
    "options": "Compliance Type"
   },
   {
+   "description": "The task definition in Compliance Type that generated this record",
    "fieldname": "source_task",
    "fieldtype": "Link",
    "hidden": 1,
    "label": "Source Task Definition",
-   "options": "Compliance Type Task",
-   "description": "The task definition in Compliance Type that generated this record"
+   "options": "Compliance Type Task"
   },
   {
    "fieldname": "task_type",
@@ -59,12 +60,12 @@
    "reqd": 1
   },
   {
+   "default": "Open",
    "fieldname": "status",
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Status",
    "options": "Open\nIn Progress\nCompleted\nOverdue\nCancelled",
-   "default": "Open",
    "reqd": 1
   },
   {
@@ -75,16 +76,16 @@
    "reqd": 1
   },
   {
+   "description": "First day of the billing/reporting period for this task",
    "fieldname": "period_start",
    "fieldtype": "Date",
-   "label": "Period Start",
-   "description": "First day of the billing/reporting period for this task"
+   "label": "Period Start"
   },
   {
+   "description": "Last day of the billing/reporting period (usually same as Due Date)",
    "fieldname": "period_end",
    "fieldtype": "Date",
-   "label": "Period End",
-   "description": "Last day of the billing/reporting period (usually same as Due Date)"
+   "label": "Period End"
   },
   {
    "fieldname": "calendar_color",
@@ -97,60 +98,61 @@
    "fieldtype": "Column Break"
   },
   {
+   "description": "Receives reminder notifications",
    "fieldname": "assigned_to",
    "fieldtype": "Link",
    "label": "Assigned To",
-   "options": "User",
-   "description": "Receives reminder notifications"
+   "options": "User"
   },
   {
+   "description": "Send a reminder this many days before the due date",
    "fieldname": "reminder_days_before",
    "fieldtype": "Int",
-   "label": "Remind (Days Before Due)",
-   "description": "Send a reminder this many days before the due date"
+   "label": "Remind (Days Before Due)"
   },
   {
+   "default": "0",
    "fieldname": "reminder_sent",
    "fieldtype": "Check",
    "hidden": 1,
    "label": "Reminder Sent"
   },
   {
+   "depends_on": "eval:doc.task_type=='Payment'",
    "fieldname": "payment_section",
    "fieldtype": "Section Break",
-   "label": "Payment",
-   "depends_on": "eval:doc.task_type=='Payment'"
+   "label": "Payment"
   },
   {
+   "depends_on": "eval:doc.task_type=='Payment'",
    "fieldname": "amount_source",
    "fieldtype": "Select",
    "label": "Amount Source",
    "options": "\nFixed\nSQL Query",
-   "read_only": 1,
-   "depends_on": "eval:doc.task_type=='Payment'"
+   "read_only": 1
   },
   {
+   "depends_on": "eval:doc.task_type=='Payment' && doc.amount_source=='SQL Query'",
+   "description": "Read-only \u2014 SQL from the task definition. Click 'Calculate Amount' to run it.",
    "fieldname": "amount_sql",
    "fieldtype": "Code",
    "label": "SQL Query",
    "options": "SQL",
-   "read_only": 1,
-   "depends_on": "eval:doc.task_type=='Payment' && doc.amount_source=='SQL Query'",
-   "description": "Read-only — SQL from the task definition. Click 'Calculate Amount' to run it."
+   "read_only": 1
   },
   {
+   "depends_on": "eval:doc.task_type=='Payment'",
    "fieldname": "amount",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Amount",
-   "depends_on": "eval:doc.task_type=='Payment'"
+   "label": "Amount"
   },
   {
+   "depends_on": "eval:doc.task_type=='Payment'",
    "fieldname": "payment_history",
    "fieldtype": "Table",
    "label": "Payment History",
-   "options": "Compliance Payment",
-   "depends_on": "eval:doc.task_type=='Payment'"
+   "options": "Compliance Payment"
   },
   {
    "fieldname": "notes_section",
@@ -169,15 +171,16 @@
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2026-04-01 00:00:00.000000",
+ "modified": "2026-04-03 08:42:39.702246",
  "modified_by": "Administrator",
  "module": "Winery",
  "name": "Compliance Task",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
-   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,

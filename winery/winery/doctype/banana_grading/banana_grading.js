@@ -2,6 +2,14 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Banana Grading", {
+	onload(frm) {
+		if (frm.is_new() && !frm.doc.damaged_warehouse) {
+			frappe.db.get_single_value("Winery Settings", "damaged_warehouse").then((wh) => {
+				if (wh) frm.set_value("damaged_warehouse", wh);
+			});
+		}
+	},
+
 	refresh(frm) {
 		_toggle_sections(frm);
 

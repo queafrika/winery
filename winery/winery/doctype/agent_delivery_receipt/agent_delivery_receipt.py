@@ -145,10 +145,11 @@ class AgentDeliveryReceipt(Document):
 			if flt(row.received_qty) <= 0:
 				continue
 			se.append("items", {
-				"item_code":   row.item_code,
-				"qty":         flt(row.received_qty),
-				"s_warehouse": from_warehouse,
-				"t_warehouse": to_warehouse,
+				"item_code":        row.item_code,
+				"qty":              flt(row.received_qty),
+				"s_warehouse":      from_warehouse,
+				"t_warehouse":      to_warehouse,
+				"is_finished_item": 1,
 			})
 
 		if not se.items:
@@ -185,6 +186,20 @@ def get_adr_for_invoice(purchase_invoice):
 	"""Return the Agent Delivery Receipt name that contains this PI, or None."""
 	adr = frappe.db.get_value("Purchase Invoice", purchase_invoice, "agent_delivery_receipt")
 	return adr or None
+
+
+@frappe.whitelist()
+def get_lcv_for_adr(stock_entry):
+	"""Return the Landed Cost Voucher name that references this stock entry, or None."""
+	result = frappe.db.get_value(
+		"Landed Cost Purchase Receipt",
+		{
+			"receipt_document_type": "Stock Entry",
+			"receipt_document": stock_entry,
+		},
+		"parent",
+	)
+	return result or None
 
 
 @frappe.whitelist()

@@ -132,9 +132,7 @@ class LabAnalysis(Document):
 			)
 		se = frappe.new_doc("Stock Entry")
 		se.stock_entry_type = "Material Transfer"
-		se.posting_date = (
-			self.analysis_date.date() if self.analysis_date else today()
-		)
+		se.posting_date = frappe.utils.nowdate()
 		for row in self.consumables:
 			if not row.item or not flt(row.quantity):
 				continue

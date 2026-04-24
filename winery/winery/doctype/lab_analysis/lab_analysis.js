@@ -288,6 +288,18 @@ function _render_batch_qa_status(frm) {
 }
 
 
+frappe.ui.form.on("Lab Analysis Consumable", {
+	item(frm, cdt, cdn) {
+		const row = locals[cdt][cdn];
+		if (!row.item) return;
+		frappe.db.get_value("Item", row.item, "stock_uom", (r) => {
+			if (r && r.stock_uom) {
+				frappe.model.set_value(cdt, cdn, "uom", r.stock_uom);
+			}
+		});
+	},
+});
+
 function _populate_consumables_from_test_type(frm) {
 	if (!frm.doc.test_type) return;
 	// Only auto-populate if the table is currently empty (do not overwrite manual edits)

@@ -21,12 +21,37 @@ class PurchaseBananasPage {
 	// ------------------------------------------------------------------ setup
 
 	async setup() {
+		// Capture before Frappe clears them on route change
+		const prefill = frappe.route_options ? { ...frappe.route_options } : {};
+		frappe.route_options = null;
+
 		this.render_html();
 		this.bind_buttons();
 		await this.load_variants();
 		this.setup_link_controls();
 		await this.detect_agent();
+
+		if (prefill.farmer) {
+			await this._prefill(prefill.farmer, prefill.farm || null);
+		}
+
 		this.add_row();
+	}
+
+	async _prefill(farmer, farm) {
+		const $farmer_sel = $(this.page.body).find("#pb-farmer-select");
+		if (!$farmer_sel.find(`option[value="${farmer}"]`).length) return;
+
+		$farmer_sel.val(farmer);
+		await this.on_farmer_change();
+
+		if (farm) {
+			const $farm_sel = $(this.page.body).find("#pb-farm-select");
+			if ($farm_sel.find(`option[value="${farm}"]`).length) {
+				$farm_sel.val(farm);
+				this.on_farm_change();
+			}
+		}
 	}
 
 	render_html() {

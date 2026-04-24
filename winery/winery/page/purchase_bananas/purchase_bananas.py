@@ -19,10 +19,20 @@ def get_agent_transit_warehouse(agent):
 
 @frappe.whitelist()
 def get_farmers_for_agent(agent):
-	"""Return all farmers associated with this agent."""
+	"""Return all farmers associated with this agent via the Agents child table."""
+	rows = frappe.db.get_all(
+		"Farmer Agent",
+		filters={"agent": agent},
+		fields=["parent"],
+		order_by="parent",
+	)
+	if not rows:
+		return []
+
+	farmer_names = [r.parent for r in rows]
 	return frappe.db.get_all(
 		"Farmer",
-		filters={"agent": agent},
+		filters={"name": ["in", farmer_names]},
 		fields=["name", "supplier"],
 		order_by="name",
 	)
@@ -90,7 +100,12 @@ def create_purchase_invoice(agent, farm, farmer, supplier, warehouse, items):
 		)
 
 	pi.flags.ignore_permissions = True
-	pi.insert()
-	pi.submit()
+	_prev = frappe.flags.mute_messages
+	frappe.flags.mute_messages = True
+	try:
+		pi.insert()
+		pi.submit()
+	finally:
+		frappe.flags.mute_messages = _prev
 
 	return pi.name

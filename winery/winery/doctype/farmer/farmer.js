@@ -7,5 +7,12 @@ frappe.ui.form.on("Farmer", {
 		frm.set_query("farm_name", () => ({
 			filters: { farmer: frm.doc.name },
 		}));
+
+		if (!frm.is_new()) {
+			frm.add_custom_button(__("Purchase Bananas"), () => {
+				frappe.route_options = { farmer: frm.doc.name };
+				frappe.set_route("purchase-bananas");
+			}, __("Actions"));
+		}
 	},
 });

@@ -13,7 +13,7 @@
   "phone",
   "email",
   "section_break_erp",
-  "agent",
+  "agents",
   "column_break_oats",
   "supplier",
   "section_break_notes",
@@ -61,18 +61,18 @@
    "label": "ERP Link"
   },
   {
-   "description": "Agent who procures bananas on from this farmer",
-   "fieldname": "agent",
-   "fieldtype": "Link",
-   "label": "Agent",
-   "options": "Agent"
+   "fieldname": "agents",
+   "fieldtype": "Table",
+   "label": "Agents",
+   "options": "Farmer Agent"
   },
   {
    "description": "Linked  Supplier record used for purchase transactions",
    "fieldname": "supplier",
    "fieldtype": "Link",
    "label": "Supplier",
-   "options": "Supplier"
+   "options": "Supplier",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_notes",

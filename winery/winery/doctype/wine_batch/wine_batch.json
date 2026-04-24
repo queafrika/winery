@@ -8,6 +8,7 @@
  "field_order": [
   "section_break_details",
   "recipe",
+  "wip_warehouse",
   "column_break_1",
   "status",
   "start_date",
@@ -30,7 +31,6 @@
   "bottling_packaging_tab",
   "section_bp_template",
   "bottling_date",
-  "wip_warehouse",
   "column_break_bp1",
   "abv_percentage",
   "abv_tax_band",
@@ -79,6 +79,7 @@
    "options": "Active\nCompleted\nCancelled"
   },
   {
+   "default": "Today",
    "fieldname": "start_date",
    "fieldtype": "Date",
    "label": "Start Date"
@@ -189,11 +190,11 @@
   },
   {
    "allow_on_submit": 1,
+   "description": "Warehouse where lab consumables are staged during operations before being consumed into finished goods",
    "fieldname": "wip_warehouse",
    "fieldtype": "Link",
    "label": "WIP Warehouse",
-   "options": "Warehouse",
-   "description": "Warehouse where lab consumables are staged during operations before being consumed into finished goods"
+   "options": "Warehouse"
   },
   {
    "fieldname": "column_break_bp1",
@@ -346,7 +347,7 @@
    "link_fieldname": "wine_batch"
   }
  ],
- "modified": "2026-03-30 12:30:57.646695",
+ "modified": "2026-04-03 08:11:37.920871",
  "modified_by": "Administrator",
  "module": "Winery",
  "name": "Wine Batch",

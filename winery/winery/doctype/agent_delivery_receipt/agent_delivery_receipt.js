@@ -27,6 +27,34 @@ frappe.ui.form.on("Agent Delivery Receipt", {
 					}
 				},
 			});
+
+			// Landed Cost Voucher button — only available when a stock entry exists
+			if (frm.doc.stock_entry) {
+				frappe.call({
+					method: "winery.winery.doctype.agent_delivery_receipt.agent_delivery_receipt.get_lcv_for_adr",
+					args: { stock_entry: frm.doc.stock_entry },
+					callback(r) {
+						if (r.message) {
+							frm.add_custom_button(__("View Landed Cost Voucher"), () => {
+								frappe.set_route("Form", "Landed Cost Voucher", r.message);
+							}).addClass("btn-default");
+						} else {
+							frm.add_custom_button(__("Create Landed Cost Voucher"), () => {
+								frappe.model.with_doctype("Landed Cost Voucher", () => {
+									const lcv = frappe.model.get_new_doc("Landed Cost Voucher");
+									lcv.distribute_charges_based_on = "Qty";
+
+									const receipt_row = frappe.model.add_child(lcv, "purchase_receipts");
+									receipt_row.receipt_document_type = "Stock Entry";
+									receipt_row.receipt_document = frm.doc.stock_entry;
+
+									frappe.set_route("Form", "Landed Cost Voucher", lcv.name);
+								});
+							}).addClass("btn-default");
+						}
+					},
+				});
+			}
 		}
 	},
 

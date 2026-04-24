@@ -3,6 +3,13 @@
 
 frappe.ui.form.on("Farm", {
 	refresh(frm) {
+		if (!frm.is_new()) {
+			frm.add_custom_button(__("Purchase Bananas"), () => {
+				frappe.route_options = { farmer: frm.doc.farmer, farm: frm.doc.name };
+				frappe.set_route("purchase-bananas");
+			}, __("Actions"));
+		}
+
 		// Load all 47 counties into dropdown immediately
 		frappe.call({
 			method: "winery.winery.doctype.farmer.farmer.get_kenya_counties",

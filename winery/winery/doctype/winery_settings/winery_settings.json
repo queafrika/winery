@@ -9,6 +9,7 @@
   "section_break_warehouses",
   "sample_warehouse",
   "unpackaged_bottle_warehouse",
+  "damaged_warehouse",
   "section_break_procurement",
   "banana_bunch_template",
   "raw_banana_finger_template",
@@ -47,6 +48,13 @@
    "label": "Unpackaged Bottle Warehouse",
    "options": "Warehouse",
    "description": "Destination warehouse for remainder filled bottles not allocated to any packaging line"
+  },
+  {
+   "fieldname": "damaged_warehouse",
+   "fieldtype": "Link",
+   "label": "Damaged Warehouse",
+   "options": "Warehouse",
+   "description": "Default warehouse for damaged (rejected) bananas during grading"
   },
   {
    "fieldname": "section_break_procurement",

@@ -143,8 +143,8 @@
    "icon": "",
    "indent": 0,
    "keep_closed": 0,
-   "label": "Farm",
-   "link_to": "Farm",
+   "label": "Farmer",
+   "link_to": "Farmer",
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
@@ -155,8 +155,8 @@
    "icon": "",
    "indent": 0,
    "keep_closed": 0,
-   "label": "Farmer",
-   "link_to": "Farmer",
+   "label": "Farm",
+   "link_to": "Farm",
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
@@ -212,23 +212,23 @@
   {
    "child": 1,
    "collapsible": 1,
-   "icon": "",
-   "indent": 0,
-   "keep_closed": 0,
-   "label": "Cellar Op Type",
-   "link_to": "Cellar Operation Type",
-   "link_type": "DocType",
-   "show_arrow": 0,
-   "type": "Link"
-  },
-  {
-   "child": 0,
-   "collapsible": 1,
    "icon": "alarm-clock-plus",
    "indent": 0,
    "keep_closed": 0,
    "label": "Compliance Types",
    "link_to": "Compliance Type",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 1,
+   "collapsible": 1,
+   "icon": "",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Cellar Op Type",
+   "link_to": "Cellar Operation Type",
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
@@ -470,7 +470,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-04-01 10:35:40.512189",
+ "modified": "2026-04-10 10:48:12.509256",
  "modified_by": "Administrator",
  "module": "Winery",
  "name": "Winery",

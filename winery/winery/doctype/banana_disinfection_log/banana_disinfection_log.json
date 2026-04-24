@@ -18,7 +18,8 @@
   "section_break_notes",
   "notes",
   "section_break_tracking",
-  "stock_entry"
+  "stock_entry",
+  "amended_from"
  ],
  "fields": [
   {
@@ -38,6 +39,7 @@
    "reqd": 1
   },
   {
+   "default": "Now",
    "fieldname": "time",
    "fieldtype": "Time",
    "in_list_view": 1,
@@ -50,9 +52,10 @@
   },
   {
    "fieldname": "performed_by",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Performed By",
+   "options": "Employee",
    "reqd": 1
   },
   {
@@ -109,11 +112,21 @@
    "label": "Stock Entry",
    "options": "Stock Entry",
    "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Banana Disinfection Log",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-27 00:00:00.000000",
+ "modified": "2026-04-03 09:10:01.066306",
  "modified_by": "Administrator",
  "module": "Winery",
  "name": "Banana Disinfection Log",

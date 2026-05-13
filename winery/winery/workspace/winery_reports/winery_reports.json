@@ -1,7 +1,7 @@
 {
  "app": "winery",
  "charts": [],
- "content": "[{\"id\":\"re_h1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports</b></span>\",\"col\":12}},{\"id\":\"re_c1\",\"type\":\"card\",\"data\":{\"card_name\":\"Batch Reports\",\"col\":4}},{\"id\":\"re_c2\",\"type\":\"card\",\"data\":{\"card_name\":\"Lab Reports\",\"col\":4}},{\"id\":\"re_c3\",\"type\":\"card\",\"data\":{\"card_name\":\"Inventory Reports\",\"col\":4}}]",
+ "content": "[{\"id\":\"re_h1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports</b></span>\",\"col\":12}},{\"id\":\"re_c1\",\"type\":\"card\",\"data\":{\"card_name\":\"Grading Reports\",\"col\":4}},{\"id\":\"re_c2\",\"type\":\"card\",\"data\":{\"card_name\":\"Ripening Reports\",\"col\":4}},{\"id\":\"re_c3\",\"type\":\"card\",\"data\":{\"card_name\":\"Wine Batch Reports\",\"col\":4}},{\"id\":\"re_c4\",\"type\":\"card\",\"data\":{\"card_name\":\"Procurement & Farms\",\"col\":4}},{\"id\":\"re_c5\",\"type\":\"card\",\"data\":{\"card_name\":\"Lab & Quality Reports\",\"col\":4}},{\"id\":\"re_c6\",\"type\":\"card\",\"data\":{\"card_name\":\"ABV & Excise\",\"col\":4}},{\"id\":\"re_c7\",\"type\":\"card\",\"data\":{\"card_name\":\"Purchases\",\"col\":4}},{\"id\":\"re_c8\",\"type\":\"card\",\"data\":{\"card_name\":\"Usage Records\",\"col\":4}},{\"id\":\"re_c9\",\"type\":\"card\",\"data\":{\"card_name\":\"Spoilage & Waste\",\"col\":4}},{\"id\":\"re_c10\",\"type\":\"card\",\"data\":{\"card_name\":\"Stock Management\",\"col\":4}},{\"id\":\"re_c11\",\"type\":\"card\",\"data\":{\"card_name\":\"Cost Allocation\",\"col\":4}},{\"id\":\"re_c12\",\"type\":\"card\",\"data\":{\"card_name\":\"Inventory Reports\",\"col\":4}}]",
  "creation": "2026-03-16 00:00:00",
  "custom_blocks": [],
  "docstatus": 0,
@@ -17,68 +17,319 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Batch Reports",
+   "label": "Grading Reports",
    "link_count": 3,
-   "link_type": "DocType",
+   "link_type": "Report",
    "onboard": 0,
    "type": "Card Break"
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
-   "label": "Wine Batch",
+   "is_query_report": 1,
+   "label": "Grading Quality Breakdown",
    "link_count": 0,
-   "link_to": "Wine Batch",
-   "link_type": "DocType",
+   "link_to": "Grading Quality Breakdown",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Grading Valuation",
+   "link_count": 0,
+   "link_to": "Grading Valuation",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Disinfection Log Tracker",
+   "link_count": 0,
+   "link_to": "Disinfection Log Tracker",
+   "link_type": "Report",
    "onboard": 0,
    "type": "Link"
   },
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Ripening Batch",
-   "link_count": 0,
-   "link_to": "Ripening Batch",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Cellar Operation",
-   "link_count": 0,
-   "link_to": "Cellar Operation",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Lab Reports",
+   "label": "Ripening Reports",
    "link_count": 2,
-   "link_type": "DocType",
+   "link_type": "Report",
    "onboard": 0,
    "type": "Card Break"
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
-   "label": "Lab Analysis",
+   "is_query_report": 1,
+   "label": "Ripening Batch Throughput",
    "link_count": 0,
-   "link_to": "Lab Analysis",
-   "link_type": "DocType",
+   "link_to": "Ripening Batch Throughput",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Ripening Efficiency",
+   "link_count": 0,
+   "link_to": "Ripening Efficiency",
+   "link_type": "Report",
    "onboard": 0,
    "type": "Link"
   },
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Banana Grading",
+   "label": "Wine Batch Reports",
+   "link_count": 3,
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Wine Batch Stage Tracker",
    "link_count": 0,
-   "link_to": "Banana Grading",
-   "link_type": "DocType",
+   "link_to": "Wine Batch Stage Tracker",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Wine Batch Cost Rollup",
+   "link_count": 0,
+   "link_to": "Wine Batch Cost Rollup",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Wine Batch Summary",
+   "link_count": 0,
+   "link_to": "Wine Batch Summary",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Procurement & Farms",
+   "link_count": 2,
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Farmer Procurement Summary",
+   "link_count": 0,
+   "link_to": "Farmer Procurement Summary",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Farm Performance by Location",
+   "link_count": 0,
+   "link_to": "Farm Performance by Location",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Lab & Quality Reports",
+   "link_count": 4,
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Batch Quality Profile",
+   "link_count": 0,
+   "link_to": "Batch Quality Profile",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Out of Range Parameters",
+   "link_count": 0,
+   "link_to": "Out of Range Parameters",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Lab Consumable Usage",
+   "link_count": 0,
+   "link_to": "Lab Consumable Usage",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Lab Analysis Summary",
+   "link_count": 0,
+   "link_to": "Lab Analysis Summary",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "ABV & Excise",
+   "link_count": 2,
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "ABV Excise Duty Compliance",
+   "link_count": 0,
+   "link_to": "ABV Excise Duty Compliance",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Bottling Yield",
+   "link_count": 0,
+   "link_to": "Bottling Yield",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Purchases",
+   "link_count": 1,
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Purchases By Item",
+   "link_count": 0,
+   "link_to": "Purchases By Item",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Usage Records",
+   "link_count": 1,
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Stock Usage by Batch",
+   "link_count": 0,
+   "link_to": "Stock Usage by Batch",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Spoilage & Waste",
+   "link_count": 2,
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Wine Batch Production vs Expected",
+   "link_count": 0,
+   "link_to": "Wine Batch Production vs Expected",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Banana Grading Damages",
+   "link_count": 0,
+   "link_to": "Banana Grading Damages",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stock Management",
+   "link_count": 1,
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Stock Reorder Levels",
+   "link_count": 0,
+   "link_to": "Stock Reorder Levels",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Cost Allocation",
+   "link_count": 1,
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Wine Batch Valuation",
+   "link_count": 0,
+   "link_to": "Wine Batch Valuation",
+   "link_type": "Report",
    "onboard": 0,
    "type": "Link"
   },
@@ -125,7 +376,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-03-16 00:00:00.000000",
+ "modified": "2026-04-24 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Winery",
  "name": "Winery Reports",

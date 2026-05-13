@@ -1,0 +1,47 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "disabled": 0,
+ "doctype": "Report",
+ "filters": [
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date",
+   "reqd": 0
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "label": "To Date",
+   "reqd": 0
+  },
+  {
+   "fieldname": "wine_batch",
+   "fieldtype": "Link",
+   "label": "Wine Batch",
+   "options": "Wine Batch",
+   "reqd": 0
+  },
+  {
+   "fieldname": "recipe",
+   "fieldtype": "Link",
+   "label": "Recipe",
+   "options": "Recipe",
+   "reqd": 0
+  },
+  {
+   "fieldname": "abv_tax_band",
+   "fieldtype": "Link",
+   "label": "Tax Band",
+   "options": "ABV Tax Band",
+   "reqd": 0
+  }
+ ],
+ "is_standard": "Yes",
+ "module": "Winery",
+ "name": "Wine Batch Valuation",
+ "ref_doctype": "Wine Batch",
+ "report_name": "Wine Batch Valuation",
+ "report_type": "Script Report"
+}

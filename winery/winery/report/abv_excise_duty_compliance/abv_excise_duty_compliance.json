@@ -1,0 +1,13 @@
+{
+ "add_total_row": 1,
+ "columns": [],
+ "disabled": 0,
+ "doctype": "Report",
+ "filters": [],
+ "is_standard": "Yes",
+ "module": "Winery",
+ "name": "ABV Excise Duty Compliance",
+ "ref_doctype": "Bottling",
+ "report_name": "ABV Excise Duty Compliance",
+ "report_type": "Script Report"
+}

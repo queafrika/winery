@@ -70,7 +70,7 @@ class PurchaseBananasPage {
 									<label class="control-label">
 										${__("Farmer")} <span class="text-danger">*</span>
 									</label>
-									<select id="pb-farmer-select" class="form-control" disabled>
+									<select id="pb-farmer-select" class="form-control">
 										<option value="">-- ${__("Select Agent first")} --</option>
 									</select>
 								</div>
@@ -79,7 +79,7 @@ class PurchaseBananasPage {
 									<label class="control-label">
 										${__("Farm")} <span class="text-danger">*</span>
 									</label>
-									<select id="pb-farm-select" class="form-control" disabled>
+									<select id="pb-farm-select" class="form-control">
 										<option value="">-- ${__("Select Farmer first")} --</option>
 									</select>
 								</div>
@@ -223,7 +223,6 @@ class PurchaseBananasPage {
 		farmers.forEach((f) => {
 			$sel.append(`<option value="${f.name}">${f.name}</option>`);
 		});
-		$sel.prop("disabled", farmers.length === 0);
 
 		if (wh) this.wh_ctrl.set_value(wh);
 	}
@@ -266,7 +265,6 @@ class PurchaseBananasPage {
 			.find("#pb-farmer-select")
 			.empty()
 			.append(`<option value="">-- ${__("Select Agent first")} --</option>`)
-			.prop("disabled", true);
 		this._clear_farm();
 	}
 
@@ -277,7 +275,6 @@ class PurchaseBananasPage {
 			.find("#pb-farm-select")
 			.empty()
 			.append(`<option value="">-- ${__("Select Farmer first")} --</option>`)
-			.prop("disabled", true);
 		this._show_farmer_info(null);
 	}
 

@@ -198,9 +198,9 @@ def get_abv_tax_band(abv_percentage):
 	abv = flt(abv_percentage)
 	band = frappe.db.sql(
 		"""
-		SELECT name, excise_duty_per_litre
+		SELECT name, excise_duty_per_dl
 		FROM `tabABV Tax Band`
-		WHERE min_abv <= %s AND max_abv > %s
+		WHERE min_abv <= %s AND max_abv > %s AND disabled = 0
 		ORDER BY min_abv DESC LIMIT 1
 		""",
 		(abv, abv),
@@ -325,13 +325,13 @@ def submit_bottling_actuals(wine_batch, bottling_date, abv_percentage, lines):
 	# Match ABV tax band
 	band = frappe.db.sql(
 		"""
-		SELECT name, excise_duty_per_litre FROM `tabABV Tax Band`
-		WHERE min_abv <= %s AND max_abv > %s ORDER BY min_abv DESC LIMIT 1
+		SELECT name, excise_duty_per_dl FROM `tabABV Tax Band`
+		WHERE min_abv <= %s AND max_abv > %s AND disabled = 0 ORDER BY min_abv DESC LIMIT 1
 		""",
 		(abv, abv), as_dict=True,
 	)
 	abv_tax_band = band[0].name if band else None
-	excise_rate = flt(band[0].excise_duty_per_litre) if band else 0.0
+	excise_rate = flt(band[0].excise_duty_per_dl) if band else 0.0
 
 	# Save per-line actuals
 	for ld in lines:
@@ -343,8 +343,16 @@ def submit_bottling_actuals(wine_batch, bottling_date, abv_percentage, lines):
 		qc     = cint(ld.get("qc_bottles", 0))
 		sample = max(cint(ld.get("sample_bottles", 1)), 1)
 		net    = max(actual - qc - sample, 0)
-		vol    = round(actual * cint(row.bottle_size_ml) / 1000, 4)
-		planned_vol = round(cint(row.planned_bottles) * cint(row.bottle_size_ml) / 1000, 4)
+
+		# Resolve bottle_size_ml — fetch_from may have left it 0 in the DB
+		sz = cint(row.bottle_size_ml)
+		if not sz and row.bottle_item:
+			sz = cint(frappe.db.get_value("Item", row.bottle_item, "bottle_size_in_ml") or 0)
+			if sz:
+				frappe.db.set_value("Wine Batch Bottling Line", bl_name, "bottle_size_ml", sz)
+
+		vol         = round(actual * sz / 1000, 4)
+		planned_vol = round(cint(row.planned_bottles) * sz / 1000, 4)
 		frappe.db.set_value("Wine Batch Bottling Line", bl_name, {
 			"actual_bottles": actual,
 			"qc_bottles": qc,
@@ -380,12 +388,14 @@ def submit_bottling_actuals(wine_batch, bottling_date, abv_percentage, lines):
 			"packaging_yield_pct": 0,
 		})
 
+	# Excise is charged per litre of pure alcohol content
+	pure_alcohol_litres = total_volume_bottled * (abv / 100.0)
 	frappe.db.set_value("Wine Batch", wine_batch, {
 		"bottling_date": bottling_date,
 		"abv_percentage": abv,
 		"abv_tax_band": abv_tax_band,
-		"excise_duty_per_litre": excise_rate,
-		"excise_duty_amount": round(total_volume_bottled * excise_rate, 4),
+		"excise_duty_per_dl": excise_rate,
+		"excise_duty_amount": round(pure_alcohol_litres * excise_rate, 4),
 		"total_volume_bottled": total_volume_bottled,
 		"process_loss": process_loss,
 		"yield_efficiency_pct": yield_pct,
@@ -421,9 +431,12 @@ def submit_packaging_actuals(wine_batch, lines):
 		output_warehouse = ld.get("output_warehouse")
 		if not output_item or not output_warehouse:
 			frappe.throw("Output Item and Output Warehouse are required for all packaging lines.")
+		actual_total_bottles = actual_cartons * cint(row.bottles_per_carton)
+		actual_volume_litres = round(actual_total_bottles * cint(row.bottle_size_ml) / 1000, 4)
 		frappe.db.set_value("Wine Batch Packaging Line", pl_name, {
 			"actual_cartons": actual_cartons,
-			"actual_total_bottles": actual_cartons * cint(row.bottles_per_carton),
+			"actual_total_bottles": actual_total_bottles,
+			"actual_volume_litres": actual_volume_litres,
 			"output_item": output_item,
 			"output_warehouse": output_warehouse,
 		})
@@ -484,6 +497,7 @@ def reset_bottling_actuals(wine_batch):
 		frappe.db.set_value("Wine Batch Packaging Line", row.name, {
 			"actual_cartons": 0,
 			"actual_total_bottles": 0,
+			"actual_volume_litres": 0,
 			"remaining_bottles": 0,
 			"output_item": None,
 			"output_warehouse": None,
@@ -493,7 +507,7 @@ def reset_bottling_actuals(wine_batch):
 		"bottling_date": None,
 		"abv_percentage": 0,
 		"abv_tax_band": None,
-		"excise_duty_per_litre": 0,
+		"excise_duty_per_dl": 0,
 		"total_volume_bottled": 0,
 		"process_loss": 0,
 		"yield_efficiency_pct": 0,
@@ -543,7 +557,7 @@ def close_wine_batch(wine_batch):
 
 	# ---- Use already-stored totals -------------------------------------------
 	total_volume_bottled   = flt(wb.total_volume_bottled)
-	excise_rate            = flt(wb.excise_duty_per_litre)
+	excise_rate            = flt(wb.excise_duty_per_dl)
 	excise_duty_amount     = flt(wb.excise_duty_amount)
 	process_loss           = flt(wb.process_loss)
 	yield_efficiency_pct   = flt(wb.yield_efficiency_pct)
@@ -652,30 +666,45 @@ def close_wine_batch(wine_batch):
 		for sz, rows in size_to_bl_rows.items()
 	}
 
-	# ---- Create ERPNext Batch per unique output_item in packaging lines ------
-	series = settings.batch_number_series or "BATCH-.YYYY.-.#####"
-	item_to_batch = {}
+	# ---- Build per-size series lookup from settings --------------------------
+	default_series = settings.batch_number_series or "BATCH-.YYYY.-.#####"
+	size_to_series = {
+		cint(r.bottle_size_ml): r.batch_number_series
+		for r in (settings.batch_series_by_size or [])
+		if r.bottle_size_ml and r.batch_number_series
+	}
+
+	# ---- Create ERPNext Batch per unique (output_item, bottle_size_ml) -------
+	item_size_to_batch = {}
 	for row in wb.packaging_lines:
 		if not row.output_item:
 			continue
-		if row.output_item not in item_to_batch:
+		sz = cint(row.bottle_size_ml)
+		key = (row.output_item, sz)
+		if key not in item_size_to_batch:
+			series = size_to_series.get(sz) or default_series
 			batch_id = make_autoname(series)
 			existing_batch = frappe.db.get_value("Batch", {"batch_id": batch_id}, "name")
 			if existing_batch:
-				item_to_batch[row.output_item] = existing_batch
+				item_size_to_batch[key] = existing_batch
 			else:
 				batch = frappe.new_doc("Batch")
 				batch.item = row.output_item
 				batch.batch_id = batch_id
 				batch.description = f"Wine Batch {wb.name}"
 				batch.insert(ignore_permissions=True)
-				item_to_batch[row.output_item] = batch.name
+				item_size_to_batch[key] = batch.name
 		frappe.db.set_value(
 			"Wine Batch Packaging Line", row.name, "output_batch_no",
-			item_to_batch[row.output_item],
+			item_size_to_batch[key],
 		)
 
 	wb.reload()
+
+	# ---- Excise valuation setup -----------------------------------------------
+	include_excise     = frappe.db.get_single_value("Winery Settings", "include_excise_in_valuation")
+	excise_rate_per_dl = flt(wb.excise_duty_per_dl)
+	abv_decimal        = flt(wb.abv_percentage) / 100.0
 
 	# ---- One Manufacture SE per packaging line --------------------------------
 	active_lines  = [r for r in wb.packaging_lines if r.output_item and cint(r.actual_cartons)]
@@ -773,7 +802,8 @@ def close_wine_batch(wine_batch):
 		# Finished item — exactly one per SE (the carton output for this packaging line)
 		bl_list  = size_to_bl_rows.get(sz, [])
 		mat_cost = mat_cost_per_bottling_line.get(bl_list[0].name, 0.0) if bl_list else 0.0
-		cost_per_bottle = wine_cost_per_ml * sz + mat_cost + additional_cost_per_bottle + lab_consumable_cost_per_bottle
+		excise_cost_per_bottle = (excise_rate_per_dl * (sz / 1000.0) * abv_decimal) if include_excise else 0.0
+		cost_per_bottle = wine_cost_per_ml * sz + mat_cost + additional_cost_per_bottle + lab_consumable_cost_per_bottle + excise_cost_per_bottle
 		basic_rate      = cost_per_bottle * cint(row.bottles_per_carton)
 		se.append("items", {
 			"item_code": row.output_item,
@@ -794,7 +824,8 @@ def close_wine_batch(wine_batch):
 					wine_cost_per_ml * sz
 					+ mat_cost_per_bottling_line.get(bl.name, 0.0)
 					+ additional_cost_per_bottle
-				+ lab_consumable_cost_per_bottle
+					+ lab_consumable_cost_per_bottle
+					+ excise_cost_per_bottle
 				)
 				if bl.bottled_wine_item:
 					se.append("items", {
@@ -842,13 +873,59 @@ def close_wine_batch(wine_batch):
 		"yield_efficiency_pct": yield_efficiency_pct,
 		"packaging_process_loss": packaging_process_loss,
 		"packaging_yield_pct": packaging_yield_pct,
-		"excise_duty_per_litre": excise_rate,
+		"excise_duty_per_dl": excise_rate,
 		"excise_duty_amount": excise_duty_amount,
 		"status": "Completed",
 		"end_date": today(),
 	})
 
+	wb.reload()
+	_create_excise_journal_entry(wb)
+
 	return {"stock_entries": se_names}
+
+
+def _create_excise_journal_entry(wb):
+	"""Create a Journal Entry recognising the excise duty liability on bottling completion.
+
+	DR  Excise Duty Expense Account   (excise_duty_amount)
+	CR  Excise Duty Payable Account   (excise_duty_amount)
+
+	Silently skips if accounts are not configured in Winery Settings or if the amount is zero.
+	"""
+	settings = frappe.get_cached_doc("Winery Settings")
+	expense_account = settings.get("excise_duty_expense_account")
+	payable_account = settings.get("excise_duty_payable_account")
+
+	if not expense_account or not payable_account:
+		return
+
+	excise_amount = flt(wb.excise_duty_amount)
+	if excise_amount <= 0:
+		return
+
+	company = frappe.defaults.get_user_default("Company") or frappe.db.get_single_value(
+		"Global Defaults", "default_company"
+	)
+
+	je = frappe.new_doc("Journal Entry")
+	je.posting_date = today()
+	je.company = company
+	je.user_remark = (
+		f"Excise Duty — {wb.name}: {wb.total_volume_bottled} L "
+		f"@ {wb.abv_percentage}% ABV, rate {wb.excise_duty_per_dl}/L pure alcohol"
+	)
+	je.append("accounts", {
+		"account": expense_account,
+		"debit_in_account_currency": excise_amount,
+	})
+	je.append("accounts", {
+		"account": payable_account,
+		"credit_in_account_currency": excise_amount,
+	})
+	je.insert(ignore_permissions=True)
+	je.submit()
+	frappe.db.set_value("Wine Batch", wb.name, "excise_journal_entry", je.name)
 
 
 @frappe.whitelist()

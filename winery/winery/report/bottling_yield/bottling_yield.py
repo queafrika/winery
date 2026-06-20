@@ -23,7 +23,7 @@ def get_columns():
 		{"label": "Yield %", "fieldname": "yield_efficiency_pct", "fieldtype": "Float", "width": 80},
 		{"label": "ABV %", "fieldname": "abv_percentage", "fieldtype": "Float", "width": 70},
 		{"label": "Tax Band", "fieldname": "abv_tax_band", "fieldtype": "Link", "options": "ABV Tax Band", "width": 180},
-		{"label": "Duty/Litre", "fieldname": "excise_duty_per_litre", "fieldtype": "Currency", "width": 100},
+		{"label": "Duty/L Pure Alcohol", "fieldname": "excise_duty_per_dl", "fieldtype": "Currency", "width": 130},
 		{"label": "Total Excise Duty", "fieldname": "excise_duty_amount", "fieldtype": "Currency", "width": 130},
 		{"label": "Stock Entry", "fieldname": "stock_entry", "fieldtype": "Link", "options": "Stock Entry", "width": 140},
 	]
@@ -66,7 +66,7 @@ def get_data(filters):
 			b.yield_efficiency_pct,
 			b.abv_percentage,
 			b.abv_tax_band,
-			b.excise_duty_per_litre,
+			b.excise_duty_per_dl,
 			b.excise_duty_amount,
 			b.stock_entry
 		FROM `tabBottling` b

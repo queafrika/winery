@@ -108,13 +108,35 @@ class BananaGrading(Document):
 
 	def _compute_adr_totals(self):
 		adr = frappe.get_doc("Agent Delivery Receipt", self.agent_delivery_receipt)
-		total_received = flt(adr.total_received) or 1  # avoid div/0
-		adr_total_amount = flt(adr.total_amount)
+
+		# Build PI → farm lookup
+		pi_names = list({row.purchase_invoice for row in adr.items if row.purchase_invoice})
+		farm_map = {
+			pi: frappe.db.get_value("Purchase Invoice", pi, "custom_farm") or ""
+			for pi in pi_names
+		}
+
+		# Build (pi_name, item_code) → PI item amount from Purchase Invoice Item
+		pi_item_amount = {}
+		for pi_name in pi_names:
+			for pi_item in frappe.db.get_all(
+				"Purchase Invoice Item",
+				filters={"parent": pi_name},
+				fields=["item_code", "amount"],
+			):
+				pi_item_amount[(pi_name, pi_item.item_code)] = flt(pi_item.amount)
+
+		# Accumulate actual purchase amounts per (farm, item_code)
+		actual_amounts = {}
+		for adr_row in adr.items:
+			farm = farm_map.get(adr_row.purchase_invoice, "")
+			key = (farm, adr_row.item_code)
+			amount = pi_item_amount.get((adr_row.purchase_invoice, adr_row.item_code), 0)
+			actual_amounts[key] = actual_amounts.get(key, 0) + amount
 
 		for row in self.grading_items:
-			row.valuation_amount = (
-				flt(row.bunches_received) / total_received
-			) * adr_total_amount
+			key = (row.farm or "", row.banana_item)
+			row.valuation_amount = actual_amounts.get(key, 0)
 			row.cost_per_finger = (
 				row.valuation_amount / flt(row.total_fingers)
 				if row.total_fingers else 0
@@ -128,9 +150,9 @@ class BananaGrading(Document):
 		self.total_damaged_fingers = int(
 			sum(flt(r.damaged_qty) for r in self.grading_items)
 		)
-		self.total_amount = adr_total_amount
+		self.total_amount = flt(adr.total_amount)
 		self.cost_per_finger_carried_forward = (
-			adr_total_amount / self.total_fingers if self.total_fingers else 0
+			sum(actual_amounts.values()) / self.total_fingers if self.total_fingers else 0
 		)
 
 	def _create_grading_batches_for_adr(self):

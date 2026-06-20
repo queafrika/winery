@@ -17,7 +17,7 @@ def get_columns():
 		{"label": "Band Name", "fieldname": "band_name", "fieldtype": "Data", "width": 160},
 		{"label": "Min ABV %", "fieldname": "min_abv", "fieldtype": "Float", "width": 90},
 		{"label": "Max ABV %", "fieldname": "max_abv", "fieldtype": "Float", "width": 90},
-		{"label": "Duty / Litre", "fieldname": "excise_duty_per_litre", "fieldtype": "Currency", "width": 120},
+		{"label": "Duty / L Pure Alcohol", "fieldname": "excise_duty_per_dl", "fieldtype": "Currency", "width": 150},
 		{"label": "Bottlings", "fieldname": "bottling_count", "fieldtype": "Int", "width": 90},
 		{"label": "Total Volume (L)", "fieldname": "total_volume_bottled", "fieldtype": "Float", "width": 130},
 		{"label": "Total Excise Duty", "fieldname": "total_excise_duty", "fieldtype": "Currency", "width": 150},
@@ -49,7 +49,7 @@ def get_data(filters):
 			atb.band_name,
 			atb.min_abv,
 			atb.max_abv,
-			b.excise_duty_per_litre,
+			b.excise_duty_per_dl,
 			COUNT(b.name) AS bottling_count,
 			SUM(b.total_volume_bottled) AS total_volume_bottled,
 			SUM(b.excise_duty_amount) AS total_excise_duty

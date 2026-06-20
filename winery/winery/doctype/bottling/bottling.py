@@ -42,7 +42,7 @@ class Bottling(Document):
 		band = frappe.db.sql(
 			"""
 			SELECT name FROM `tabABV Tax Band`
-			WHERE min_abv <= %s AND max_abv > %s
+			WHERE min_abv <= %s AND max_abv > %s AND disabled = 0
 			ORDER BY min_abv DESC LIMIT 1
 			""",
 			(self.abv_percentage, self.abv_percentage),
@@ -51,11 +51,13 @@ class Bottling(Document):
 		self.abv_tax_band = band[0].name if band else None
 
 	def _compute_excise_duty(self):
-		rate = flt(self.excise_duty_per_litre)
+		rate = flt(self.excise_duty_per_dl)
 		if not rate and self.abv_tax_band:
-			rate = flt(frappe.db.get_value("ABV Tax Band", self.abv_tax_band, "excise_duty_per_litre"))
-			self.excise_duty_per_litre = rate
-		self.excise_duty_amount = round(flt(self.total_volume_bottled) * rate, 4)
+			rate = flt(frappe.db.get_value("ABV Tax Band", self.abv_tax_band, "excise_duty_per_dl"))
+			self.excise_duty_per_dl = rate
+		# Excise is charged per litre of pure alcohol content
+		pure_alcohol_litres = flt(self.total_volume_bottled) * (flt(self.abv_percentage) / 100.0)
+		self.excise_duty_amount = round(pure_alcohol_litres * rate, 4)
 
 	# ------------------------------------------------------------------ #
 	#  Submit / Cancel                                                     #
@@ -222,9 +224,9 @@ def get_abv_tax_band(abv_percentage):
 	abv = flt(abv_percentage)
 	band = frappe.db.sql(
 		"""
-		SELECT name, excise_duty_per_litre
+		SELECT name, excise_duty_per_dl
 		FROM `tabABV Tax Band`
-		WHERE min_abv <= %s AND max_abv > %s
+		WHERE min_abv <= %s AND max_abv > %s AND disabled = 0
 		ORDER BY min_abv DESC LIMIT 1
 		""",
 		(abv, abv),

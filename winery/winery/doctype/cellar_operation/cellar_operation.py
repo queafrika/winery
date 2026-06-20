@@ -5,6 +5,8 @@ import json
 
 import frappe
 from frappe.model.document import Document
+from datetime import timedelta
+
 from frappe.utils import flt, now_datetime, time_diff_in_hours
 
 
@@ -53,6 +55,20 @@ class CellarOperation(Document):
 
 		if employee:
 			self.db_set("started_by", employee)
+
+		# Calculate expected end time from recipe stage duration
+		if self.wine_batch and self.operation_type:
+			try:
+				recipe_name = frappe.db.get_value("Wine Batch", self.wine_batch, "recipe")
+				if recipe_name:
+					recipe = frappe.get_doc("Recipe", recipe_name)
+					stage_duration = next(
+						(s.expected_duration for s in recipe.stages if s.operation_type == self.operation_type), 0
+					) or 0
+					if stage_duration:
+						self.db_set("expected_end_time", now + timedelta(hours=stage_duration))
+			except Exception:
+				pass
 
 		frappe.msgprint(f"Operation started at {frappe.utils.format_datetime(now)}.", alert=True)
 		return {"start_time": str(now)}
@@ -161,6 +177,10 @@ class CellarOperation(Document):
 				item_row["serial_no"] = row["serial_no"]
 			if row.get("conversion_factor") and flt(row["conversion_factor"]) not in (0, 1):
 				item_row["conversion_factor"] = flt(row["conversion_factor"])
+			actual_wt = flt(row.get("actual_weight_kg"))
+			if actual_wt > 0:
+				item_row["actual_weight_kg"] = actual_wt
+				item_row["nos_per_kg"] = round(flt(row["qty"]) / actual_wt, 2)
 			se.append("items", item_row)
 
 		if not se.items:

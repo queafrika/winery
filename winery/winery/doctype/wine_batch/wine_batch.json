@@ -45,6 +45,7 @@
   "packaging_process_loss",
   "packaging_yield_pct",
   "excise_duty_amount",
+  "excise_journal_entry",
   "section_bottling_lines",
   "bottling_lines",
   "section_packaging_lines",
@@ -216,13 +217,6 @@
    "read_only": 1
   },
   {
-   "allow_on_submit": 1,
-   "fieldname": "excise_duty_per_litre",
-   "fieldtype": "Currency",
-   "label": "Excise Duty per Litre",
-   "read_only": 1
-  },
-  {
    "fieldname": "section_bp_status",
    "fieldtype": "Section Break",
    "label": "Bottling Status & Results"
@@ -290,6 +284,15 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
+   "fieldname": "excise_journal_entry",
+   "fieldtype": "Link",
+   "label": "Excise Journal Entry",
+   "no_copy": 1,
+   "options": "Journal Entry",
+   "read_only": 1
+  },
+  {
    "fieldname": "section_bottling_lines",
    "fieldtype": "Section Break",
    "label": "Bottling Lines"
@@ -335,6 +338,13 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "excise_duty_per_litre",
+   "fieldtype": "Currency",
+   "label": "Excise Duty per Litre of Pure Alcohol",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
@@ -347,7 +357,7 @@
    "link_fieldname": "wine_batch"
   }
  ],
- "modified": "2026-04-03 08:11:37.920871",
+ "modified": "2026-05-15 12:51:38.678322",
  "modified_by": "Administrator",
  "module": "Winery",
  "name": "Wine Batch",

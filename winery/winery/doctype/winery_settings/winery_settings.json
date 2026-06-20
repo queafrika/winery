@@ -6,6 +6,7 @@
  "field_order": [
   "batch_series_section",
   "batch_number_series",
+  "batch_series_by_size",
   "section_break_warehouses",
   "sample_warehouse",
   "unpackaged_bottle_warehouse",
@@ -15,7 +16,11 @@
   "raw_banana_finger_template",
   "ripe_banana_finger_template",
   "section_break_accounts",
-  "rebottling_expense_account"
+  "rebottling_expense_account",
+  "section_break_excise",
+  "excise_duty_expense_account",
+  "excise_duty_payable_account",
+  "include_excise_in_valuation"
  ],
  "fields": [
   {
@@ -26,9 +31,16 @@
   {
    "fieldname": "batch_number_series",
    "fieldtype": "Data",
-   "label": "Batch Number Series",
-   "description": "Naming series for ERPNext Batch records created on bottling completion. E.g. BATCH-.YYYY.-.#####",
+   "label": "Default Batch Number Series",
+   "description": "Fallback naming series used when no per-size series is configured below. E.g. BATCH-.YYYY.-.#####",
    "default": "BATCH-.YYYY.-.#####"
+  },
+  {
+   "fieldname": "batch_series_by_size",
+   "fieldtype": "Table",
+   "label": "Batch Series by Bottle Size",
+   "options": "Winery Bottle Batch Series",
+   "description": "Configure a distinct naming series for each bottle size. Takes precedence over the Default Batch Number Series above."
   },
   {
    "fieldname": "section_break_warehouses",
@@ -93,6 +105,31 @@
    "label": "Rebottling Expenses Account",
    "options": "Account",
    "description": "Account where the cost difference (old packaging value destroyed) is posted when closing a rebottling"
+  },
+  {
+   "fieldname": "section_break_excise",
+   "fieldtype": "Section Break",
+   "label": "Excise Duty Accounting"
+  },
+  {
+   "fieldname": "excise_duty_expense_account",
+   "fieldtype": "Link",
+   "label": "Excise Duty Expense Account",
+   "options": "Account",
+   "description": "Expense account debited when excise duty liability is recognised on bottling completion"
+  },
+  {
+   "fieldname": "excise_duty_payable_account",
+   "fieldtype": "Link",
+   "label": "Excise Duty Payable Account",
+   "options": "Account",
+   "description": "Liability account credited when excise duty is recognised; cleared when payment is made to KRA"
+  },
+  {
+   "fieldname": "include_excise_in_valuation",
+   "fieldtype": "Check",
+   "label": "Include Excise Duty in Product Valuation",
+   "description": "When enabled, excise duty cost per bottle is included in the finished-goods valuation rate (recommended)"
   }
  ],
  "index_web_pages_for_search": 0,

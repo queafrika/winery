@@ -1,0 +1,109 @@
+{
+ "actions": [],
+ "creation": "2026-06-20 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "icon_label",
+  "tab",
+  "column_break_1",
+  "order",
+  "enabled",
+  "workspace_section",
+  "workspace_sidebar",
+  "roles_section",
+  "roles_help",
+  "roles"
+ ],
+ "fields": [
+  {
+   "fieldname": "icon_label",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Icon Label",
+   "reqd": 1
+  },
+  {
+   "fieldname": "tab",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Tab",
+   "options": "Winery Desktop Tab",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "order",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Order"
+  },
+  {
+   "default": "1",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Enabled"
+  },
+  {
+   "fieldname": "workspace_section",
+   "fieldtype": "Section Break",
+   "label": "Navigation"
+  },
+  {
+   "fieldname": "workspace_sidebar",
+   "fieldtype": "Link",
+   "label": "Workspace Sidebar",
+   "options": "Workspace",
+   "description": "The Workspace this icon navigates to."
+  },
+  {
+   "fieldname": "roles_section",
+   "fieldtype": "Section Break",
+   "label": "Visibility"
+  },
+  {
+   "default": "Leave empty to show this icon to all users who can see its tab. Add roles to restrict to specific roles.",
+   "fieldname": "roles_help",
+   "fieldtype": "Small Text",
+   "label": "",
+   "read_only": 1
+  },
+  {
+   "fieldname": "roles",
+   "fieldtype": "Table",
+   "label": "Allowed Roles",
+   "options": "Winery Desktop Icon Role"
+  }
+ ],
+ "links": [],
+ "modified": "2026-06-20 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Winery Desktop Icon",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "order",
+ "sort_order": "ASC",
+ "states": [],
+ "title_field": "icon_label",
+ "track_changes": 0
+}

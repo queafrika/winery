@@ -577,6 +577,11 @@ def end_ripening(ripening_batch, destination_warehouse, end_date, transfers, rip
 	rb.db_set("actual_end_date", end_date)
 	rb.db_set("ripening_days", ripening_days)
 
+	has_remaining = bool(batch_updates)
+	has_skipped = any(int(t.get("fingers_to_transfer") or 0) == 0 for t in transfers)
+	new_status = "Partially Completed" if (has_remaining or has_skipped) else "Completed"
+	rb.db_set("status", new_status)
+
 	# Stamp source and ripe batches with tracking info
 	for t in transfers:
 		batch_no = t.get("batch_no")

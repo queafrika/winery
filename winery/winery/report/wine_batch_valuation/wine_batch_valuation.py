@@ -19,7 +19,7 @@ def get_columns():
 		{"label": "Start Date", "fieldname": "start_date", "fieldtype": "Date", "width": 100},
 		{"label": "ABV %", "fieldname": "abv_percentage", "fieldtype": "Float", "width": 70},
 		{"label": "Tax Band", "fieldname": "abv_tax_band", "fieldtype": "Link", "options": "ABV Tax Band", "width": 150},
-		{"label": "Duty / Litre", "fieldname": "excise_duty_per_litre", "fieldtype": "Currency", "width": 110},
+		{"label": "Duty / L Pure Alcohol", "fieldname": "excise_duty_per_dl", "fieldtype": "Currency", "width": 140},
 		# Bottle line detail
 		{"label": "Bottle Item", "fieldname": "bottle_item", "fieldtype": "Link", "options": "Item", "width": 160},
 		{"label": "Size (ml)", "fieldname": "bottle_size_ml", "fieldtype": "Int", "width": 80},
@@ -74,7 +74,7 @@ def get_data(filters):
 			wb.start_date,
 			wb.abv_percentage,
 			wb.abv_tax_band,
-			wb.excise_duty_per_litre,
+			wb.excise_duty_per_dl,
 			wb.total_volume_bottled
 		FROM `tabWine Batch` wb
 		{where}
@@ -139,14 +139,16 @@ def get_data(filters):
 	result = []
 	for bl in bottle_lines:
 		wb = batch_map[bl.wine_batch]
-		duty_per_litre = flt(wb.excise_duty_per_litre)
+		duty_per_dl = flt(wb.excise_duty_per_dl)
+		abv_decimal = flt(wb.abv_percentage) / 100.0
 		size_ml = flt(bl.bottle_size_ml)
 		size_l = size_ml / 1000.0
 
-		excise_per_bottle = round(duty_per_litre * size_l, 4)
+		# Excise: rate per litre of pure alcohol × pure alcohol volume
+		excise_per_bottle = round(duty_per_dl * size_l * abv_decimal, 4)
 		net_bottles = flt(bl.net_bottles)
 		vol_litres = flt(bl.volume_litres)
-		total_line_excise = round(duty_per_litre * vol_litres, 4)
+		total_line_excise = round(duty_per_dl * vol_litres * abv_decimal, 4)
 
 		# Get matching packaging lines for this bottle size
 		pack_entries = pack_map.get((bl.wine_batch, size_ml), [{}])
@@ -161,7 +163,7 @@ def get_data(filters):
 				"start_date": wb.start_date,
 				"abv_percentage": wb.abv_percentage,
 				"abv_tax_band": wb.abv_tax_band,
-				"excise_duty_per_litre": duty_per_litre,
+				"excise_duty_per_dl": duty_per_dl,
 				"bottle_item": bl.bottle_item,
 				"bottle_size_ml": int(size_ml),
 				"planned_bottles": flt(bl.planned_bottles),

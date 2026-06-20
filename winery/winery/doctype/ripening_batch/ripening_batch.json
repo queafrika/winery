@@ -70,7 +70,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Status",
-   "options": "In Progress\nReady for Sale\nReady for Wine\nCompleted\nCancelled"
+   "options": "In Progress\nReady for Sale\nReady for Wine\nCompleted\nPartially Completed\nCancelled"
   },
   {
    "fieldname": "section_break_batches",

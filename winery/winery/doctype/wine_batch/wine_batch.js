@@ -24,7 +24,7 @@ frappe.ui.form.on("Wine Batch", {
 			callback(r) {
 				if (r.message && r.message.name) {
 					frm.set_value("abv_tax_band", r.message.name);
-					frm.set_value("excise_duty_per_litre", r.message.excise_duty_per_litre);
+					frm.set_value("excise_duty_per_litre", r.message.excise_duty_per_dl);
 				} else {
 					frm.set_value("abv_tax_band", null);
 					frm.set_value("excise_duty_per_litre", 0);
@@ -445,15 +445,20 @@ function _autocalc_cartons(frm, cdt, cdn) {
 		if (cint(bl.bottle_size_ml) === sz) total_planned += cint(bl.planned_bottles);
 	});
 
-	const cartons = Math.floor(total_planned / bpc);
+	const cartons      = Math.floor(total_planned / bpc);
+	const total_bottles = cartons * bpc;
+	const volume_litres = Math.round(total_bottles * sz / 1000 * 10000) / 10000;
 	frappe.model.set_value(cdt, cdn, "cartons", cartons);
-	frappe.model.set_value(cdt, cdn, "total_bottles", cartons * bpc);
+	frappe.model.set_value(cdt, cdn, "total_bottles", total_bottles);
+	frappe.model.set_value(cdt, cdn, "volume_litres", volume_litres);
 }
 
 function _recalc_packaging_planned(_frm, cdt, cdn) {
-	const row = locals[cdt][cdn];
-	frappe.model.set_value(cdt, cdn, "total_bottles",
-		cint(row.cartons) * cint(row.bottles_per_carton));
+	const row           = locals[cdt][cdn];
+	const total_bottles = cint(row.cartons) * cint(row.bottles_per_carton);
+	const volume_litres = Math.round(total_bottles * cint(row.bottle_size_ml) / 1000 * 10000) / 10000;
+	frappe.model.set_value(cdt, cdn, "total_bottles", total_bottles);
+	frappe.model.set_value(cdt, cdn, "volume_litres", volume_litres);
 }
 
 function _validate_packaging_balance(frm) {
@@ -1109,7 +1114,9 @@ function _build_co_transfer_dialog(co_name, stock_items, item_map, conv_map, win
 					<table class="table table-bordered table-sm" style="margin-bottom:6px">
 						<thead><tr>
 							<th>${__("Batch No")}</th>
-							<th style="width:140px">${stock_uom} ${__("Count")}</th>
+							<th style="width:120px">${stock_uom} ${__("Count")}</th>
+							<th style="width:110px">${__("Weight (Kg)")}</th>
+							<th style="width:90px">${__("Nos/Kg")}</th>
 							<th style="width:36px"></th>
 						</tr></thead>
 						<tbody class="bt-tbody"></tbody>
@@ -1118,7 +1125,7 @@ function _build_co_transfer_dialog(co_name, stock_items, item_map, conv_map, win
 						+ ${__("Add Row")}
 					</button>
 					<div class="bt-total" style="color:#555;font-size:12px;margin-top:6px">
-						${__("Total")}: 0 ${stock_uom} (${__("represents")} ${item.quantity} ${req_uom})
+						${__("Total")}: 0 ${stock_uom} / 0 Kg (${__("represents")} ${item.quantity} ${req_uom})
 					</div>`,
 			});
 		} else if (uom_mismatch) {
@@ -1173,6 +1180,7 @@ function _build_co_transfer_dialog(co_name, stock_items, item_map, conv_map, win
 						if (!batch_no || !batch_qty) return;
 						has_entry = true;
 						const resolved_item = sel.options[sel.selectedIndex]?.dataset?.item || item.item;
+						const actual_weight_kg = parseFloat(row.querySelector(".b-wt")?.value) || 0;
 						transfer_items.push({
 							item_code: resolved_item,
 							qty: batch_qty,
@@ -1180,6 +1188,7 @@ function _build_co_transfer_dialog(co_name, stock_items, item_map, conv_map, win
 							s_warehouse,
 							batch_no,
 							conversion_factor: 1,
+							actual_weight_kg,
 						});
 					});
 					if (!has_entry) {
@@ -1291,10 +1300,21 @@ function _init_co_batch_table(dialog, idx, item, stock_uom, req_uom) {
 	const addBtn  = $field.find(".bt-add")[0];
 
 	function recalcTotal() {
-		let total = 0;
-		tbody.querySelectorAll(".b-qty").forEach(inp => { total += parseFloat(inp.value) || 0; });
+		let totalNos = 0, totalWt = 0;
+		tbody.querySelectorAll("tr").forEach(tr => {
+			totalNos += parseFloat(tr.querySelector(".b-qty")?.value) || 0;
+			totalWt  += parseFloat(tr.querySelector(".b-wt")?.value)  || 0;
+			const qty = parseFloat(tr.querySelector(".b-qty")?.value) || 0;
+			const wt  = parseFloat(tr.querySelector(".b-wt")?.value)  || 0;
+			const factorEl = tr.querySelector(".b-factor");
+			if (factorEl) {
+				factorEl.textContent = (qty > 0 && wt > 0) ? (qty / wt).toFixed(1) : "—";
+			}
+		});
+		const overallFactor = (totalNos > 0 && totalWt > 0)
+			? ` = ${(totalNos / totalWt).toFixed(1)} ${stock_uom}/Kg` : "";
 		totalEl.textContent =
-			`${__("Total")}: ${total.toFixed(0)} ${stock_uom} (${__("represents")} ${item.quantity} ${req_uom})`;
+			`${__("Total")}: ${totalNos.toFixed(0)} ${stock_uom} / ${totalWt.toFixed(3)} Kg${overallFactor} (${__("represents")} ${item.quantity} ${req_uom})`;
 	}
 
 	function addRow(removable) {
@@ -1309,6 +1329,13 @@ function _init_co_batch_table(dialog, idx, item, stock_uom, req_uom) {
 				<input type="number" class="form-control form-control-sm b-qty"
 				       placeholder="0" min="0" step="1">
 			</td>
+			<td>
+				<input type="number" class="form-control form-control-sm b-wt"
+				       placeholder="0.000" min="0" step="0.001">
+			</td>
+			<td style="text-align:center;vertical-align:middle;color:#555;font-size:12px">
+				<span class="b-factor">—</span>
+			</td>
 			<td style="text-align:center;vertical-align:middle">
 				${removable
 					? `<button class="btn btn-xs btn-danger rm-row" type="button"
@@ -1318,6 +1345,7 @@ function _init_co_batch_table(dialog, idx, item, stock_uom, req_uom) {
 		tbody.appendChild(tr);
 		tr.querySelector(".b-no").innerHTML = buildBatchOptions();
 		tr.querySelector(".b-qty").addEventListener("input", recalcTotal);
+		tr.querySelector(".b-wt").addEventListener("input", recalcTotal);
 		if (removable) {
 			tr.querySelector(".rm-row").addEventListener("click", () => { tr.remove(); recalcTotal(); });
 		}

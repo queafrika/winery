@@ -231,5 +231,30 @@
   "options": "Item Lab Test Requirement",
   "insert_after": "lab_test_requirements_section",
   "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Stock Entry Detail-actual_weight_kg",
+  "dt": "Stock Entry Detail",
+  "fieldname": "actual_weight_kg",
+  "fieldtype": "Float",
+  "label": "Actual Weight (Kg)",
+  "insert_after": "conversion_factor",
+  "read_only": 1,
+  "no_copy": 1,
+  "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Stock Entry Detail-nos_per_kg",
+  "dt": "Stock Entry Detail",
+  "fieldname": "nos_per_kg",
+  "fieldtype": "Float",
+  "label": "Nos / Kg",
+  "precision": "2",
+  "insert_after": "actual_weight_kg",
+  "read_only": 1,
+  "no_copy": 1,
+  "module": "Winery"
  }
 ]

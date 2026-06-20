@@ -298,10 +298,61 @@
   object-fit: contain;
 }
 
+/* Content area wraps tabs + icons so they stack vertically on the right side */
+.winery-content-area {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-left: 80px;
+}
+
+/* ── Company title ───────────────────────────────────────────── */
+.winery-company-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #6B2D8B;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+/* ── Tab bar ─────────────────────────────────────────────────── */
+.winery-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid #e8e8e8;
+  padding-bottom: 0;
+}
+
+.winery-tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 10px 22px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #888;
+  cursor: pointer;
+  margin-bottom: -2px;
+  border-radius: 4px 4px 0 0;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.winery-tab-btn:hover {
+  color: #6B2D8B;
+  background: #f3e8f9;
+}
+
+.winery-tab-btn.active {
+  color: #6B2D8B;
+  border-bottom-color: #6B2D8B;
+  background: none;
+}
+
 .desktop-container .icons-container {
   flex: 1 1 auto;
   margin-top: 0 !important;
-  padding-left: 80px !important;
+  padding-left: 0 !important;
 }
 
 /* ── 18. Input fields — gold border & tint (all states) ─────*/
@@ -439,4 +490,54 @@ textarea:focus {
 
 .winery-dirty-tab__close:hover {
   color: #ff6b6b;
+}
+
+/* ── 20. Custom desktop icon grid ────────────────────────────── */
+.winery-icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 24px;
+  padding-top: 8px;
+}
+
+.winery-icon-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none !important;
+  cursor: pointer;
+}
+
+.winery-icon-badge {
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  background: #F5A800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+
+.winery-icon-card:hover .winery-icon-badge {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(245, 168, 0, 0.35);
+}
+
+.winery-icon-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  word-break: break-word;
+}
+
+.winery-empty {
+  color: #888;
+  font-style: italic;
+  padding: 16px 0;
 }

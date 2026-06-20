@@ -9,7 +9,8 @@
   "min_abv",
   "max_abv",
   "column_break_1",
-  "excise_duty_per_litre",
+  "excise_duty_per_dl",
+  "disabled",
   "description"
  ],
  "fields": [
@@ -42,10 +43,17 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "excise_duty_per_litre",
+   "fieldname": "excise_duty_per_dl",
    "fieldtype": "Currency",
-   "label": "Excise Duty per Litre",
+   "label": "Excise Duty per Litre of Pure Alcohol",
    "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "label": "Disabled",
    "in_list_view": 1
   },
   {

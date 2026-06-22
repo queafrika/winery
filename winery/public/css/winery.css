@@ -272,7 +272,7 @@
   fill: #ffffff !important;
 }
 
-/* ── 17. Desktop home — split layout: icons left, logo right  */
+/* ── 17. Desktop home — split layout: logo left, content right */
 .desktop-container {
   display: flex !important;
   flex-direction: row !important;
@@ -284,16 +284,17 @@
 }
 
 .desktop-logo-panel {
-  flex: 0 0 420px;
+  flex: 0 0 280px;
   display: flex;
   align-items: center;
   justify-content: center;
   order: -1;
+  padding-top: 8px;
 }
 
 .desktop-brand-logo {
-  max-width: 420px;
-  max-height: 420px;
+  max-width: 280px;
+  max-height: 280px;
   width: 100%;
   object-fit: contain;
 }
@@ -304,7 +305,57 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding-left: 80px;
+  padding-left: 40px;
+  min-width: 0;
+}
+
+/* ── Mobile: hide logo, content fills full width ─────────────── */
+@media (max-width: 768px) {
+  .desktop-container {
+    flex-direction: column !important;
+    padding: 20px 16px !important;
+    gap: 16px !important;
+  }
+
+  .desktop-logo-panel {
+    display: none !important;
+  }
+
+  .winery-content-area {
+    padding-left: 0 !important;
+    width: 100%;
+  }
+
+  .winery-company-title {
+    font-size: 1.2rem !important;
+  }
+
+  .winery-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .winery-tab-btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .winery-icon-grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)) !important;
+    gap: 16px !important;
+  }
+
+  .winery-icon-badge {
+    width: 56px !important;
+    height: 56px !important;
+    font-size: 1.4rem !important;
+    border-radius: 14px !important;
+  }
+
+  .winery-icon-label {
+    font-size: 0.72rem !important;
+  }
 }
 
 /* ── Company title ───────────────────────────────────────────── */

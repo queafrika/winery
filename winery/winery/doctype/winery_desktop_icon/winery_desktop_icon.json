@@ -10,8 +10,9 @@
   "column_break_1",
   "order",
   "enabled",
-  "workspace_section",
-  "workspace_sidebar",
+  "navigation_section",
+  "link_type",
+  "link_to",
   "roles_section",
   "roles_help",
   "roles"
@@ -51,16 +52,26 @@
    "label": "Enabled"
   },
   {
-   "fieldname": "workspace_section",
+   "fieldname": "navigation_section",
    "fieldtype": "Section Break",
    "label": "Navigation"
   },
   {
-   "fieldname": "workspace_sidebar",
-   "fieldtype": "Link",
-   "label": "Workspace Sidebar",
-   "options": "Workspace",
-   "description": "The Workspace this icon navigates to."
+   "fieldname": "link_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Link Type",
+   "options": "\nWorkspace\nDocType\nReport\nPage",
+   "reqd": 1
+  },
+  {
+   "fieldname": "link_to",
+   "fieldtype": "Dynamic Link",
+   "in_list_view": 1,
+   "label": "Link To",
+   "options": "link_type",
+   "reqd": 1,
+   "description": "Select the target based on the Link Type chosen above."
   },
   {
    "fieldname": "roles_section",

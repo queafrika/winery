@@ -42,6 +42,27 @@ $(document).on("desktop_screen", function () {
 	customGrid.className = "winery-icon-grid";
 	contentArea.appendChild(customGrid);
 
+	// ── Navigation helper ─────────────────────────────────────────────────────
+	function navigate(link_type, link_to) {
+		if (!link_to) return;
+		switch (link_type) {
+			case "Workspace":
+				frappe.set_route("Workspaces", link_to);
+				break;
+			case "DocType":
+				frappe.set_route("List", link_to);
+				break;
+			case "Report":
+				frappe.set_route("query-report", link_to);
+				break;
+			case "Page":
+				frappe.set_route(link_to);
+				break;
+			default:
+				frappe.set_route(link_to);
+		}
+	}
+
 	// ── Fetch config from server ──────────────────────────────────────────────
 	frappe.call({
 		method: "winery.winery.api.get_desktop_config",
@@ -81,17 +102,7 @@ $(document).on("desktop_screen", function () {
 
 					card.addEventListener("click", function (e) {
 						e.preventDefault();
-						if (icon.workspace_sidebar) {
-							// Navigate to the workspace sidebar
-							var ws = frappe.boot.workspace_sidebar_item
-								? frappe.boot.workspace_sidebar_item[icon.workspace_sidebar.toLowerCase()]
-								: null;
-							if (ws) {
-								frappe.set_route("Workspaces", icon.workspace_sidebar);
-							} else {
-								frappe.set_route(icon.workspace_sidebar);
-							}
-						}
+						navigate(icon.link_type, icon.link_to);
 					});
 
 					customGrid.appendChild(card);

@@ -32,7 +32,7 @@ def get_desktop_config():
 	icons = frappe.get_all(
 		"Winery Desktop Icon",
 		filters={"enabled": 1},
-		fields=["name", "icon_label", "tab", "workspace_sidebar", "order"],
+		fields=["name", "icon_label", "tab", "link_type", "link_to", "order"],
 		order_by="order asc",
 		ignore_permissions=True,
 	)
@@ -58,7 +58,8 @@ def get_desktop_config():
 		if user_can_see(icon_roles_map, icon.name):
 			icons_by_tab.setdefault(icon.tab, []).append({
 				"icon_label": icon.icon_label,
-				"workspace_sidebar": icon.workspace_sidebar,
+				"link_type": icon.link_type,
+				"link_to": icon.link_to,
 			})
 
 	# ── Filter tabs by user roles and build result ────────────────────────────

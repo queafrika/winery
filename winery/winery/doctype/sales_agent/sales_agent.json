@@ -1,0 +1,187 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:sales_agent_name",
+ "creation": "2026-07-04 00:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_personal",
+  "sales_agent_name",
+  "id_number",
+  "user",
+  "column_break_1",
+  "phone_number",
+  "status",
+  "section_break_sales",
+  "agent_warehouse",
+  "selling_price_list",
+  "default_customer",
+  "column_break_2",
+  "max_discount_pct",
+  "pos_profile",
+  "section_break_reporting",
+  "sales_person",
+  "territory",
+  "section_break_notes",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_personal",
+   "fieldtype": "Section Break",
+   "label": "Personal Details"
+  },
+  {
+   "fieldname": "sales_agent_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Sales Agent Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "id_number",
+   "fieldtype": "Data",
+   "label": "National ID / Passport No."
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "User Account",
+   "options": "User",
+   "reqd": 1,
+   "unique": 1,
+   "description": "ERPNext user account for this agent — used to auto-identify the agent on login and API calls"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "phone_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Phone Number"
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Active\nSuspended\nInactive"
+  },
+  {
+   "fieldname": "section_break_sales",
+   "fieldtype": "Section Break",
+   "label": "Sales Configuration"
+  },
+  {
+   "fieldname": "agent_warehouse",
+   "fieldtype": "Link",
+   "label": "Agent Warehouse",
+   "options": "Warehouse",
+   "reqd": 1,
+   "description": "Van/field warehouse that holds this agent's consignment stock. Auto-created on first save if left blank."
+  },
+  {
+   "fieldname": "selling_price_list",
+   "fieldtype": "Link",
+   "label": "Selling Price List",
+   "options": "Price List",
+   "description": "Price list used to price this agent's sales. Falls back to the company default selling price list."
+  },
+  {
+   "fieldname": "default_customer",
+   "fieldtype": "Link",
+   "label": "Default Walk-in Customer",
+   "options": "Customer",
+   "description": "Auto-created walk-in customer used when a sale has no named customer."
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "max_discount_pct",
+   "fieldtype": "Percent",
+   "label": "Max Discount %",
+   "description": "Maximum per-line discount the agent may apply. Enforced server-side at checkout."
+  },
+  {
+   "fieldname": "pos_profile",
+   "fieldtype": "Link",
+   "label": "POS Profile",
+   "options": "POS Profile"
+  },
+  {
+   "fieldname": "section_break_reporting",
+   "fieldtype": "Section Break",
+   "label": "Reporting (optional)"
+  },
+  {
+   "fieldname": "sales_person",
+   "fieldtype": "Link",
+   "label": "Sales Person",
+   "options": "Sales Person",
+   "description": "Link to a Sales Person to enable ERPNext commission/target reports."
+  },
+  {
+   "fieldname": "territory",
+   "fieldtype": "Link",
+   "label": "Territory",
+   "options": "Territory"
+  },
+  {
+   "fieldname": "section_break_notes",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-07-04 00:00:00",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Sales Agent",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

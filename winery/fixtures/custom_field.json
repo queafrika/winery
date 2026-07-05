@@ -256,5 +256,62 @@
   "read_only": 1,
   "no_copy": 1,
   "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Sales Invoice-pos_sales_agent",
+  "dt": "Sales Invoice",
+  "fieldname": "pos_sales_agent",
+  "fieldtype": "Link",
+  "label": "POS Sales Agent",
+  "options": "Sales Agent",
+  "insert_after": "pos_profile",
+  "read_only": 1,
+  "no_copy": 1,
+  "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Sales Invoice-pos_client_uuid",
+  "dt": "Sales Invoice",
+  "fieldname": "pos_client_uuid",
+  "fieldtype": "Data",
+  "label": "POS Client UUID",
+  "insert_after": "pos_sales_agent",
+  "unique": 1,
+  "read_only": 1,
+  "no_copy": 1,
+  "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Sales Invoice Payment-winery_mpesa_receipt_no",
+  "dt": "Sales Invoice Payment",
+  "fieldname": "winery_mpesa_receipt_no",
+  "fieldtype": "Data",
+  "label": "M-Pesa Receipt No",
+  "insert_after": "reference_no",
+  "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Sales Invoice Payment-winery_bank_reference",
+  "dt": "Sales Invoice Payment",
+  "fieldname": "winery_bank_reference",
+  "fieldtype": "Data",
+  "label": "Bank Reference",
+  "insert_after": "winery_mpesa_receipt_no",
+  "module": "Winery"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "Sales Invoice Payment-winery_verification_status",
+  "dt": "Sales Invoice Payment",
+  "fieldname": "winery_verification_status",
+  "fieldtype": "Select",
+  "label": "Verification Status",
+  "options": "\nAuto-verified\nPending\nVerified\nRejected",
+  "insert_after": "winery_bank_reference",
+  "module": "Winery"
  }
 ]

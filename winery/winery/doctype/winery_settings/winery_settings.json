@@ -20,7 +20,11 @@
   "section_break_excise",
   "excise_duty_expense_account",
   "excise_duty_payable_account",
-  "include_excise_in_valuation"
+  "include_excise_in_valuation",
+  "section_break_casual",
+  "casual_labour_expense_account",
+  "casual_default_tax_payable_account",
+  "casual_default_payment_account"
  ],
  "fields": [
   {
@@ -130,6 +134,32 @@
    "fieldtype": "Check",
    "label": "Include Excise Duty in Product Valuation",
    "description": "When enabled, excise duty cost per bottle is included in the finished-goods valuation rate (recommended)"
+  },
+  {
+   "fieldname": "section_break_casual",
+   "fieldtype": "Section Break",
+   "label": "Casual Labour Accounting"
+  },
+  {
+   "fieldname": "casual_labour_expense_account",
+   "fieldtype": "Link",
+   "label": "Casual Labour Expense Account",
+   "options": "Account",
+   "description": "Expense account debited with gross casual worker earnings when a Casual Payment is submitted"
+  },
+  {
+   "fieldname": "casual_default_tax_payable_account",
+   "fieldtype": "Link",
+   "label": "Default Tax / Deduction Payable Account",
+   "options": "Account",
+   "description": "Fallback liability account credited for deduction rows that do not specify their own account"
+  },
+  {
+   "fieldname": "casual_default_payment_account",
+   "fieldtype": "Link",
+   "label": "Default Payment Account (Paid From)",
+   "options": "Account",
+   "description": "Default Cash / Bank account suggested as the Paid From account on new Casual Payments"
   }
  ],
  "index_web_pages_for_search": 0,

@@ -352,33 +352,25 @@ def get_uom_conversion(item_code, from_uom):
 def get_batches_for_item_warehouse(item_code, warehouse):
 	"""Return batches with positive available stock for item_code in warehouse.
 
-	Handles three cases:
+	Handles two cases:
 	- Template item (has_variants=1): aggregates batches from all active variants.
-	- Variant of the ripe_banana_finger_template: returns its own batches directly.
-	- Any other item (including legacy "Ripe Banana"): tries its own batch-tracked
-	  stock first; if none found, falls back to the ripe_banana_finger_template
-	  variants from Winery Settings.
+	- Any other item: returns its own batches directly.
 
-	NULL batch_no rows (non-batch stock) are intentionally excluded so they cannot
-	mask the fallback when an item has no proper batch tracking.
+	NULL batch_no rows (non-batch stock) are intentionally excluded.
 
 	Each result dict includes "item_code" (the actual variant) so transfer_materials
-	can post the SE against the correct variant rather than the template/legacy item.
+	can post the SE against the correct variant rather than the template.
 	"""
 	from erpnext.stock.doctype.batch.batch import get_batch_qty
 
 	def _batches_for(icode):
-		"""Return batch rows with positive qty, excluding NULL-batch entries."""
 		return [
 			{"batch_no": b.get("batch_no"), "qty": b.get("qty"), "item_code": icode}
 			for b in (get_batch_qty(item_code=icode, warehouse=warehouse) or [])
 			if b.get("qty", 0) > 0 and b.get("batch_no")
 		]
 
-	ripe_tpl = frappe.db.get_single_value("Winery Settings", "ripe_banana_finger_template")
-
 	def _sorted_by_ripening(batches):
-		"""Sort batch list oldest-ripened-first using ripening_end_date on the Batch record."""
 		if not batches:
 			return batches
 		batch_nos = [b["batch_no"] for b in batches]
@@ -394,30 +386,9 @@ def get_batches_for_item_warehouse(item_code, warehouse):
 
 	has_variants = frappe.db.get_value("Item", item_code, "has_variants")
 	if has_variants:
-		# Template item — aggregate all active variants, order by ripening date
 		variants = frappe.db.get_all(
 			"Item", filters={"variant_of": item_code, "disabled": 0}, pluck="name"
 		)
 		return _sorted_by_ripening([b for v in variants for b in _batches_for(v)])
 
-	variant_of = frappe.db.get_value("Item", item_code, "variant_of")
-	if ripe_tpl and variant_of == ripe_tpl:
-		# Already a proper variant of the template — use directly, ordered
-		return _sorted_by_ripening(_batches_for(item_code))
-
-	# Direct item (could be legacy standalone like "Ripe Banana") — try its own batches.
-	# If the item is unrelated to the ripe_banana_finger_template (no variant_of link,
-	# not the template itself) AND the template's variants have stock in this warehouse,
-	# prefer the template variants over the legacy item's own batches.
-	item_is_legacy = ripe_tpl and ripe_tpl != item_code and variant_of != ripe_tpl
-	if item_is_legacy:
-		variants = frappe.db.get_all(
-			"Item", filters={"variant_of": ripe_tpl, "disabled": 0}, pluck="name"
-		)
-		tpl_batches = [b for v in variants for b in _batches_for(v)]
-		if tpl_batches:
-			return _sorted_by_ripening(tpl_batches)
-
-	# Return the item's own batches (used when no ripe_tpl configured, or item is
-	# not legacy, or template variants have no stock in this warehouse)
 	return _sorted_by_ripening(_batches_for(item_code))

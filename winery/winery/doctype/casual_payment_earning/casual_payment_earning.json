@@ -1,0 +1,68 @@
+{
+ "actions": [],
+ "creation": "2026-07-05 00:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "casual_worker_earning",
+  "earning_type",
+  "work_date",
+  "description",
+  "amount"
+ ],
+ "fields": [
+  {
+   "fieldname": "casual_worker_earning",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Earning",
+   "options": "Casual Worker Earning",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fetch_from": "casual_worker_earning.earning_type",
+   "fieldname": "earning_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Earning Type",
+   "options": "Casual Earning Type",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "casual_worker_earning.work_date",
+   "fieldname": "work_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Work Date",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "casual_worker_earning.description",
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Amount",
+   "read_only": 1
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-07-05 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Casual Payment Earning",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,167 @@
+{
+ "actions": [],
+ "autoname": "format:DAYCLOSE-{sales_agent}-{close_date}",
+ "creation": "2026-07-04 00:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "is_submittable": 1,
+ "field_order": [
+  "section_break_head",
+  "sales_agent",
+  "close_date",
+  "column_break_head",
+  "status",
+  "invoice_count",
+  "section_break_cash",
+  "system_cash",
+  "declared_cash",
+  "cash_variance",
+  "section_break_other",
+  "mpesa_total",
+  "bank_total",
+  "grand_total",
+  "section_break_notes",
+  "notes",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_head",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "sales_agent",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Sales Agent",
+   "options": "Sales Agent",
+   "reqd": 1
+  },
+  {
+   "fieldname": "close_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Close Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_head",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Submitted",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Submitted\nReviewed"
+  },
+  {
+   "fieldname": "invoice_count",
+   "fieldtype": "Int",
+   "label": "Invoice Count",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_cash",
+   "fieldtype": "Section Break",
+   "label": "Cash Reconciliation"
+  },
+  {
+   "fieldname": "system_cash",
+   "fieldtype": "Currency",
+   "label": "System Cash",
+   "read_only": 1
+  },
+  {
+   "fieldname": "declared_cash",
+   "fieldtype": "Currency",
+   "label": "Declared Cash"
+  },
+  {
+   "fieldname": "cash_variance",
+   "fieldtype": "Currency",
+   "label": "Cash Variance",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_other",
+   "fieldtype": "Section Break",
+   "label": "Other Modes"
+  },
+  {
+   "fieldname": "mpesa_total",
+   "fieldtype": "Currency",
+   "label": "M-Pesa Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "bank_total",
+   "fieldtype": "Currency",
+   "label": "Bank Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "grand_total",
+   "fieldtype": "Currency",
+   "label": "Grand Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_notes",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Winery POS Day Close",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-07-04 00:00:00",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Winery POS Day Close",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

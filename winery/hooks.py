@@ -24,6 +24,12 @@ scheduler_events = {
 	"hourly": [
 		"winery.tasks.check_ungraded_adrs",
 	],
+	"cron": {
+		# Reconcile M-Pesa STK requests whose Safaricom callback may have been lost.
+		"*/5 * * * *": [
+			"winery.winery.pos.mpesa.stk_query",
+		],
+	},
 }
 
 app_publisher = "Finesoft Afrika"

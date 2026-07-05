@@ -1,0 +1,81 @@
+{
+ "actions": [],
+ "creation": "2026-07-05 00:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "tax_name",
+  "calculation_type",
+  "rate",
+  "amount",
+  "formula",
+  "account",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "tax_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Tax / Deduction Name",
+   "reqd": 1
+  },
+  {
+   "default": "On Gross Total",
+   "fieldname": "calculation_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Calculation Type",
+   "options": "Flat Amount\nOn Gross Total\nFormula",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.calculation_type==\"On Gross Total\"",
+   "description": "Percentage of gross earnings",
+   "fieldname": "rate",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Rate (%)"
+  },
+  {
+   "depends_on": "eval:doc.calculation_type==\"Flat Amount\"",
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "label": "Flat Amount"
+  },
+  {
+   "depends_on": "eval:doc.calculation_type==\"Formula\"",
+   "description": "Python expression. Available: gross_amount, total_deductions_so_far, flt(). e.g. gross_amount * 0.015",
+   "fieldname": "formula",
+   "fieldtype": "Code",
+   "label": "Formula",
+   "options": "PythonExpression"
+  },
+  {
+   "description": "Liability / payable account credited for this deduction",
+   "fieldname": "account",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-07-05 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Casual Tax Template Detail",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

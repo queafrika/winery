@@ -721,6 +721,7 @@ def close_wine_batch(wine_batch):
 
 		se = frappe.new_doc("Stock Entry")
 		se.stock_entry_type = "Manufacture"
+		se.purpose = "Manufacture"
 		se.posting_date = wb.bottling_date or today()
 
 		# WIP consumption — proportional by volume; last SE takes the exact remainder
@@ -812,6 +813,7 @@ def close_wine_batch(wine_batch):
 			"batch_no": row.output_batch_no or None,
 			"use_serial_batch_fields": 1 if row.output_batch_no else 0,
 			"is_finished_item": 1,
+			"set_basic_rate_manually": 1,
 			"basic_rate": round(basic_rate, 4),
 		})
 
@@ -833,6 +835,7 @@ def close_wine_batch(wine_batch):
 						"qty": sample_qty,
 						"t_warehouse": sample_warehouse,
 						"is_finished_item": 0,
+						"set_basic_rate_manually": 1,
 						"basic_rate": round(cost, 4),
 					})
 				elif bl.bottle_item:
@@ -841,6 +844,8 @@ def close_wine_batch(wine_batch):
 						"qty": sample_qty,
 						"t_warehouse": sample_warehouse,
 						"is_finished_item": 0,
+						"set_basic_rate_manually": 1,
+						"basic_rate": round(cost, 4),
 					})
 				if unpackaged_warehouse and bl.bottled_wine_item:
 					remainder = cint(bl.net_bottles) - packaged_by_size.get(sz, 0)
@@ -850,6 +855,7 @@ def close_wine_batch(wine_batch):
 							"qty": remainder,
 							"t_warehouse": unpackaged_warehouse,
 							"is_finished_item": 0,
+							"set_basic_rate_manually": 1,
 							"basic_rate": round(cost, 4),
 						})
 

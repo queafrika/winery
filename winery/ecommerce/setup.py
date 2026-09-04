@@ -310,9 +310,18 @@ def run():
 
 
 # --------------------------------------------------------------------------- #
-def _create_custom_fields():
+def ensure_custom_fields():
+	"""Create/update the storefront custom fields. Safe to run on every migrate.
+
+	Kept public and free of data seeding so a patch can call it: the storefront
+	queries select these columns directly, so a site missing them 500s on /shop.
+	"""
 	create_custom_fields(ITEM_FIELDS, ignore_validate=True, update=True)
 	return ["✓ Item / Customer / Website Settings custom fields created or updated"]
+
+
+def _create_custom_fields():
+	return ensure_custom_fields()
 
 
 def _create_item_groups():

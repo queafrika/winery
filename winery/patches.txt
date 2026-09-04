@@ -5,4 +5,5 @@
 [post_model_sync]
 # Patches added in this section will be executed after doctypes are migrated
 winery.patches.rename_excise_duty_per_litre_to_per_dl
+winery.patches.create_storefront_custom_fields
 winery.patches.setup_sales_agent_pos

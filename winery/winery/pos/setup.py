@@ -240,12 +240,42 @@ def _ensure_clearing_account(company, account_name):
     return acc.name
 
 
+def _default_profile_warehouse(company):
+    """A leaf warehouse to satisfy POS Profile's mandatory warehouse field.
+
+    Only a placeholder: the sale engine sets the agent's own leaf warehouse on
+    every invoice (`si.set_warehouse`), so this value is never used for stock.
+    Prefers Stock Settings' default warehouse, then "Stores", then any leaf.
+    """
+    default = frappe.db.get_single_value("Stock Settings", "default_warehouse")
+    if default and frappe.db.get_value("Warehouse", default, "company") == company:
+        if not frappe.db.get_value("Warehouse", default, "is_group"):
+            return default
+
+    abbr = get_company_abbr(company)
+    stores = f"Stores - {abbr}"
+    if frappe.db.exists("Warehouse", {"name": stores, "is_group": 0, "company": company}):
+        return stores
+
+    return frappe.db.get_value(
+        "Warehouse",
+        {"company": company, "is_group": 0, "disabled": 0},
+        "name",
+        order_by="creation asc",
+    )
+
+
 def ensure_pos_profile(company=None):
     """Default POS Profile used by field sales agents."""
     company = company or get_default_company()
     ensure_modes_of_payment(company)
     if frappe.db.exists("POS Profile", POS_PROFILE_NAME):
         return POS_PROFILE_NAME
+    warehouse = _default_profile_warehouse(company)
+    if not warehouse:
+        # No leaf warehouse yet (bare company). Skip — the next migrate retries.
+        print(f"Skipping POS Profile {POS_PROFILE_NAME}: no leaf warehouse for {company}")
+        return None
     cost_center = frappe.db.get_value("Company", company, "cost_center") or frappe.db.get_value(
         "Cost Center", {"company": company, "is_group": 0}, "name"
     )
@@ -260,9 +290,11 @@ def ensure_pos_profile(company=None):
     profile.name = POS_PROFILE_NAME
     profile.company = company
     profile.currency = frappe.db.get_value("Company", company, "default_currency")
-    # Leave warehouse blank: it must be a leaf, but each agent has their own. The
-    # sale engine sets the agent's leaf warehouse per invoice. A group warehouse
-    # here would be copied into the transaction and rejected.
+    # Warehouse is mandatory on POS Profile and must be a leaf, but each agent
+    # has their own — the sale engine overrides it per invoice. So set any leaf
+    # warehouse here as a placeholder; never a group warehouse, which would be
+    # copied into the transaction and rejected.
+    profile.warehouse = warehouse
     profile.cost_center = cost_center
     profile.write_off_account = write_off_account
     profile.write_off_cost_center = cost_center

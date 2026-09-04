@@ -1,0 +1,54 @@
+{% extends "templates/ropen/layout.html" %}
+{% from "templates/ropen/macros.html" import crumbs %}
+
+{% block body %}
+
+<section class="page-head">
+	<div class="wrap">
+		<p class="eyebrow">Basket</p>
+		<h1>Your basket</h1>
+	</div>
+</section>
+
+{{ crumbs(breadcrumbs) }}
+
+<section class="section-tight" data-cart-page>
+	<div class="wrap">
+		<div class="checkout-layout">
+
+			<div>
+				<div data-cart-notes></div>
+				<div data-cart-body>
+					{#- Rendered by ropen-web.js from localStorage, then re-priced server-side. -#}
+					<div class="status-panel"><div class="spinner"></div><p>Loading your basket…</p></div>
+				</div>
+
+				<p style="margin-top:2rem">
+					<a class="link-arrow" href="/shop">Keep shopping</a>
+				</p>
+			</div>
+
+			<aside>
+				<div class="summary" data-cart-summary hidden>
+					<h3>Order summary</h3>
+					<div class="summary-row">
+						<span data-summary-count>0 items</span>
+						<span></span>
+					</div>
+					<div class="summary-row summary-total">
+						<span>Total</span>
+						<span data-summary-total>,</span>
+					</div>
+					<a class="btn btn-primary btn-lg btn-block" href="/checkout">Checkout with M-Pesa</a>
+					<p class="summary-note">
+						Prices include VAT. Delivery is arranged after your order is confirmed ,
+						we will call the number you give us.
+					</p>
+				</div>
+			</aside>
+
+		</div>
+	</div>
+</section>
+
+{% endblock %}

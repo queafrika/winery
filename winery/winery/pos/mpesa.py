@@ -65,8 +65,12 @@ def normalise_phone(phone):
 	return digits
 
 
-def stk_push(phone, amount, pos_client_uuid):
-	"""Initiate an STK Push and record a Pending Winery Mpesa Payment Request."""
+def stk_push(phone, amount, pos_client_uuid, account_reference=None, description=None):
+	"""Initiate an STK Push and record a Pending Winery Mpesa Payment Request.
+
+	`account_reference` / `description` default to the POS wording; the web
+	storefront passes its own so shoppers recognise the prompt on their handset.
+	"""
 	settings = _settings()
 	msisdn = normalise_phone(phone)
 	amount = int(flt(amount))
@@ -93,8 +97,8 @@ def stk_push(phone, amount, pos_client_uuid):
 		"PartyB": settings.shortcode,
 		"PhoneNumber": msisdn,
 		"CallBackURL": settings.callback_url,
-		"AccountReference": pos_client_uuid[:12],
-		"TransactionDesc": "Winery POS sale",
+		"AccountReference": (account_reference or pos_client_uuid)[:12],
+		"TransactionDesc": description or "Winery POS sale",
 	}
 
 	token = _get_token(settings)

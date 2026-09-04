@@ -1,0 +1,314 @@
+{% extends "templates/ropen/layout.html" %}
+{% from "templates/ropen/macros.html" import hero_img, section_img, product_card, cta_band, crumbs, faq_block %}
+{% from "templates/ropen/icons.html" import icon %}
+
+{% block body %}
+
+<section class="hero hero-sub">
+	<div class="hero-media">
+		{{ hero_img("hero-drying", "Coffee parchment drying on raised beds at Njagũ Farm, Kiambu") }}
+	</div>
+	<div class="wrap">
+		<div class="hero-content">
+			<p class="eyebrow eyebrow-light">Njagũ Farm &middot; Kiambu</p>
+			<h1>Specialty Kenyan coffee</h1>
+			<p class="lede">
+				Single-origin, traceable to the tree. SL28, SL34 and Ruiru&nbsp;11 grown between 1,550 and
+				1,725 metres, fully washed and sun-dried on our own beds.
+			</p>
+			<div class="hero-actions">
+				<a class="btn btn-gold btn-lg" href="/shop?group=coffee">Shop our coffee</a>
+			</div>
+		</div>
+	</div>
+</section>
+
+{{ crumbs(breadcrumbs) }}
+
+
+<section class="section">
+	<div class="wrap">
+		<div class="split stretch-media">
+			<div class="reveal">
+				<p class="eyebrow">The farm</p>
+				<h2>Njagũ, on a hillside above a permanent stream</h2>
+				<p>
+					Our specialty coffee farm sits in Njagũ village, near the boundary of the Lari
+					and Githunguri sub-counties of Kiambu. It lies on a hilly slope ranging from
+					1,550 to 1,725 metres above sea level, and borders a permanent stream at its
+					lower end.
+				</p>
+				<p>
+					The area receives an annual average rainfall of 1,380mm, and temperatures range
+					between 15&nbsp;°C and 23&nbsp;°C. Its soils are reddish to brown, deep,
+					well-drained fertile humic nitisols derived from volcanic rock , the
+					combination that gives Kenyan arabica its reputation.
+				</p>
+
+				<div class="stats stats-inline" style="margin-top:clamp(2rem,1.5rem+1.5vw,3rem)">
+					<div>
+						<div class="stat-value" style="color:var(--purple)">1,550&ndash;1,725m</div>
+						<div class="stat-label">Above sea level</div>
+					</div>
+					<div>
+						<div class="stat-value" style="color:var(--purple)">1,380mm</div>
+						<div class="stat-label">Annual rainfall</div>
+					</div>
+					<div>
+						<div class="stat-value" style="color:var(--purple)">15&ndash;23&nbsp;°C</div>
+						<div class="stat-label">Temperature range</div>
+					</div>
+					<div>
+						<div class="stat-value" style="color:var(--purple);font-size:clamp(1.4rem,1.1rem + 1vw,1.9rem)">SL28 / SL34 / Ruiru&nbsp;11</div>
+						<div class="stat-label">Principal varieties</div>
+					</div>
+				</div>
+			</div>
+			<div class="split-media reveal">
+				{{ section_img("coffee-cherries", "Ripe red and green coffee cherry on the branch", 1200, 1600) }}
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<section class="section section-cream">
+	<div class="wrap">
+		<div class="section-head">
+			<p class="eyebrow">History</p>
+			<h2>Trees that have been yielding for seventy years</h2>
+		</div>
+
+		<div class="history-layout">
+			<ol class="timeline reveal">
+				<li>
+					<span class="tl-year">1912</span>
+					<p>
+						Coffee growing is introduced to the wider Kiambu area by Christian
+						missionaries, and subsequently adopted by white-settler farmers between
+						1912 and 1950 , using both forced and wage labour, mainly by women
+						and children.
+					</p>
+				</li>
+				<li>
+					<span class="tl-year">1954</span>
+					<p>
+						For decades, colonial rule prohibited native Africans from growing cash
+						crops like tea and coffee. That prohibition holds until 1954.
+					</p>
+				</li>
+				<li>
+					<span class="tl-year">1990s</span>
+					<p>
+						A more disease-resistant variety, Ruiru&nbsp;11 from the Kenya Agricultural
+						Research Laboratories, begins taking root from the early 1990s.
+					</p>
+				</li>
+				<li>
+					<span class="tl-year">2000s</span>
+					<p>
+						The Kenyan coffee sector goes through turmoil and low farmer prices in the
+						late 1990s and early 2000s. A number of farms are neglected, or their crop
+						uprooted altogether.
+					</p>
+				</li>
+				<li>
+					<span class="tl-year">2023</span>
+					<p>
+						<strong>We acquired one such farm</strong> and have been on a rehabilitation
+						journey since: drilling a borehole, trenching and benching, adding a new
+						drip irrigation system, and replacing gaps with improved varieties.
+					</p>
+				</li>
+			</ol>
+
+			<figure class="locket reveal">
+				<img src="/assets/winery/images/about-farm.webp"
+				     alt="A mature multi-stemmed coffee bush at Njagũ Farm, its thick stems grown
+				          from decades of cutting back"
+				     width="360" height="560" loading="lazy" decoding="async">
+				<figcaption>
+					Many of the seedlings planted then , SL28 and SL34, from cultivars
+					released by Scott Agricultural Laboratories , are still yielding
+					coffee today.
+				</figcaption>
+			</figure>
+		</div>
+
+		<div class="card reveal" style="margin-top:2.5rem;border-left:3px solid var(--gold)">
+			<h3 style="font-size:1.2rem">In honour of the women who planted it</h3>
+			<p style="margin-bottom:0">
+				In honour of the women and children then enlisted into forced labour establishing
+				these coffee farms, part of our coffee proceeds goes to support aged women welfare
+				programmes in the local communities.
+			</p>
+		</div>
+	</div>
+</section>
+
+
+<section class="section">
+	<div class="wrap">
+		<div class="split reverse">
+			<div class="split-media reveal">
+				{{ section_img("coffee-drying", "Coffee parchment drying on raised beds at Njagũ Farm") }}
+			</div>
+			<div class="reveal">
+				<p class="eyebrow">Processing</p>
+				<h2>Washed, then fourteen days in the sun</h2>
+				<p>
+					Our coffee is wet-processed , washed. The skin and pulp are removed from
+					the cherry before the bean is set out to sun-dry for up to 14 days, until the
+					moisture content goes below 11%.
+				</p>
+				<p>
+					Sometimes we send our coffee to the local cooperative society factory, where it
+					undergoes the same washing, pulping and sun-drying.
+				</p>
+				<figure class="text-figure">
+					<img src="/assets/winery/images/coffee-planting.webp"
+					     srcset="/assets/winery/images/coffee-planting-800.webp 800w,
+					             /assets/winery/images/coffee-planting.webp 1125w"
+					     sizes="(max-width: 800px) 100vw, 50vw"
+					     alt="Firming red soil around a newly planted coffee seedling, a jembe laid
+					          on the ground alongside"
+					     width="1125" height="844" loading="lazy" decoding="async">
+				</figure>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<section class="section section-paper2">
+	<div class="wrap">
+		<div class="section-head center">
+			<p class="eyebrow" style="justify-content:center">How we farm</p>
+			<h2>Good agricultural practices, in practice</h2>
+			<p class="lede">
+				We believe in and practise the following on every block of the farm.
+			</p>
+		</div>
+		<div class="grid grid-3 reveal">
+			<div class="card">
+				<div class="icon-badge icon-badge-green">{{ icon("leaf", 22) }}</div>
+				<h3>Soil first</h3>
+				<p>Soil conservation and minimal tillage, with trenching and benching across the
+				   slope to hold water and stop erosion.</p>
+			</div>
+			<div class="card">
+				<div class="icon-badge icon-badge-gold">{{ icon("flask", 22) }}</div>
+				<h3>Minimal spray</h3>
+				<p>Minimal spraying, using approved organics, and application of organic manure
+				   rather than routine chemical inputs.</p>
+			</div>
+			<div class="card">
+				<div class="icon-badge">{{ icon("shield", 22) }}</div>
+				<h3>Resistant replanting</h3>
+				<p>Crop gaps replaced with disease-resistant varieties, alongside shade regulation
+				   and selective harvesting of ripe cherry only.</p>
+			</div>
+		</div>
+
+		<figure class="text-figure wide reveal" style="margin-top:2.5rem">
+			<img src="/assets/winery/images/coffee-flowering.webp"
+			     srcset="/assets/winery/images/coffee-flowering-800.webp 800w,
+			             /assets/winery/images/coffee-flowering.webp 1200w"
+			     sizes="(max-width: 760px) 100vw, 720px"
+			     alt="A young coffee bush in white blossom on red soil, a drip irrigation line
+			          running along the row beside it"
+			     width="1200" height="800" loading="lazy" decoding="async">
+			<figcaption>
+				Blossom on a replanted block, with the drip line running alongside.
+			</figcaption>
+		</figure>
+	</div>
+</section>
+
+
+{% if products %}
+<section class="section">
+	<div class="wrap">
+		<div class="section-head center">
+			<p class="eyebrow" style="justify-content:center">Buy direct</p>
+			<h2>Our coffees</h2>
+		</div>
+		<div class="product-grid reveal">
+			{%- for product in products %}
+			{{ product_card(product) }}
+			{%- endfor %}
+		</div>
+		<p class="center" style="margin-top:2.5rem">
+			<a class="btn btn-primary btn-lg" href="/shop?group=coffee">See every coffee in the shop</a>
+		</p>
+	</div>
+</section>
+{% endif %}
+
+
+<section class="section section-cream">
+	<div class="wrap">
+		<div class="split">
+			<div class="reveal">
+				<p class="eyebrow">Export</p>
+				<h2>TerraNova Coffee LLC, United States</h2>
+				<p>
+					TerraNova Coffee LLC is a USA-registered company affiliated to Ropen Coffee &amp;
+					Fine Foods Limited, through which we supply Kenyan specialty coffee into the
+					American market.
+				</p>
+				<ul>
+					<li>Contracting estate farms and guiding them on the good agricultural practices
+					    the specialty market requires</li>
+					<li>Ensuring a steady supply of single-origin, traceable specialty coffee</li>
+					<li>Providing a guaranteed market for contracted farmers</li>
+					<li>Practising fair trade, and continuing the welfare of the aged women who
+					    planted coffee in the Kenyan highlands from the 1950s</li>
+				</ul>
+				<p><a class="link-arrow" href="/contact">Samples &amp; green coffee orders</a></p>
+			</div>
+			<div class="reveal">
+				<div class="card">
+					<h3 style="font-size:1.15rem">Green coffee, stateside</h3>
+					<p style="font-size:.93rem;color:var(--ink-2)">
+						Stock is held at Continental Terminals, 200 Middlesex Ave, NJ 07008, and
+						sourced from the Iria-ini Farmers Cooperative Society in Nyeri County,
+						Central Kenya.
+					</p>
+					<ul class="spec-list" style="margin-top:1.25rem">
+						<li><span class="k">AA Reserve</span><span class="v">Black currant, honey, chocolate, bright citric acidity, fruity-floral aromatics, sweet lingering finish &middot; SCA 89</span></li>
+						<li><span class="k">AA Specialty</span><span class="v">Orange and tangerine zest, caramel, berries, sweet and well balanced with a juicy lingering finish &middot; SCA 85&ndash;87</span></li>
+						<li><span class="k">AB Specialty</span><span class="v">Fruity-floral citric brightness, caramel and vanilla, berries, creamy mouthfeel, sweet finish &middot; SCA 85&ndash;87</span></li>
+						<li><span class="k">Varieties</span><span class="v">SL28, SL34 &amp; Ruiru&nbsp;11</span></li>
+					</ul>
+					<p class="summary-note">
+						Availability changes with each crop , contact TerraNova for current
+						stock, volumes and pricing.
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<section class="section">
+	<div class="wrap-narrow">
+		<div class="section-head">
+			<p class="eyebrow">Questions</p>
+			<h2>Our coffee, answered</h2>
+		</div>
+		{{ faq_block(faqs) }}
+	</div>
+</section>
+
+
+{{ cta_band(
+	"Coffee traceable to the tree that grew it",
+	"Single-origin Njagũ Farm coffee, roasted and delivered across Kenya. Pay with M-Pesa.",
+	"coffee-drying",
+	"Shop coffee now", "/shop?group=coffee",
+	"Export enquiries", "/contact"
+) }}
+
+{% endblock %}

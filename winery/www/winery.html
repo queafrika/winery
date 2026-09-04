@@ -1,0 +1,198 @@
+{% extends "templates/ropen/layout.html" %}
+{% from "templates/ropen/macros.html" import hero_img, section_img, product_card, cta_band, crumbs, faq_block %}
+{% from "templates/ropen/icons.html" import icon %}
+
+{% block body %}
+
+<section class="hero hero-sub">
+	<div class="hero-media">
+		{{ hero_img("hero-winery", "Bottles of Banny's Dry Banana Wine beside a woven banana-fibre carrier") }}
+	</div>
+	<div class="wrap">
+		<div class="hero-content">
+			<p class="eyebrow eyebrow-light">Ropen Winery</p>
+			<h1>Banny&rsquo;s Banana Wine</h1>
+			<p class="lede">
+				Culturally inspired, deeply rooted. A dry wine fermented from ripe Kenyan bananas
+				, fruit that would otherwise have gone to waste.
+			</p>
+			<div class="hero-actions">
+				<a class="btn btn-gold btn-lg" href="/shop?group=wine">Shop Banny&rsquo;s</a>
+			</div>
+		</div>
+	</div>
+</section>
+
+{{ crumbs(breadcrumbs) }}
+
+
+<section class="section">
+	<div class="wrap">
+		<div class="split">
+			<div class="reveal">
+				<p class="eyebrow">Culturally inspired</p>
+				<h2>A plant woven through every ceremony</h2>
+				<p>
+					The banana plant has been a culturally significant crop for many East African
+					communities. It featured in birth, marriage and death ceremonies. It is a
+					seasonless crop that saw people through times of hunger, and its smooth puree is
+					still used to introduce infants to solid food.
+				</p>
+				<p>
+					It provided building materials, especially for thatching houses, and served as
+					utensil and serving dish in ceremonial offerings and festivals. Its fruit has
+					been used for centuries to make healthy traditional brews, both raw and ripened.
+				</p>
+				<p>
+					Many of those uses were led by the traditional woman , in food and brew
+					preparation, in thatching, in weaving. That is who you see on every bottle.
+				</p>
+			</div>
+			<div class="split-media reveal">
+				{{ section_img("wine-label", "The Banny's Dry Banana Wine front and back label artwork", 1200, 722) }}
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<section class="section section-cream">
+	<div class="wrap">
+		<div class="split reverse">
+			<div class="split-media reveal">
+				{{ section_img("banana-plantation", "A mature banana stand on a Kiambu smallholding") }}
+			</div>
+			<div class="reveal">
+				<p class="eyebrow">Empowerment rooted</p>
+				<h2>The glut that started the winery</h2>
+				<p>
+					Banana suckers were distributed across many parts of Kiambu during our founder's
+					service as Women's Representative. The trees matured, fruit production began
+					, and the resulting glut brought low prices and waste. It became apparent
+					that fruit alone could not deliver the economic empowerment that had been
+					envisaged.
+				</p>
+				<blockquote style="border-left:3px solid var(--gold);padding-left:1.25rem;margin:1.75rem 0;font-size:1.05rem;color:var(--ink-2)">
+					Visiting homes and witnessing hunger, and lack of basics like sugar, yet bunches
+					of bananas hung about in the compound , that made me embark on a journey of
+					more meaningful value addition.
+				</blockquote>
+				<p>
+					That journey set out to address two things at once: the banana-fruit glut and its
+					post-harvest losses, and the use of the <em>entire</em> banana plant , not
+					just the fruit.
+				</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<section class="section">
+	<div class="wrap">
+		<div class="section-head center">
+			<p class="eyebrow" style="justify-content:center">Eco-friendly drinks</p>
+			<h2>Made from what would have been wasted</h2>
+			<p class="lede">
+				Every decision in the process , the fruit, the power, the packaging ,
+				is made to take less out than it puts back.
+			</p>
+		</div>
+
+		<div class="grid grid-3 reveal">
+			<div class="card">
+				<div class="icon-badge icon-badge-green">{{ icon("leaf", 22) }}</div>
+				<h3>Overripe fruit, rescued</h3>
+				<p>Made out of overripe bananas that would otherwise go to waste, from a crop
+				   available throughout the year and characterised by high post-harvest losses.</p>
+			</div>
+			<div class="card">
+				<div class="icon-badge icon-badge-gold">{{ icon("flask", 22) }}</div>
+				<h3>Solar powered</h3>
+				<p>The manufacturing process requires fairly low power consumption, and the power
+				   it does require is drawn from solar.</p>
+			</div>
+			<div class="card">
+				<div class="icon-badge">{{ icon("box", 22) }}</div>
+				<h3>Packaging that returns</h3>
+				<p>Recyclable and reusable glass bottles, bulk packed in carton boxes, presented
+				   in biodegradable paper packs, corks and labels, with banana-fibre carriers.</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<section class="section section-paper2">
+	<div class="wrap">
+		<div class="split">
+			<div class="split-media reveal">
+				{{ section_img("cellar-bottles", "Banny's bottles with gold capsules and the green oval label", 1200, 795) }}
+			</div>
+			<div class="reveal">
+				<p class="eyebrow">In the bottle</p>
+				<h2>Dry, and honest about it</h2>
+				<p>
+					Banny&rsquo;s is a <strong>dry</strong> banana wine , fermented out rather
+					than left sweet, so the fruit reads as fruit and not as syrup. Serve it well
+					chilled at 8&ndash;10&nbsp;°C. Once opened, keep it refrigerated.
+				</p>
+				<ul class="spec-list" style="margin-top:1.5rem">
+					<li><span class="k">Style</span><span class="v">Dry banana wine</span></li>
+					<li><span class="k">Strength</span><span class="v">8.5% ABV</span></li>
+					<li><span class="k">Bottle</span><span class="v">750&nbsp;ml glass, recyclable</span></li>
+					<li><span class="k">Ingredients</span><span class="v">Ripe bananas, sugar, pectinase &amp; amylase enzymes, food-grade potassium sorbate &amp; potassium metabisulphate</span></li>
+					<li><span class="k">Allergens</span><span class="v">Contains sulphur</span></li>
+					<li><span class="k">Made in</span><span class="v">Ruiru, Kiambu, Kenya</span></li>
+				</ul>
+				<div class="notice notice-warn" style="margin-top:1.75rem">
+					{{ icon("alert", 20) }}
+					<span>Excessive consumption is harmful to your health. Not for sale to persons
+					      under the age of 18 years.</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+{% if products %}
+<section class="section">
+	<div class="wrap">
+		<div class="section-head center">
+			<p class="eyebrow" style="justify-content:center">Buy direct</p>
+			<h2>Banny&rsquo;s, delivered</h2>
+		</div>
+		<div class="product-grid reveal">
+			{%- for product in products %}
+			{{ product_card(product) }}
+			{%- endfor %}
+		</div>
+		<p class="center" style="margin-top:2.5rem">
+			<a class="btn btn-primary btn-lg" href="/shop?group=wine">See every wine in the shop</a>
+		</p>
+	</div>
+</section>
+{% endif %}
+
+
+<section class="section section-cream">
+	<div class="wrap-narrow">
+		<div class="section-head">
+			<p class="eyebrow">Questions</p>
+			<h2>Banny&rsquo;s, answered</h2>
+		</div>
+		{{ faq_block(faqs) }}
+	</div>
+</section>
+
+
+{{ cta_band(
+	"Bring home a bottle",
+	"Banny's is on sale online in singles and cases. Order in minutes and pay with M-Pesa.",
+	"cellar-bottles",
+	"Shop Banny's now", "/shop?group=wine",
+	"Talk to sales", "/contact"
+) }}
+
+{% endblock %}

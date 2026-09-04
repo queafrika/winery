@@ -29,6 +29,11 @@ scheduler_events = {
 		"*/5 * * * *": [
 			"winery.winery.pos.mpesa.stk_query",
 		],
+		# Close out web orders whose STK prompt was never answered. Runs on the
+		# off-beat so the reconciliation above has already had its chance.
+		"3-59/10 * * * *": [
+			"winery.ecommerce.payments.expire_stale_orders",
+		],
 	},
 }
 
@@ -92,8 +97,10 @@ doctype_js = {
 # Home Pages
 # ----------
 
-# application home page (will override Website Settings)
-# home_page = "login"
+# Site root serves the Ropen marketing home page. Set here rather than in Website
+# Settings because that field is validated against the route cache on save, which
+# silently blanks it when the cache is cold (e.g. during a fresh setup run).
+home_page = "index"
 
 # website user home page (by Role)
 # role_home_page = {
@@ -105,6 +112,16 @@ doctype_js = {
 
 # automatically create page for each record of this doctype
 # website_generators = ["Web Page"]
+
+# Storefront routes
+# -----------------
+# Product pages are generated from Item.web_slug rather than a web-view doctype,
+# so they need an explicit rule. The order confirmation page is keyed by an
+# unguessable token rather than the order name.
+website_route_rules = [
+	{"from_route": "/shop/<slug>", "to_route": "shop/product"},
+	{"from_route": "/order/<token>", "to_route": "order"},
+]
 
 # Jinja
 # ----------
@@ -180,6 +197,10 @@ doc_events = {
 	},
 	"Purchase Invoice": {
 		"on_submit": "winery.winery.utils.qa_hooks.set_batch_qa_pending",
+	},
+	# Settles web orders when Safaricom confirms (or rejects) the STK payment.
+	"Winery Mpesa Payment Request": {
+		"on_update": "winery.ecommerce.payments.on_payment_request_update",
 	},
 }
 

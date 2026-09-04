@@ -1,0 +1,113 @@
+{% extends "templates/ropen/layout.html" %}
+{% from "templates/ropen/macros.html" import product_card, crumbs %}
+{% from "templates/ropen/icons.html" import icon %}
+
+{% block body %}
+
+{{ crumbs(breadcrumbs) }}
+
+<section class="section-tight">
+	<div class="wrap">
+		<div class="product-detail">
+
+			<div class="product-hero-img reveal">
+				<img src="{{ product.image }}" alt="{{ product.item_name }}"
+				     width="1000" height="1000" fetchpriority="high" decoding="async">
+			</div>
+
+			<div>
+				{%- if department %}
+				<p class="eyebrow">{{ department.label }}</p>
+				{%- endif %}
+				<h1 style="font-size:clamp(1.9rem,1.4rem+2vw,2.9rem)">{{ product.item_name }}</h1>
+
+				{%- if product.web_tagline %}
+				<p class="lede">{{ product.web_tagline }}</p>
+				{%- endif %}
+
+				{%- if product.in_stock %}
+				<div class="price-block">
+					<span class="amount">{{ product.price_formatted }}</span>
+					<span class="unit">per {{ product.stock_uom }} · VAT included</span>
+				</div>
+
+				<div class="qty-row">
+					<div class="qty-stepper">
+						<button type="button" data-step="-1" aria-label="Decrease quantity">−</button>
+						<input type="number" id="qty" value="1" min="1" max="60" aria-label="Quantity">
+						<button type="button" data-step="1" aria-label="Increase quantity">+</button>
+					</div>
+					<button class="btn btn-primary btn-lg" data-add-to-cart="{{ product.item_code }}"
+					        data-name="{{ product.item_name }}" data-qty-from="#qty">
+						Add to basket
+					</button>
+					<button class="btn btn-outline btn-lg" data-add-to-cart="{{ product.item_code }}"
+					        data-name="{{ product.item_name }}" data-qty-from="#qty" data-then-cart>
+						Buy now
+					</button>
+				</div>
+
+				<div class="notice notice-info">
+					{{ icon("mobile", 20) }}
+					<span>Checkout is by M-Pesa. We send an STK prompt to your phone , no card and
+					      no account needed.</span>
+				</div>
+				{%- else %}
+				<div class="notice notice-warn">
+					{{ icon("info", 20) }}
+					<span>This product is not currently priced for online sale. Contact us and we
+					      will quote you directly.</span>
+				</div>
+				<p><a class="btn btn-primary btn-lg" href="/contact">Enquire about this product</a></p>
+				{%- endif %}
+
+				<ul class="spec-list">
+					<li><span class="k">Product code</span><span class="v">{{ product.item_code }}</span></li>
+					<li><span class="k">Category</span><span class="v">{{ product.item_group }}</span></li>
+					<li><span class="k">Sold by</span><span class="v">{{ product.stock_uom }}</span></li>
+					{%- if product.brand %}
+					<li><span class="k">Brand</span><span class="v">{{ product.brand }}</span></li>
+					{%- endif %}
+					<li><span class="k">Origin</span><span class="v">Kiambu County, Kenya</span></li>
+				</ul>
+			</div>
+
+		</div>
+	</div>
+</section>
+
+
+{%- if product.web_description %}
+<section class="section-tight">
+	<div class="wrap-narrow">
+		<h2>About this product</h2>
+		<div class="stack">{{ product.web_description }}</div>
+
+		{%- if department and department.slug == 'wine' %}
+		<div class="notice notice-warn" style="margin-top:2rem">
+			<span aria-hidden="true">18+</span>
+			<span>Sold to persons aged 18 and over only. Please drink responsibly.</span>
+		</div>
+		{%- endif %}
+	</div>
+</section>
+{%- endif %}
+
+
+{%- if related %}
+<section class="section section-cream">
+	<div class="wrap">
+		<div class="section-head">
+			<p class="eyebrow">You might also like</p>
+			<h2>More from our {{ department.label | lower if department else 'range' }}</h2>
+		</div>
+		<div class="product-grid">
+			{%- for item in related %}
+			{{ product_card(item) }}
+			{%- endfor %}
+		</div>
+	</div>
+</section>
+{%- endif %}
+
+{% endblock %}

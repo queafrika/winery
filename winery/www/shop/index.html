@@ -1,0 +1,104 @@
+{% extends "templates/ropen/layout.html" %}
+{% from "templates/ropen/macros.html" import product_card, crumbs %}
+{% from "templates/ropen/icons.html" import icon %}
+
+{% block body %}
+
+<section class="page-head">
+	<div class="wrap">
+		<p class="eyebrow">Shop</p>
+		<h1>{{ heading }}</h1>
+		<p class="lede measure">{{ lede }}</p>
+	</div>
+</section>
+
+{{ crumbs(breadcrumbs) }}
+
+
+<section class="section-tight" data-shop data-initial-group="{{ active_group }}">
+	<div class="wrap">
+
+		<div class="shop-toolbar">
+			<div class="filter-chips" role="group" aria-label="Filter by product type">
+				<button type="button" class="chip" data-filter-group=""
+				        aria-pressed="{{ 'false' if active_group else 'true' }}">All products</button>
+				{%- for dept in departments %}
+				<button type="button" class="chip" data-filter-group="{{ dept.slug }}"
+				        aria-pressed="{{ 'true' if active_group == dept.slug else 'false' }}">
+					{{ dept.label }}
+					<span class="chip-count">{{ dept.count }}</span>
+				</button>
+				{%- endfor %}
+			</div>
+
+			<div class="shop-tools">
+				<div class="search-field">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+					     stroke-linecap="round" aria-hidden="true">
+						<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+					</svg>
+					<input type="search" data-shop-search value="{{ search }}"
+					       placeholder="Search products" aria-label="Search products">
+				</div>
+				<select class="field" data-shop-sort aria-label="Sort products" style="width:auto">
+					<option value="featured"{% if sort == 'featured' %} selected{% endif %}>Featured</option>
+					<option value="name"{% if sort == 'name' %} selected{% endif %}>Name A–Z</option>
+					<option value="price-asc"{% if sort == 'price-asc' %} selected{% endif %}>Price: low to high</option>
+					<option value="price-desc"{% if sort == 'price-desc' %} selected{% endif %}>Price: high to low</option>
+				</select>
+			</div>
+		</div>
+
+		<p class="lede" style="font-size:.9rem;color:var(--ink-3);margin-bottom:1.5rem" data-shop-count>
+			{{ total_count }} product{{ '' if total_count == 1 else 's' }}
+		</p>
+
+		<div class="product-grid" data-shop-results aria-live="polite" aria-busy="false">
+			{%- if products %}
+				{%- for product in products %}
+				{{ product_card(product) }}
+				{%- endfor %}
+			{%- else %}
+			<div class="empty-state" style="grid-column:1/-1">
+				<div class="icon-badge">{{ icon("search", 22) }}</div>
+				<h3>Nothing here yet</h3>
+				<p>We are still adding products to this section. Try the other department, or get
+				   in touch and we will tell you what is available.</p>
+				<p style="margin-top:1.25rem">
+					<button class="btn btn-outline" data-shop-reset>Clear filters</button>
+					<a class="btn btn-primary" href="/contact">Contact us</a>
+				</p>
+			</div>
+			{%- endif %}
+		</div>
+
+	</div>
+</section>
+
+
+<section class="section-tight section-cream">
+	<div class="wrap">
+		<div class="grid grid-3">
+			<div class="card">
+				<div class="icon-badge icon-badge-green">{{ icon("mobile", 22) }}</div>
+				<h3>Pay with M-Pesa</h3>
+				<p>An STK prompt arrives on your phone the moment you check out. Enter your PIN and
+				   the order is confirmed.</p>
+			</div>
+			<div class="card">
+				<div class="icon-badge">{{ icon("truck", 22) }}</div>
+				<h3>Delivered across Kenya</h3>
+				<p>Orders go into dispatch as soon as payment clears. We will confirm timing on the
+				   number you give us.</p>
+			</div>
+			<div class="card">
+				<div class="icon-badge icon-badge-gold">{{ icon("box", 22) }}</div>
+				<h3>Cases and wholesale</h3>
+				<p>Buying for a bar, café, office or event? Case pricing is on the shop, and trade
+				   terms are a message away.</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+{% endblock %}

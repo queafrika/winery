@@ -1,0 +1,249 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "naming_series:",
+ "creation": "2026-09-04 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "section_status",
+  "naming_series",
+  "status",
+  "order_token",
+  "column_break_status",
+  "order_date",
+  "total",
+  "currency",
+  "section_customer",
+  "customer_name",
+  "phone",
+  "email",
+  "column_break_customer",
+  "delivery_address",
+  "town",
+  "delivery_notes",
+  "section_items",
+  "items",
+  "section_payment",
+  "checkout_request_id",
+  "mpesa_receipt_number",
+  "column_break_payment",
+  "mpesa_request",
+  "failure_reason",
+  "section_links",
+  "customer",
+  "sales_order"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_status",
+   "fieldtype": "Section Break",
+   "label": "Order"
+  },
+  {
+   "default": "ROPEN-WEB-.YYYY.-",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "ROPEN-WEB-.YYYY.-",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "default": "Pending Payment",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Pending Payment\nPaid\nFailed\nExpired\nCancelled",
+   "reqd": 1
+  },
+  {
+   "description": "Random public identifier used in the order confirmation URL.",
+   "fieldname": "order_token",
+   "fieldtype": "Data",
+   "label": "Order Token",
+   "read_only": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "column_break_status",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "order_date",
+   "fieldtype": "Datetime",
+   "label": "Order Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "default": "KES",
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_customer",
+   "fieldtype": "Section Break",
+   "label": "Customer"
+  },
+  {
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Full Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "label": "M-Pesa Phone",
+   "reqd": 1
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "column_break_customer",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "delivery_address",
+   "fieldtype": "Small Text",
+   "label": "Delivery Address"
+  },
+  {
+   "fieldname": "town",
+   "fieldtype": "Data",
+   "label": "Town / City"
+  },
+  {
+   "fieldname": "delivery_notes",
+   "fieldtype": "Small Text",
+   "label": "Delivery Notes"
+  },
+  {
+   "fieldname": "section_items",
+   "fieldtype": "Section Break",
+   "label": "Items"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "Ropen Web Order Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_payment",
+   "fieldtype": "Section Break",
+   "label": "M-Pesa"
+  },
+  {
+   "fieldname": "checkout_request_id",
+   "fieldtype": "Data",
+   "label": "Checkout Request ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "mpesa_receipt_number",
+   "fieldtype": "Data",
+   "label": "M-Pesa Receipt",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_payment",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "mpesa_request",
+   "fieldtype": "Link",
+   "label": "M-Pesa Payment Request",
+   "options": "Winery Mpesa Payment Request",
+   "read_only": 1
+  },
+  {
+   "fieldname": "failure_reason",
+   "fieldtype": "Small Text",
+   "label": "Failure Reason",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_links",
+   "fieldtype": "Section Break",
+   "label": "ERP Links"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sales_order",
+   "fieldtype": "Link",
+   "label": "Sales Order",
+   "options": "Sales Order",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "modified": "2026-09-04 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Winery",
+ "name": "Ropen Web Order",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Sales User"
+  }
+ ],
+ "search_fields": "customer_name,phone,status",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "customer_name",
+ "track_changes": 1
+}

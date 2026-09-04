@@ -1,0 +1,203 @@
+{% extends "templates/ropen/layout.html" %}
+{% from "templates/ropen/macros.html" import crumbs %}
+{% from "templates/ropen/icons.html" import icon %}
+
+{% block body %}
+
+<section class="page-head">
+	<div class="wrap">
+		<p class="eyebrow">Contact</p>
+		<h1>Talk to us</h1>
+		<p class="lede measure">
+			Retail orders, wholesale terms, green coffee samples, supplying us with fruit or
+			cherry, or arranging a visit , whichever it is, this reaches the right desk.
+		</p>
+	</div>
+</section>
+
+{{ crumbs(breadcrumbs) }}
+
+
+<section class="section">
+	<div class="wrap">
+		<div class="checkout-layout">
+
+			<div>
+				<h2>Send us a message</h2>
+				<p class="lede">We reply within one working day.</p>
+
+				<form data-contact-form novalidate style="margin-top:2rem">
+					<div class="form-grid">
+						<div class="form-row">
+							<label for="c-name">Your name <span aria-hidden="true">*</span></label>
+							<input class="field" type="text" id="c-name" name="name"
+							       autocomplete="name" required>
+						</div>
+						<div class="form-row">
+							<label for="c-email">Email <span aria-hidden="true">*</span></label>
+							<input class="field" type="email" id="c-email" name="email"
+							       autocomplete="email" required>
+						</div>
+						<div class="form-row">
+							<label for="c-phone">Phone</label>
+							<input class="field" type="tel" id="c-phone" name="phone"
+							       autocomplete="tel" placeholder="0712 345 678">
+						</div>
+						<div class="form-row">
+							<label for="c-subject">What is this about?</label>
+							<select class="field" id="c-subject" name="subject">
+								<option>General enquiry</option>
+								<option>Retail order</option>
+								<option>Wholesale / trade pricing</option>
+								<option>Green coffee &amp; export samples</option>
+								<option>Banana fibre &amp; Bansoko products</option>
+								<option>Supplying us with fruit or cherry</option>
+								<option>Visiting the farm or winery</option>
+								<option>Something else</option>
+							</select>
+						</div>
+						<div class="form-row full">
+							<label for="c-message">Your message <span aria-hidden="true">*</span></label>
+							<textarea class="field" id="c-message" name="message" required
+							          placeholder="Tell us what you need and we will come back to you."></textarea>
+						</div>
+					</div>
+
+					<div data-contact-status style="margin-top:1.25rem"></div>
+
+					<button class="btn btn-primary btn-lg" type="submit" style="margin-top:1rem">
+						Send message
+					</button>
+					<p class="summary-note">
+						We use your details only to answer your enquiry. Nothing is shared with anyone else.
+					</p>
+				</form>
+			</div>
+
+			<div>
+				<div class="summary">
+					<h3>Reach us directly</h3>
+
+					<div class="contact-item">
+						<span class="icon-badge" aria-hidden="true">{{ icon("phone", 20) }}</span>
+						<div>
+							<h4>Phone</h4>
+							<p><a href="tel:{{ business.phone | replace(' ', '') }}">{{ business.phone }}</a></p>
+						</div>
+					</div>
+
+					<div class="contact-item">
+						<span class="icon-badge icon-badge-gold" aria-hidden="true">{{ icon("mail", 20) }}</span>
+						<div>
+							<h4>Email</h4>
+							<p><a href="mailto:{{ business.email }}">{{ business.email }}</a></p>
+						</div>
+					</div>
+
+					<div class="contact-item">
+						<span class="icon-badge icon-badge-green" aria-hidden="true">{{ icon("pin", 20) }}</span>
+						<div>
+							<h4>Visit</h4>
+							<p>Ropen Coffee &amp; Fine Foods Ltd<br>{{ business.town }}, {{ business.county }}<br>{{ business.country }}</p>
+						</div>
+					</div>
+
+					<div class="contact-item">
+						<span class="icon-badge" aria-hidden="true">{{ icon("clock", 20) }}</span>
+						<div>
+							<h4>Opening hours</h4>
+							<p>{{ business.hours }}</p>
+						</div>
+					</div>
+
+					{%- if business.whatsapp %}
+					<a class="btn btn-outline btn-block" style="margin-top:1.25rem"
+					   href="https://wa.me/{{ business.whatsapp | replace('+', '') | replace(' ', '') }}"
+					   rel="noopener noreferrer" target="_blank">Message us on WhatsApp</a>
+					{%- endif %}
+				</div>
+			</div>
+
+		</div>
+	</div>
+</section>
+
+
+<section class="section-tight section-cream">
+	<div class="wrap">
+		<div class="section-head">
+			<p class="eyebrow">Green coffee &amp; export</p>
+			<h2>TerraNova Coffee LLC , United States</h2>
+			<p class="lede measure">
+				For samples, volumes and pricing on stateside green coffee, contact our USA
+				affiliate directly.
+			</p>
+		</div>
+
+		<div class="grid grid-2">
+			<div class="card">
+				<h3 style="font-size:1.15rem">Grace Evans</h3>
+				<div class="contact-item" style="border:0;padding:.6rem 0">
+					<span class="icon-badge" aria-hidden="true">{{ icon("phone", 20) }}</span>
+					<div>
+						<h4>Telephone</h4>
+						<p><a href="tel:+12143999892">+1 214 399-9892</a></p>
+					</div>
+				</div>
+			</div>
+
+			<div class="card">
+				<h3 style="font-size:1.15rem">Robinson Mutiso</h3>
+				<div class="contact-item" style="border:0;padding:.6rem 0">
+					<span class="icon-badge" aria-hidden="true">{{ icon("phone", 20) }}</span>
+					<div>
+						<h4>Telephone</h4>
+						<p><a href="tel:+18155829144">+1 815 582-9144</a></p>
+					</div>
+				</div>
+				<div class="contact-item" style="border:0;padding:.6rem 0">
+					<span class="icon-badge icon-badge-gold" aria-hidden="true">{{ icon("mail", 20) }}</span>
+					<div>
+						<h4>Email</h4>
+						<p><a href="mailto:robinmutiso@gmail.com">robinmutiso@gmail.com</a></p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<p class="summary-note" style="margin-top:1.5rem">
+			Stock is held at Continental Terminals, 200 Middlesex Ave, NJ 07008.
+		</p>
+	</div>
+</section>
+
+
+<section class="section-tight">
+	<div class="wrap">
+		<div class="grid grid-3">
+			<div class="card">
+				<div class="icon-badge">{{ icon("cart", 22) }}</div>
+				<h3>Placing an order</h3>
+				<p>Most orders go straight through the shop with M-Pesa , no account and no
+				   phone call needed.</p>
+				<p><a class="link-arrow" href="/shop">Go to the shop</a></p>
+			</div>
+			<div class="card">
+				<div class="icon-badge icon-badge-gold">{{ icon("box", 22) }}</div>
+				<h3>Wholesale &amp; trade</h3>
+				<p>Bars, restaurants, cafés, offices and retailers , we supply cases and bulk
+				   on standing terms.</p>
+				<p><a class="link-arrow" href="#main">Use the form above</a></p>
+			</div>
+			<div class="card">
+				<div class="icon-badge icon-badge-green">{{ icon("leaf", 22) }}</div>
+				<h3>Supplying us</h3>
+				<p>Growing bananas or coffee near Kiambu? We are always looking for more farmers to
+				   buy from.</p>
+				<p><a class="link-arrow" href="#main">Get in touch</a></p>
+			</div>
+		</div>
+	</div>
+</section>
+
+{% endblock %}

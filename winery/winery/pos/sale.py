@@ -18,7 +18,11 @@ from frappe import _
 from frappe.utils import flt, cint, nowdate, get_datetime
 
 from winery.winery.doctype.sales_agent.sales_agent import get_agent_for_user
-from winery.winery.pos.constants import POS_CUSTOMER_GROUP, ErrorCode
+from winery.winery.pos.constants import (
+	KENYA_TAX_TEMPLATE_TITLE,
+	POS_CUSTOMER_GROUP,
+	ErrorCode,
+)
 
 
 class POSError(frappe.ValidationError):
@@ -88,6 +92,8 @@ def create_sale(payload, agent=None):
 
 	# Let ERPNext compute rates/taxes/totals from the price list.
 	si.run_method("set_missing_values")
+	# Apply Kenya 16% VAT (inclusive) before totals are computed.
+	_apply_sales_taxes(si)
 	si.run_method("calculate_taxes_and_totals")
 
 	# 5. Stock availability in the agent warehouse (before we try to submit).
@@ -212,6 +218,39 @@ def _validate_stock(si, agent):
 			_("Insufficient stock in the agent warehouse for one or more items."),
 			detail={"shortages": shortages},
 		)
+
+
+# --------------------------------------------------------------------------- #
+# taxes
+# --------------------------------------------------------------------------- #
+def _apply_sales_taxes(si):
+	"""Attach the company's Kenya VAT template so 16% VAT is recorded on every sale.
+
+	VAT is treated as INCLUSIVE: the price-list / cart amount already contains it, so
+	each tax row is forced to ``included_in_print_rate = 1``. ERPNext then back-calculates
+	the VAT out of the item rate instead of adding it on top — the grand total stays equal
+	to the cart total, which is exactly what the app charged and what the payment split in
+	``_append_payments`` reconciles against.
+
+	No-op if taxes are already present or no Kenya Tax template exists for the company.
+	"""
+	if si.get("taxes"):
+		return
+
+	template = frappe.db.get_value(
+		"Sales Taxes and Charges Template",
+		{"company": si.company, "name": ["like", f"{KENYA_TAX_TEMPLATE_TITLE}%"], "disabled": 0},
+		"name",
+	)
+	if not template:
+		return
+
+	from erpnext.controllers.accounts_controller import get_taxes_and_charges
+
+	si.taxes_and_charges = template
+	for row in get_taxes_and_charges("Sales Taxes and Charges Template", template):
+		row["included_in_print_rate"] = 1  # VAT is inside the cart price
+		si.append("taxes", row)
 
 
 # --------------------------------------------------------------------------- #

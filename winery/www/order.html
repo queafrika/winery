@@ -1,0 +1,110 @@
+{% extends "templates/ropen/layout.html" %}
+{% from "templates/ropen/icons.html" import icon %}
+
+{% block body %}
+
+<section class="section-tight" data-order-page
+         data-order-token="{{ order_token }}" data-order-status="{{ order.status }}">
+	<div class="wrap-narrow">
+
+		{%- if order.status == 'Paid' %}
+		<div class="status-panel">
+			<div class="result-icon ok">{{ icon("check", 34) }}</div>
+			<h1 style="font-size:clamp(1.9rem,1.4rem+2vw,2.8rem)">Thank you , payment received</h1>
+			<p class="lede">
+				Order <strong>{{ order.order_id }}</strong> is confirmed and in our system. We will
+				call {{ order.phone }} to arrange delivery.
+			</p>
+			{%- if order.mpesa_receipt_number %}
+			<p><span class="badge badge-ok">M-Pesa {{ order.mpesa_receipt_number }}</span></p>
+			{%- endif %}
+		</div>
+
+		{%- elif order.status == 'Pending Payment' %}
+		<div class="status-panel">
+			<div class="phone-pulse">{{ icon("mobile", 32) }}</div>
+			<h1 style="font-size:clamp(1.9rem,1.4rem+2vw,2.8rem)">Waiting for your payment</h1>
+			<p class="lede">
+				We have sent an M-Pesa request to {{ order.phone }}. Enter your PIN on your handset
+				to confirm order <strong>{{ order.order_id }}</strong>.
+			</p>
+			<div class="spinner"></div>
+			<p style="color:var(--ink-3);font-size:.9rem">This page refreshes on its own.</p>
+		</div>
+
+		{%- else %}
+		<div class="status-panel">
+			<div class="result-icon bad">{{ icon("alert", 34) }}</div>
+			<h1 style="font-size:clamp(1.9rem,1.4rem+2vw,2.8rem)">Payment was not completed</h1>
+			<p class="lede">
+				Order <strong>{{ order.order_id }}</strong> was not paid
+				{%- if order.failure_reason %} , {{ order.failure_reason }}{% endif %}.
+				Nothing has been charged and nothing has been dispatched.
+			</p>
+			<p class="lede">
+				If money did leave your account, send us the M-Pesa code and we will sort it out
+				straight away.
+			</p>
+			<div class="cta-actions">
+				<a class="btn btn-primary" href="/shop">Try again</a>
+				<a class="btn btn-outline" href="/contact">Contact us</a>
+			</div>
+		</div>
+		{%- endif %}
+
+		<div class="card" style="margin-top:2.5rem">
+			<h2 style="font-size:1.3rem">Order details</h2>
+
+			<div class="table-scroll">
+				<table class="order-table">
+					<caption class="visually-hidden">Items in order {{ order.order_id }}</caption>
+					<thead>
+						<tr>
+							<th scope="col">Item</th>
+							<th scope="col" class="num">Qty</th>
+							<th scope="col" class="num">Rate</th>
+							<th scope="col" class="num">Amount</th>
+						</tr>
+					</thead>
+					<tbody>
+						{%- for line in order['items'] %}
+						<tr>
+							<td>{{ line.item_name }}</td>
+							<td class="num">{{ line.qty | int }} {{ line.uom }}</td>
+							<td class="num">{{ line.rate_formatted }}</td>
+							<td class="num">{{ line.amount_formatted }}</td>
+						</tr>
+						{%- endfor %}
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="3" class="num">Total (VAT included)</td>
+							<td class="num">{{ order.total_formatted }}</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+
+			<ul class="spec-list">
+				<li><span class="k">Name</span><span class="v">{{ order.customer_name }}</span></li>
+				<li><span class="k">Phone</span><span class="v">{{ order.phone }}</span></li>
+				{%- if order.email %}
+				<li><span class="k">Email</span><span class="v">{{ order.email }}</span></li>
+				{%- endif %}
+				<li><span class="k">Delivery to</span><span class="v">{{ order.delivery_address }}{% if order.town %}, {{ order.town }}{% endif %}</span></li>
+				<li><span class="k">Placed</span><span class="v">{{ frappe.utils.format_datetime(order.order_date) }}</span></li>
+			</ul>
+		</div>
+
+		<p style="margin-top:2rem" class="center">
+			<a class="link-arrow" href="/shop">Continue shopping</a>
+		</p>
+
+		<p class="summary-note center">
+			Keep this page bookmarked , it is the only link to your order.
+		</p>
+
+	</div>
+</section>
+
+{% endblock %}

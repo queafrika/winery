@@ -21,6 +21,11 @@ POS_MODES_OF_PAYMENT = {
 # Default POS Profile created for agents.
 POS_PROFILE_NAME = "Winery Field Sales"
 
+# Title (company abbr is appended by ERPNext, e.g. "Kenya Tax - W") of the Sales
+# Taxes and Charges Template applied to every POS sale. Its 16% VAT is treated as
+# INCLUSIVE in the cart price by the sale engine, so the grand total is unchanged.
+KENYA_TAX_TEMPLATE_TITLE = "Kenya Tax"
+
 # Application error codes returned to the mobile client (see technical docs §9).
 class ErrorCode:
     AGENT_INACTIVE = "AGENT_INACTIVE"

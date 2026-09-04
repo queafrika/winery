@@ -1,0 +1,132 @@
+{% extends "templates/ropen/layout.html" %}
+{% from "templates/ropen/macros.html" import crumbs %}
+{% from "templates/ropen/icons.html" import icon %}
+
+{% block body %}
+
+<section class="page-head">
+	<div class="wrap">
+		<p class="eyebrow">Checkout</p>
+		<h1>Almost done</h1>
+		<p class="lede measure">
+			Tell us where the order is going, then confirm the payment on your phone. No account
+			needed.
+		</p>
+	</div>
+</section>
+
+{{ crumbs(breadcrumbs) }}
+
+<section class="section-tight" data-checkout>
+	<div class="wrap">
+
+		{%- if not mpesa_ready %}
+		<div class="notice notice-warn">
+			{{ icon("alert", 20) }}
+			<span><strong>Online payment is not live yet.</strong> M-Pesa credentials have not been
+			      configured on this site, so checkout will not complete. Please
+			      <a href="/contact">contact us</a> to place your order in the meantime.</span>
+		</div>
+		{%- endif %}
+
+		<div class="checkout-layout">
+
+			<div>
+				<div data-checkout-error></div>
+
+				<form data-checkout-form novalidate>
+					<h2>Delivery details</h2>
+
+					<div class="form-grid" style="margin-top:1.5rem">
+						<div class="form-row">
+							<label for="f-name">Full name <span aria-hidden="true">*</span></label>
+							<input class="field" type="text" id="f-name" name="customer_name"
+							       autocomplete="name" required>
+						</div>
+
+						<div class="form-row">
+							<label for="f-phone">M-Pesa phone number <span aria-hidden="true">*</span></label>
+							<input class="field" type="tel" id="f-phone" name="phone"
+							       autocomplete="tel" inputmode="tel" placeholder="0712 345 678" required>
+							<span class="hint">The STK payment prompt is sent to this number.</span>
+						</div>
+
+						<div class="form-row">
+							<label for="f-email">Email</label>
+							<input class="field" type="email" id="f-email" name="email"
+							       autocomplete="email">
+							<span class="hint">Optional , for your receipt.</span>
+						</div>
+
+						<div class="form-row">
+							<label for="f-town">Town / city</label>
+							<input class="field" type="text" id="f-town" name="town"
+							       autocomplete="address-level2" placeholder="Nairobi">
+						</div>
+
+						<div class="form-row full">
+							<label for="f-address">Delivery address <span aria-hidden="true">*</span></label>
+							<textarea class="field" id="f-address" name="delivery_address" required
+							          autocomplete="street-address"
+							          placeholder="Estate or building, street, and any landmark that helps us find you."></textarea>
+						</div>
+
+						<div class="form-row full">
+							<label for="f-notes">Delivery notes</label>
+							<textarea class="field" id="f-notes" name="delivery_notes"
+							          style="min-height:80px"
+							          placeholder="Anything we should know , preferred delivery time, gate code, grind preference for coffee."></textarea>
+						</div>
+					</div>
+
+					<button class="btn btn-primary btn-lg btn-block" type="submit"
+					        data-checkout-submit style="margin-top:2rem" disabled>
+						Loading your basket…
+					</button>
+
+					<p class="summary-note">
+						By placing this order you confirm you are 18 or over. Prices include VAT.
+					</p>
+				</form>
+
+				{#- Swapped in by JS once the STK push is away. -#}
+				<div data-pay-panel hidden>
+					<div class="status-panel">
+						<div class="phone-pulse">{{ icon("mobile", 32) }}</div>
+						<h2>Check your phone</h2>
+						<p class="lede">
+							We have sent an M-Pesa payment request to
+							<strong data-pay-phone></strong>. Enter your M-Pesa PIN to confirm.
+						</p>
+						<div class="spinner" style="margin-top:2rem"></div>
+						<p style="color:var(--ink-3);font-size:.9rem">
+							Waiting for confirmation. Please keep this page open , it updates on its own.
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<aside>
+				<div class="summary" data-checkout-summary>
+					<h3>Your order</h3>
+					<div data-summary-lines>
+						<div class="summary-row"><span>Loading…</span><span></span></div>
+					</div>
+					<div class="summary-row summary-total">
+						<span>Total</span>
+						<span data-summary-total>,</span>
+					</div>
+					<p class="summary-note">
+						<a href="/cart">Edit your basket</a>
+					</p>
+					<p class="summary-note">
+						Payment is taken by M-Pesa STK push. We never see or store your PIN.
+					</p>
+				</div>
+			</aside>
+
+		</div>
+	</div>
+</section>
+
+{% endblock %}

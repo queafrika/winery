@@ -1,0 +1,124 @@
+[
+  {
+    "file": "hero-drying.webp",
+    "unsplash_id": "1524350876685-274059332603",
+    "author": "Mike Kenneally",
+    "note": "Renamed from hero-home.webp; now the coffee page hero."
+  },
+  {
+    "file": "hero-winery.webp",
+    "unsplash_id": "1566467021572-37fbefe8fcb2",
+    "author": "Timothy James"
+  },
+  {
+    "file": "hero-coffee.webp",
+    "unsplash_id": "1515694590185-73647ba02c10",
+    "author": "Rodrigo Flores"
+  },
+  {
+    "file": "hero-shop.webp",
+    "unsplash_id": "1597905722448-a1df7c00000a",
+    "author": "Kelsey Knight"
+  },
+  {
+    "file": "about-farmers.webp",
+    "unsplash_id": "1509100194014-d49809396daa",
+    "author": "Annie Spratt",
+    "note": "Cropped to the right-hand side of the frame to remove people we do not have consent to publish."
+  },
+  {
+    "file": "farm-field.webp",
+    "unsplash_id": "1605000797499-95a51c5269ae",
+    "author": "Etienne Girardet"
+  },
+  {
+    "file": "banana-plantation.webp",
+    "unsplash_id": "1653481006616-aab561a77a3b",
+    "author": "Rio Lecatompessy"
+  },
+  {
+    "file": "coffee-roasting.webp",
+    "unsplash_id": "1518081692809-d68867210ca9",
+    "author": "Nathan Dumlao"
+  },
+  {
+    "file": "cellar-bottles.webp",
+    "unsplash_id": "1562601579-599dec564e06",
+    "author": "Kelsey Knight"
+  },
+  {
+    "file": "wine-glass.webp",
+    "unsplash_id": "1606767208159-1a5fb0a87841",
+    "author": "Kelsey Knight"
+  },
+  {
+    "file": "contact-hero.webp",
+    "unsplash_id": "1596788068873-9ffd5cacd4c4",
+    "author": "Random Institute"
+  },
+  {
+    "file": "products/wine-750-dry.webp",
+    "unsplash_id": "1642189941430-7073f85d7140",
+    "author": "Sanja Tuseva"
+  },
+  {
+    "file": "products/wine-1l-dry.webp",
+    "unsplash_id": "1760920193193-91dd96af7862",
+    "author": "Unsplash"
+  },
+  {
+    "file": "products/wine-case-750.webp",
+    "unsplash_id": "1554230561-31bdc707b537",
+    "author": "Hermes Rivera"
+  },
+  {
+    "file": "products/wine-case-1l.webp",
+    "unsplash_id": "1562601579-599dec564e06",
+    "author": "Kelsey Knight"
+  },
+  {
+    "file": "products/coffee-ground.webp",
+    "unsplash_id": "1651761483492-7d2e26dd3455",
+    "author": "Ivan Torres"
+  },
+  {
+    "file": "products/coffee-beans.webp",
+    "unsplash_id": "1562051036-e0eea191d42f",
+    "author": "Nathan Dumlao"
+  },
+  {
+    "file": "products/coffee-espresso.webp",
+    "unsplash_id": "1447933601403-0c6688de566e",
+    "author": "Mike Kenneally"
+  },
+  {
+    "file": "products/coffee-filter.webp",
+    "unsplash_id": "1511920170033-f8396924c348",
+    "author": "Nathan Dumlao"
+  },
+  {
+    "file": "about-start.webp",
+    "author": "Ropen (client-supplied)",
+    "note": "Original photograph from ropen.pptx slide 7 (ppt/media/image22.jpeg), 736x1308. Not Unsplash. Cropped square (736x736, top offset 340) to sit level with the text on the About page \"How it started\" section."
+  },
+  {
+    "file": "coffee-planting.webp",
+    "author": "Ropen (client-supplied)",
+    "note": "Original photograph ropen_photo.jpeg, 1125x1500. Not Unsplash. Cropped to 4:3 (1125x844, top offset 300) for the coffee page Processing section."
+  },
+  {
+    "file": "coffee-drying.webp",
+    "author": "Ropen (client-supplied)",
+    "note": "Original photograph, WhatsApp 2026-09-04 14.12.27 (1200x1600). Replaced an Unsplash stock image. Cropped to 1200x900."
+  },
+  {
+    "file": "coffee-cherries.webp",
+    "author": "Ropen (client-supplied)",
+    "note": "Original photograph, WhatsApp 2026-09-04 14.12.51 (1200x1600). Replaced Unsplash 1515694590185, which was a duplicate of hero-coffee.webp. Used uncropped."
+  },
+  {
+    "file": "coffee-flowering.webp",
+    "author": "Ropen (client-supplied)",
+    "note": "Original photograph, WhatsApp 2026-09-04 14.16.01 (1200x1600). Cropped to 3:2 (top offset 200) for the coffee page \"How we farm\" section."
+  }
+]

@@ -1,0 +1,48 @@
+{%- set nav_items = [
+	("/",        "Home"),
+	("/winery",  "Winery"),
+	("/coffee",  "Coffee"),
+	("/shop",    "Shop"),
+	("/about",   "About"),
+	("/contact", "Contact"),
+] -%}
+{%- set here = current_route or "/" -%}
+
+<header class="nav">
+	<nav class="nav-inner" aria-label="Main">
+		<a class="nav-brand" href="/">
+			<img src="/assets/winery/images/ropen-logo.png" alt="" width="42" height="63" aria-hidden="true">
+			<span class="nav-brand-text">
+				<span class="nav-brand-name">Ropen</span>
+				<span class="nav-brand-tag">Coffee &amp; Fine Foods</span>
+			</span>
+			<span class="visually-hidden">Ropen Coffee and Fine Foods — home</span>
+		</a>
+
+		<button class="nav-toggle" type="button" aria-expanded="false"
+		        aria-controls="nav-links" aria-label="Open menu">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+				<path d="M3 6h18M3 12h18M3 18h18"/>
+			</svg>
+		</button>
+
+		<ul class="nav-links" id="nav-links">
+			{%- for route, label in nav_items %}
+			<li><a href="{{ route }}"{% if here == route or (route != "/" and here.startswith(route)) %} aria-current="page"{% endif %}>{{ label }}</a></li>
+			{%- endfor %}
+		</ul>
+
+		<div class="nav-actions">
+			<a class="cart-btn" href="/cart">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+				     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+					<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+					<path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+				</svg>
+				<span class="cart-label">Basket</span>
+				<span class="cart-count" aria-live="polite">0</span>
+				<span class="visually-hidden">items in basket</span>
+			</a>
+		</div>
+	</nav>
+</header>

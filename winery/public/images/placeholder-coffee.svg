@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" role="img" aria-label="Ropen coffee">
+  <rect width="500" height="500" fill="#eef7ee"/>
+  <g fill="none" stroke="#1A5C2A" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity=".55">
+    <path d="M150 200h180v110a70 70 0 0 1-70 70h-40a70 70 0 0 1-70-70z"/>
+    <path d="M330 225h30a40 40 0 0 1 0 80h-30"/>
+    <path d="M195 150c0-20 20-25 20-45M250 150c0-20 20-25 20-45M305 150c0-20 20-25 20-45"/>
+  </g>
+  <ellipse cx="240" cy="290" rx="40" ry="26" fill="#F5A800" opacity=".3"/>
+</svg>

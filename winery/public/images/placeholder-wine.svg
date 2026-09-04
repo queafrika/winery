@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" role="img" aria-label="Ropen wine">
+  <rect width="500" height="500" fill="#f6eefb"/>
+  <g fill="none" stroke="#6B2D8B" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity=".55">
+    <path d="M215 110h70v60c0 20 35 55 35 95v135a20 20 0 0 1-20 20h-100a20 20 0 0 1-20-20V265c0-40 35-75 35-95z"/>
+    <path d="M225 90h50v20h-50z"/>
+    <path d="M180 300h140"/>
+  </g>
+  <circle cx="250" cy="360" r="34" fill="#F5A800" opacity=".35"/>
+</svg>

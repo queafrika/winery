@@ -1,0 +1,202 @@
+{% extends "templates/ropen/layout.html" %}
+{% from "templates/ropen/macros.html" import product_card, cta_band %}
+{% from "templates/ropen/icons.html" import icon %}
+
+{% block body %}
+
+<section class="hero hero-brand">
+	<div class="wrap">
+		<div class="hero-lead">
+			<div class="hero-content">
+				<p class="eyebrow eyebrow-light">Kiambu County, Kenya</p>
+				<h1>Ropen Coffee & Fine Foods.</h1>
+				<p class="lede">
+					A Kenyan establishment specialising in the farming and processing of
+					fine alcoholic and non-alcoholic beverages , Banny&rsquo;s banana wine and
+					single-origin Njagũ Farm coffee.
+				</p>
+				<div class="hero-actions">
+					<a class="btn btn-gold btn-lg" href="/shop">Shop our products</a>
+					<a class="btn btn-ghost-light btn-lg" href="/about">Who we are</a>
+				</div>
+			</div>
+
+			<div class="hero-brandmark">
+				<img src="/assets/winery/images/ropen-logo.png"
+				     alt="Ropen Coffee and Fine Foods" width="300" height="480"
+				     fetchpriority="high" decoding="async">
+			</div>
+		</div>
+
+		<div class="hero-cards">
+			<a class="hero-card" href="/winery">
+				<img src="/assets/winery/images/hero-winery-800.webp" alt="" loading="lazy"
+				     decoding="async" width="800" height="450" aria-hidden="true">
+				<h3>Winery</h3>
+				<p>Banny&rsquo;s Dry Banana Wine , culturally inspired, deeply rooted.</p>
+				<span class="link-arrow">Visit the winery</span>
+			</a>
+			<a class="hero-card" href="/coffee">
+				<img src="/assets/winery/images/hero-coffee-800.webp" alt="" loading="lazy"
+				     decoding="async" width="800" height="450" aria-hidden="true">
+				<h3>Coffee</h3>
+				<p>Single-origin specialty coffee, traceable to Njagũ Farm.</p>
+				<span class="link-arrow">Explore our coffee</span>
+			</a>
+			<a class="hero-card" href="/shop">
+				<img src="/assets/winery/images/hero-shop-800.webp" alt="" loading="lazy"
+				     decoding="async" width="800" height="450" aria-hidden="true">
+				<h3>Shop</h3>
+				<p>Buy wine and coffee online. Pay with M-Pesa.</p>
+				<span class="link-arrow">Start shopping</span>
+			</a>
+		</div>
+	</div>
+</section>
+
+
+<section class="section">
+	<div class="wrap">
+		<div class="split">
+			<div class="split-media oval reveal">
+				<img src="/assets/winery/images/about-farm.webp"
+				     alt="A mature multi-stemmed coffee bush at Njagũ Farm, Kiambu"
+				     width="360" height="560" loading="lazy" decoding="async">
+			</div>
+			<div class="reveal">
+				<p class="eyebrow">Who we are</p>
+				<h2>Value added where the fruit is grown</h2>
+				<p>
+					Ropen Coffee &amp; Fine Foods Limited is a family-owned Kenyan company. We farm
+					and process our own crop rather than selling it on and hoping for the best.
+				</p>
+				<p>
+					Our winery turns overripe bananas , a year-round crop with famously high
+					post-harvest losses , into Banny&rsquo;s Dry Banana Wine. Our coffee farm
+					at Njagũ, rehabilitated since 2023, grows SL28, SL34 and Ruiru&nbsp;11 between 1,550 and 1,725
+					metres and washes and dries the cherry on site.
+				</p>
+				<p><a class="link-arrow" href="/about">Read our full story</a></p>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<section class="section section-ink">
+	<div class="wrap">
+		<div class="stats">
+			<div class="reveal">
+				<div class="stat-value">4</div>
+				<div class="stat-label">Divisions</div>
+			</div>
+			<div class="reveal">
+				<div class="stat-value">1,725m</div>
+				<div class="stat-label">Top of the coffee farm</div>
+			</div>
+			<div class="reveal">
+				<div class="stat-value">8.5%</div>
+				<div class="stat-label">Banny&rsquo;s ABV</div>
+			</div>
+			<div class="reveal">
+				<div class="stat-value">M-Pesa</div>
+				<div class="stat-label">Checkout in seconds</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+{% if featured %}
+<section class="section section-cream">
+	<div class="wrap">
+		<div class="section-head center">
+			<p class="eyebrow" style="justify-content:center">From the shop</p>
+			<h2>What people are ordering</h2>
+			<p class="lede">
+				Wine and coffee, delivered across Kenya. Filter by what you are after, add to your
+				basket, and pay on your phone.
+			</p>
+		</div>
+
+		<div class="product-grid reveal">
+			{%- for product in featured %}
+			{{ product_card(product) }}
+			{%- endfor %}
+		</div>
+
+		<p class="center" style="margin-top:2.5rem">
+			<a class="btn btn-primary btn-lg" href="/shop">Browse the full shop</a>
+		</p>
+	</div>
+</section>
+{% endif %}
+
+
+<section class="section">
+	<div class="wrap">
+		<div class="section-head center">
+			<p class="eyebrow" style="justify-content:center">Why it matters</p>
+			<h2>Waste on one side, a market on the other</h2>
+		</div>
+		<div class="grid grid-3 reveal">
+			<div class="card">
+				<div class="icon-badge icon-badge-green">{{ icon("leaf", 22) }}</div>
+				<h3>Nothing wasted</h3>
+				<p>Overripe fruit becomes wine; banana stems become fibre, bags and packaging at
+				   Bansoko Centre. The whole plant is used.</p>
+			</div>
+			<div class="card">
+				<div class="icon-badge">{{ icon("pin", 22) }}</div>
+				<h3>Traceable to source</h3>
+				<p>Single-origin coffee traceable to the farm that grew it, and a batch reference
+				   printed on every bottle of Banny&rsquo;s.</p>
+			</div>
+			<div class="card">
+				<div class="icon-badge icon-badge-gold">{{ icon("check", 22) }}</div>
+				<h3>Proceeds that go back</h3>
+				<p>Part of our coffee proceeds supports aged women welfare programmes in the
+				   communities where these farms were established.</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<section class="section section-paper2">
+	<div class="wrap">
+		<div class="section-head center">
+			<p class="eyebrow" style="justify-content:center">How it works</p>
+			<h2>Ordering takes about a minute</h2>
+		</div>
+		<div class="steps reveal">
+			<div class="step">
+				<h4>Pick your products</h4>
+				<p>Filter the shop by wine or coffee and add what you want to your basket.</p>
+			</div>
+			<div class="step">
+				<h4>Tell us where</h4>
+				<p>Your name, Safaricom number and a delivery address. No account needed.</p>
+			</div>
+			<div class="step">
+				<h4>Pay with M-Pesa</h4>
+				<p>We send an STK prompt straight to your phone. Enter your PIN to confirm.</p>
+			</div>
+			<div class="step">
+				<h4>We deliver</h4>
+				<p>Your order goes into dispatch the moment payment clears.</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+{{ cta_band(
+	"Wine for the table, coffee for the morning",
+	"Everything we make is on sale online, priced in shillings and paid for with M-Pesa.",
+	"cellar-bottles",
+	"Shop wine", "/shop?group=wine",
+	"Shop coffee", "/shop?group=coffee"
+) }}
+
+{% endblock %}

@@ -1,0 +1,173 @@
+{% extends "templates/ropen/layout.html" %}
+{% from "templates/ropen/macros.html" import section_img, cta_band, crumbs %}
+{% from "templates/ropen/icons.html" import icon %}
+
+{% block body %}
+
+<section class="page-head">
+	<div class="wrap">
+		<p class="eyebrow">About Ropen</p>
+		<h1>Who we are</h1>
+		<p class="lede measure">
+			An establishment specialising in the farming and processing of fine
+			alcoholic and non-alcoholic beverages.
+		</p>
+	</div>
+</section>
+
+{{ crumbs(breadcrumbs) }}
+
+
+<section class="section">
+	<div class="wrap">
+		<div class="section-head">
+			<p class="eyebrow">Our divisions</p>
+			<h2>Four arms, one company</h2>
+		</div>
+
+		<div class="grid grid-4-across reveal">
+			<div class="card card-hover">
+				<div class="icon-badge icon-badge-green">{{ icon("coffee", 22) }}</div>
+				<h3>Coffee Farming &amp; Processing</h3>
+				<p>Njagũ Farm in Kiambu , our specialty coffee farm, rehabilitated since 2023
+				   and producing single-origin SL28, SL34 and Ruiru&nbsp;11 traceable to the tree.</p>
+				<p><a class="link-arrow" href="/coffee">Visit the farm</a></p>
+			</div>
+
+			<div class="card card-hover">
+				<div class="icon-badge">{{ icon("wine", 22) }}</div>
+				<h3>Ropen Winery</h3>
+				<p>Home of Banny&rsquo;s Dry Banana Wine , culturally inspired, deeply rooted,
+				   and made from fruit that would otherwise have been wasted.</p>
+				<p><a class="link-arrow" href="/winery">Inside the winery</a></p>
+			</div>
+
+			<div class="card card-hover">
+				<div class="icon-badge icon-badge-gold">{{ icon("leaf", 22) }}</div>
+				<h3>Bansoko Centre</h3>
+				<p>Where we promote use of the <em>entire</em> banana plant , extracting,
+				   drying and dyeing banana fibre, and working with artisans to produce
+				   eco-friendly bags, packaging and artifacts.</p>
+			</div>
+
+			<div class="card card-hover">
+				<div class="icon-badge">{{ icon("box", 22) }}</div>
+				<h3>TerraNova Coffee (USA) LLC</h3>
+				<p>Our USA-registered affiliate, through which Kenyan specialty coffee reaches the
+				   American market under fair-trade terms.</p>
+				<p><a class="link-arrow" href="/contact">Export desk</a></p>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<section class="section section-cream">
+	<div class="wrap">
+		<div class="split">
+			<div class="split-media square reveal">
+				<img src="/assets/winery/images/about-start.webp"
+				     alt="Young banana plants newly established in tilled red soil on a Kiambu hillside"
+				     width="736" height="736" loading="lazy" decoding="async">
+			</div>
+			<div class="reveal">
+				<p class="eyebrow">How it started</p>
+				<h2>Bananas hanging in the compound, and hunger in the house</h2>
+				<p>
+					After distributing many banana suckers across various areas of Kiambu while
+					serving as the Women&rsquo;s Representative, and after the trees matured and
+					began fruiting, the subsequent banana-fruit glut brought low prices and waste.
+					It became apparent that fruit alone could not bring the economic empowerment
+					that had been envisaged.
+				</p>
+				<blockquote style="border-left:3px solid var(--gold);padding-left:1.25rem;margin:1.75rem 0;font-size:1.05rem;color:var(--ink-2)">
+					Visiting homes and witnessing hunger, and lack of basics like sugar, yet bunches
+					of bananas hung about in the compound, made me embark on a journey of more
+					meaningful value addition , one that would not only address the banana
+					glut and post-harvest losses, but also the utilisation of the entire banana
+					plant.
+				</blockquote>
+				<p>
+					That is the through-line of everything here: take what the land already produces
+					in surplus, and add enough value to it that a farming family is better off.
+				</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<section class="section">
+	<div class="wrap">
+		<div class="split reverse media-fill">
+			<div class="split-media reveal">
+				{{ section_img("bansoko-fibre", "Banana fibre drying at Bansoko Centre", 1200, 1600) }}
+			</div>
+			<div class="reveal">
+				<p class="eyebrow">Bansoko Centre</p>
+				<h2>The whole plant, not just the fruit</h2>
+				<p>
+					At Bansoko Centre we promote utilisation of the entire banana plant. We provide
+					machinery to extract banana fibre from banana stems. The fibre is then dried and
+					dyed as necessary.
+				</p>
+				<p>
+					Some fibre is baled and packed into 15kg bales for onward processing into finer
+					fabrics. The extraction and weaving process requires very low power consumption.
+				</p>
+				<p>
+					Artisans are engaged to produce various banana-fibre artifacts, and to produce
+					and supply eco-friendly bags and packaging material , including the woven
+					carriers our wine ships in.
+				</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<section class="section section-ink">
+	<div class="wrap">
+		<div class="section-head center">
+			<p class="eyebrow eyebrow-light" style="justify-content:center">What we hold to</p>
+			<h2>Four things we do not compromise on</h2>
+		</div>
+		<div class="grid grid-4-across reveal">
+			<div class="card" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14)">
+				<div class="icon-badge icon-badge-gold">{{ icon("leaf", 22) }}</div>
+				<h3>Waste becomes value</h3>
+				<p>Overripe fruit that would have rotted, and stems that would have been burned,
+				   become wine, fibre and packaging.</p>
+			</div>
+			<div class="card" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14)">
+				<div class="icon-badge icon-badge-gold">{{ icon("pin", 22) }}</div>
+				<h3>Traceable to source</h3>
+				<p>Our coffee is single-origin and traceable to the farm it grew on; every wine
+				   batch carries its own reference on the label.</p>
+			</div>
+			<div class="card" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14)">
+				<div class="icon-badge icon-badge-gold">{{ icon("shield", 22) }}</div>
+				<h3>Low impact by design</h3>
+				<p>Solar power, minimal spraying with approved organics, organic manure, and
+				   recyclable or biodegradable packaging throughout.</p>
+			</div>
+			<div class="card" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14)">
+				<div class="icon-badge icon-badge-gold">{{ icon("check", 22) }}</div>
+				<h3>The women who planted it</h3>
+				<p>Part of our coffee proceeds supports aged women welfare programmes in the local
+				   communities, in honour of those who established these farms.</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+{{ cta_band(
+	"Everything we make is on sale online",
+	"Banny's banana wine and single-origin Njagũ Farm coffee, side by side. Pay with M-Pesa.",
+	"hero-shop",
+	"Go to the shop", "/shop",
+	"Talk to us", "/contact"
+) }}
+
+{% endblock %}

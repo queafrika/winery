@@ -1,0 +1,105 @@
+{#- Reusable fragments shared by the storefront pages. -#}
+
+{#- Named `crumbs` so it cannot shadow the `breadcrumbs` context variable. -#}
+{%- macro crumbs(items) -%}
+{%- if items and items | length > 1 %}
+<nav class="crumbs" aria-label="Breadcrumb">
+	<div class="wrap">
+		<ol>
+			{%- for item in items %}
+			<li>
+				{%- if loop.last %}
+				<span aria-current="page">{{ item.label }}</span>
+				{%- else %}
+				<a href="{{ item.route }}">{{ item.label }}</a>
+				{%- endif %}
+			</li>
+			{%- endfor %}
+		</ol>
+	</div>
+</nav>
+{%- endif %}
+{%- endmacro -%}
+
+
+{#- Responsive hero image. `name` is the asset stem, e.g. "hero-coffee". -#}
+{%- macro hero_img(name, alt, priority=true) -%}
+<img src="/assets/winery/images/{{ name }}.webp"
+     srcset="/assets/winery/images/{{ name }}-800.webp 800w,
+             /assets/winery/images/{{ name }}-1200.webp 1200w,
+             /assets/winery/images/{{ name }}.webp 1920w"
+     sizes="100vw"
+     alt="{{ alt }}"
+     width="1920" height="1280"
+     {% if priority %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
+     decoding="async">
+{%- endmacro -%}
+
+
+{#- Section image (non-hero): two widths are enough. -#}
+{%- macro section_img(name, alt, w=1200, h=800) -%}
+<img src="/assets/winery/images/{{ name }}.webp"
+     srcset="/assets/winery/images/{{ name }}-800.webp 800w,
+             /assets/winery/images/{{ name }}.webp 1200w"
+     sizes="(max-width: 800px) 100vw, 50vw"
+     alt="{{ alt }}" width="{{ w }}" height="{{ h }}" loading="lazy" decoding="async">
+{%- endmacro -%}
+
+
+{%- macro product_card(p) -%}
+<article class="product-card">
+	<a class="product-media" href="{{ p.route }}" aria-label="{{ p.item_name }}">
+		<img src="{{ p.image }}" alt="{{ p.item_name }}" loading="lazy" decoding="async"
+		     width="500" height="500">
+		<span class="product-tag{% if p.department == 'coffee' %} is-coffee{% endif %}">
+			{{ 'Coffee' if p.department == 'coffee' else 'Wine' }}
+		</span>
+	</a>
+	<div class="product-body">
+		<h3 class="product-title"><a href="{{ p.route }}">{{ p.item_name }}</a></h3>
+		<p class="product-desc">{{ p.short_description or "" }}</p>
+		<div class="product-foot">
+			{%- if p.in_stock %}
+			<div class="product-price">{{ p.price_formatted }}</div>
+			<button class="btn btn-primary btn-sm" data-add-to-cart="{{ p.item_code }}"
+			        data-name="{{ p.item_name }}">Add</button>
+			{%- else %}
+			<div class="product-price" style="font-size:.95rem;color:var(--ink-3)">Enquire</div>
+			<a class="btn btn-outline btn-sm" href="/contact">Enquire</a>
+			{%- endif %}
+		</div>
+	</div>
+</article>
+{%- endmacro -%}
+
+
+{%- macro cta_band(title, text, image, primary_label, primary_href, secondary_label=None, secondary_href=None) -%}
+<section class="section">
+	<div class="wrap">
+		<div class="cta-band reveal">
+			<img src="/assets/winery/images/{{ image }}.webp" alt="" loading="lazy" decoding="async"
+			     width="1200" height="600" aria-hidden="true">
+			<h2>{{ title }}</h2>
+			<p class="lede measure-center">{{ text }}</p>
+			<div class="cta-actions">
+				<a class="btn btn-gold btn-lg" href="{{ primary_href }}">{{ primary_label }}</a>
+				{%- if secondary_label %}
+				<a class="btn btn-ghost-light btn-lg" href="{{ secondary_href }}">{{ secondary_label }}</a>
+				{%- endif %}
+			</div>
+		</div>
+	</div>
+</section>
+{%- endmacro -%}
+
+
+{%- macro faq_block(pairs) -%}
+<div class="faq">
+	{%- for question, answer in pairs %}
+	<details{% if loop.first %} open{% endif %}>
+		<summary>{{ question }}</summary>
+		<p>{{ answer }}</p>
+	</details>
+	{%- endfor %}
+</div>
+{%- endmacro -%}
